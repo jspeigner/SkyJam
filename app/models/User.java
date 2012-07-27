@@ -9,7 +9,9 @@ import com.avaje.ebean.annotation.EnumValue;
 import play.db.ebean.*;
 import play.db.ebean.Model.Finder;
 import play.data.format.*;
+
 import play.data.validation.*;
+import play.data.validation.Constraints.Email;
 
 
 @Entity 
@@ -23,13 +25,16 @@ public class User extends Model {
 	public String username;
 	
 	@Constraints.Required
+	@Email
 	public String email;
 	
 	@Constraints.Required
 	public String password;
 
+	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date registeredDate;
 
+	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date lastLoginDate;
 	
 	
@@ -45,7 +50,7 @@ public class User extends Model {
 	@Constraints.Required
 	public UserType type;
 	
-	public int imageStorageObjectId;
+	// public int imageStorageObjectId;
 	
 
 	public static Model.Finder<Long,User> find = new Finder<Long, User>(Long.class, User.class);

@@ -4,14 +4,14 @@
 # --- !Ups
 
 create table users (
-  id                        integer auto_increment not null,
+  id                        bigint auto_increment not null,
   username                  varchar(255),
   email                     varchar(255),
   password                  varchar(255),
   registered_date           date,
   last_login_date           date,
-  type                      varchar(255),
-  image_storage_object_id   integer,
+  type                      varchar(5),
+  constraint ck_users_type check (type in ('admin','user')),
   constraint pk_users primary key (id))
 ;
 
