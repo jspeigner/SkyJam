@@ -13,30 +13,28 @@ import play.data.format.Formats;
 import play.db.ebean.Model;
 
 @Entity
-@Table(name="user_playlist_activities")
-public class UserPlaylistActivity extends Model {
-
+@Table(name="playlist_ratings")
+public class PlaylistRating extends Model {
+	
 	@Id
 	public Integer id;
+	
+	@Formats.DateTime(pattern="yyyy-MM-dd")
+	public Date createdDate;	
 	
 	@ManyToOne
 	public User user;
 	
-	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date createdDate;
-	
-	public enum Type{
-			play,
-			pause,
-			skip
+	public enum Type
+	{
+		like,
+		dislike
 	};
 	
 	@Enumerated(EnumType.STRING)
 	public Type type;
 	
 	@ManyToOne
-	public PlaylistSong playlistSong;
-	
-	
-	
+	public Playlist playlist;
+
 }
