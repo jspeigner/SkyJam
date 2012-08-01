@@ -1,17 +1,18 @@
 package models;
 
-import java.sql.Date;
+import java.util.Date;
 import javax.persistence.*;
-import javax.validation.Constraint;
+
 
 import com.avaje.ebean.annotation.EnumValue;
+import com.avaje.ebean.validation.Length;
 
 import play.db.ebean.*;
-import play.db.ebean.Model.Finder;
 import play.data.format.*;
 
 import play.data.validation.*;
 import play.data.validation.Constraints.Email;
+import play.data.validation.Constraints.MaxLength;
 
 
 @Entity 
@@ -19,11 +20,13 @@ import play.data.validation.Constraints.Email;
 public class User extends Model {
 	
 	@Id
-	public Long id;
+	public Integer id;
 	
+	@Length(max=30)
 	@Constraints.Required
 	public String username;
 	
+	@Length(max=40)
 	@Constraints.Required
 	@Email
 	public String email;
@@ -40,20 +43,16 @@ public class User extends Model {
 	
 	public enum UserType
 	{
-		@EnumValue("admin")
 		admin,
-		
-		@EnumValue("user")
-		user; 
+		user 
 	}
 	
 	@Constraints.Required
+	@Enumerated(EnumType.STRING)
 	public UserType type;
 	
-	// public int imageStorageObjectId;
-	
 
-	public static Model.Finder<Long,User> find = new Finder<Long, User>(Long.class, User.class);
+	public static Model.Finder<Integer,User> find = new Finder<Integer, User>(Integer.class, User.class);
 	
 	public static User authenticate(String email, String password) {
         return find.where()

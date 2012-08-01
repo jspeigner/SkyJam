@@ -1,0 +1,19 @@
+@(bucketName:String, files:List[String])
+
+
+<h1>Bucket - @bucketName</h1>
+@{ 
+Collections.sort( files );
+
+}
+
+
+
+<h2>Objects</h2>
+<h3>@Calendar.getInstance().getTime()</h3>
+
+<ol style="margin-left:100px">
+	@for(s3object <- files) {
+	<li>@s3object</li>
+	}
+</ol>
