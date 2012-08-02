@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS `albums` (
   UNIQUE KEY `artist_id` (`artist_id`,`name`),
   KEY `fk_albums_genres1` (`genre_id`),
   KEY `fk_albums_storage_object1` (`album_art_storage_object_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7624 ;
 
 CREATE TABLE IF NOT EXISTS `amazon_accounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `access_key_id` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'AWS access key\n',
   `secret_access_key` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 CREATE TABLE IF NOT EXISTS `artists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `artists` (
   `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4755 ;
 
 CREATE TABLE IF NOT EXISTS `buckets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `buckets` (
   `amazon_account_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_aws_buckets_amazon_s3_accounts1` (`amazon_account_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 CREATE TABLE IF NOT EXISTS `cloudfront_distributions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,13 +49,13 @@ CREATE TABLE IF NOT EXISTS `cloudfront_distributions` (
   `storage_object_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cloudfront_distribution_song_storages1` (`storage_object_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `genres` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `music_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `playlists` (
   KEY `fk_playlists_users1` (`user_id`),
   KEY `fk_playlists_music_categories1` (`music_category_id`),
   KEY `fk_playlists_genres1` (`genre_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `playlist_ratings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `playlist_ratings` (
   KEY `fk_user_ratings_users1` (`user_id`),
   KEY `fk_object` (`playlist_id`),
   KEY `fk_user` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `playlist_songs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `playlist_songs` (
   PRIMARY KEY (`id`),
   KEY `fk_playlist_songs_playlists1` (`playlist_id`),
   KEY `fk_playlist_songs_songs1` (`song_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `play_evolutions` (
   `id` int(11) NOT NULL,
@@ -129,7 +129,13 @@ CREATE TABLE IF NOT EXISTS `songs` (
   UNIQUE KEY `name` (`name`,`album_id`),
   KEY `fk_songs_albums1` (`album_id`),
   KEY `fk_songs_storage_object1` (`storage_object_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=36328 ;
+
+CREATE TABLE IF NOT EXISTS `songs_music_categories` (
+  `song_id` int(11) NOT NULL,
+  `music_category_id` int(11) NOT NULL,
+  PRIMARY KEY (`song_id`,`music_category_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `storage_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -139,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `storage_objects` (
   `created_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_song_storages_aws_buckets1` (`bucket_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=36328 ;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -154,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`,`password`),
   KEY `type` (`type`),
   KEY `fk_users_storage_object1` (`image_storage_object_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `user_playlist_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -164,4 +170,4 @@ CREATE TABLE IF NOT EXISTS `user_playlist_activities` (
   `playlist_song_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_playlist_activity_users1` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

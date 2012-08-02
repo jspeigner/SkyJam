@@ -3,7 +3,7 @@ package models;
 import javax.persistence.*;
 
 import com.avaje.ebean.validation.Length;
-
+import java.util.Set;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 
@@ -36,6 +36,11 @@ public class Song extends Model {
 	
 	@Enumerated(EnumType.STRING)
 	public Status status;
+	
+	
+	@ManyToMany
+	@JoinTable(name = "songs_music_categories", joinColumns = { @JoinColumn(name="song_id") }, inverseJoinColumns = { @JoinColumn(name="music_category_id") } )
+	public Set<MusicCategory> musicCategories;
 	
 	public static Model.Finder<Integer,Song> find = new Finder<Integer, Song>(Integer.class, Song.class);
 	

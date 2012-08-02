@@ -32,7 +32,7 @@ public class UserController extends Controller {
      */
     public static Result login() {
         return ok(
-            login.render(form(Login.class))
+            User_login.render(form(Login.class))
         );
     }
     
@@ -42,7 +42,7 @@ public class UserController extends Controller {
     public static Result authenticate() {
         Form<Login> loginForm = form(Login.class).bindFromRequest();
         if(loginForm.hasErrors()) {
-            return badRequest(login.render(loginForm));
+            return badRequest(User_login.render(loginForm));
         } else {
         	
             session("email", loginForm.get().email);

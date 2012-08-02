@@ -9,7 +9,7 @@ public class ApplicationController extends Controller {
   public static Result index() 
   {
     
-	  return ok(index.render());
+	  return ok( Application_index.render());
     
   }
   

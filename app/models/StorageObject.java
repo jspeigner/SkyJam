@@ -40,7 +40,4 @@ public class StorageObject extends Model {
 	}
 
 
-	
-
-
 }
