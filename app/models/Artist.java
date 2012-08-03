@@ -16,10 +16,8 @@ import play.data.validation.Constraints.MaxLength;
 
 @Entity
 @Table(name="artists")
-public class Artist extends Model {
+public class Artist extends AppModel {
 
-	@Id
-	public Integer id;
 
 	@Constraints.Required
 	@MaxLength(200)

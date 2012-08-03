@@ -9,12 +9,8 @@ import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="songs")
-public class Song extends Model {
+public class Song extends AppModel {
 	
-	@Id
-	public Integer id;
-	
-
 	@Length(max=300)
 	public String name;
 	

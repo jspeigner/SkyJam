@@ -10,11 +10,8 @@ import play.db.ebean.Model;
 
 @Entity
 @Table(name="genres")
-public class Genre extends Model {
+public class Genre extends AppModel {
 
-	@Id
-	public Integer id;
-	
 	@Length(max=100)
 	public String name;
 

@@ -19,10 +19,9 @@ import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="cloudfront_distributions")
-public class CloudfrontDistribution extends Model {
+public class CloudfrontDistribution extends AppModel {
 
-	@Id
-	public Integer id;
+
 	
 	@Length(max=32)
 	public String distributionId;

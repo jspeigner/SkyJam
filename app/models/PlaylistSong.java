@@ -13,11 +13,9 @@ import play.db.ebean.Model;
 
 @Entity
 @Table(name="playlist_songs")
-public class PlaylistSong extends Model {
+public class PlaylistSong extends AppModel {
 
-	@Id
-	public Integer id;
-	
+
 	@ManyToOne
 	public Playlist playlist;
 	

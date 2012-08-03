@@ -13,14 +13,12 @@ import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="buckets")
-public class Bucket extends Model {
+public class Bucket extends AppModel {
 
 
 	private static final long serialVersionUID = 1854388095675477416L;
 
-	@Id
-	public Integer id;
-	
+
 	@Length(max=1024)
 	public String name;
 	

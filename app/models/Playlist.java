@@ -16,10 +16,8 @@ import play.db.ebean.Model;
 
 @Entity
 @Table(name="playlists")
-public class Playlist extends Model {
+public class Playlist extends AppModel {
 
-	@Id
-	public Integer id;
 	
 	@Length(max=200)
 	public String name;

@@ -12,13 +12,8 @@ import com.avaje.ebean.validation.Length;
 
 @Entity 
 @Table(name="amazon_accounts")
-public class AmazonAccount extends Model implements AWSCredentials {
+public class AmazonAccount extends AppModel implements AWSCredentials {
 
-
-
-
-	@Id
-	public Integer id;
 	
 	@Length(min=16, max=45)
 	public String accessKeyId;

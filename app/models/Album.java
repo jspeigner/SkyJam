@@ -11,14 +11,12 @@ import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
+
 
 @Entity 
 @Table(name="albums")
-public class Album extends Model {
+public class Album extends AppModel {
 
-	@Id
-	public Integer id;
 
 	@Length(max=200)
 	public String name;

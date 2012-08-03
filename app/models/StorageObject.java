@@ -15,10 +15,8 @@ import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="storage_objects")
-public class StorageObject extends Model {
+public class StorageObject extends AppModel {
 	
-	@Id
-	public Integer id;
 	
 	@Length(max=255)
 	public String name;

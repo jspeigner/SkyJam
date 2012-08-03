@@ -14,10 +14,8 @@ import play.db.ebean.Model;
 
 @Entity
 @Table(name="playlist_ratings")
-public class PlaylistRating extends Model {
+public class PlaylistRating extends AppModel {
 	
-	@Id
-	public Integer id;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date createdDate;	

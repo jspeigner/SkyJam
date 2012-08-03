@@ -17,11 +17,9 @@ import play.data.validation.Constraints.MaxLength;
 
 @Entity 
 @Table(name="users")
-public class User extends Model {
+public class User extends AppModel {
 	
-	@Id
-	public Integer id;
-	
+
 	@Length(max=30)
 	@Constraints.Required
 	public String username;
