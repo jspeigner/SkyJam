@@ -1,9 +1,10 @@
 html { background-image: url(../img/bg-1.png),url(../img/bg-2.png), url(../img/bg-3.png); background-attachment:fixed; }
 body {  padding-bottom: 40px; background: transparent !important; }
 
+footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #E5E5E5; }
 
 #body-container { background-color:white; padding-top: 43px; }
-
+	#body-container #body-content { padding: 0 20px 0 20px; }
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar-inner {
@@ -32,3 +33,10 @@ body {  padding-bottom: 40px; background: transparent !important; }
 	#player a.pause { display:none;}
 		#player li.name {padding:9px 10px 11px;}
 		#player li a:hover { color: black; background-color: #D4D4D4; }
+		
+	
+#activityBar { margin: 20px 0 20px 0;}		
+	#activityBar ul { list-style: none; display:block; margin:0; padding:0; }
+		#activityBar ul li { text-align: center;  display:block; }
+			#activityBar ul li img { display:block; }
+			#activityBar ul li a { font-size:1.5em; padding: 20px 0 20px 0; line-height: 3em; }

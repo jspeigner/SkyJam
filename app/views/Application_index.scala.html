@@ -1,8 +1,19 @@
-@()
+@(parentCategory:MusicCategory, categories:Set[MusicCategory])
 
 @Layout_main("Home", metaKeywords = "Skyjam Music Mp3 playlists", metaDescription = "Online Music") {
     
-<h2>Select your activity</h2>
-<div id="activityBar"></div>
+@if( parentCategory != null ){
+	<h2>Select your activity from <i>@parentCategory.name</i></h2>
+} else { 
+	<h2>Select your activity</h2>
+}
+
+<div id="activityBar" class="row-fluid">
+	<ul>
+	@for( category <- categories ){
+		<li class="span3"><img src="@routes.Assets.at("files/music_category/320x240.gif")" width="320" height="240" alt="@category.name"><a href="@routes.ApplicationController.category(category.getId())">@category.name</a></li>
+	}
+	</ul>
+</div>
     
 }
