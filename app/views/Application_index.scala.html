@@ -11,7 +11,7 @@
 <div id="activityBar" class="row-fluid">
 	<ul>
 	@for( category <- categories ){
-		<li class="span3"><img src="@routes.Assets.at("files/music_category/320x240.gif")" width="320" height="240" alt="@category.name"><a href="@routes.ApplicationController.category(category.getId())">@category.name</a></li>
+		<li class="span3"><img src="@routes.Assets.at("files/music_category/240x180.gif")" alt="@category.name"><a href="@routes.ApplicationController.category(category.getId())">@category.name</a></li>
 	}
 	</ul>
 </div>

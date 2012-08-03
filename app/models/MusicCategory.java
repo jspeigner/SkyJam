@@ -26,12 +26,18 @@ public class MusicCategory extends AppModel {
 	@JoinColumn(name="parent_id")
 	public MusicCategory parent;
 	
+	protected Integer parentId;
+	
+	/*
 	@ManyToMany
 	@JoinTable(name = "songs_music_categories", joinColumns = { @JoinColumn(name="music_category_id") }, inverseJoinColumns = { @JoinColumn(name="song_id") } )
 	public Set<MusicCategory> musicCategories;
-	
+	*/
 	
 	public static Model.Finder<Integer,MusicCategory> find = new Finder<Integer, MusicCategory>(Integer.class, MusicCategory.class);
 	
-	
+	public Integer getParentId()
+	{
+		return parentId;
+	}
 }

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import play.data.format.Formats;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="playlist_songs")
@@ -25,10 +26,12 @@ public class PlaylistSong extends AppModel {
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date createdDate;	
 	
-	public Integer order;
+	public Integer position;
 	
 	public Integer likesCount;
 	
 	public Integer dislikesCount;
+	
+	public static Model.Finder<Integer,Song> find = new Finder<Integer, Song>(Integer.class, Song.class);
 	
 }

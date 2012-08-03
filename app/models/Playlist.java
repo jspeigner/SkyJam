@@ -13,6 +13,7 @@ import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
 import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="playlists")
@@ -47,4 +48,12 @@ public class Playlist extends AppModel {
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date createdDate;	
 	
+	
+	public static Model.Finder<Integer,Playlist> find = new Finder<Integer, Playlist>(Integer.class, Playlist.class);
+	
+	
+	public static int findCountByMusicCategoryId(Integer musicCategoryId)
+	{
+		return find.where().eq("music_category_id", musicCategoryId).findRowCount();
+	}
 }

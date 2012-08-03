@@ -4,12 +4,16 @@
 
 # Home page
 GET     /                          	controllers.ApplicationController.index()
-GET     /category/:id				controllers.ApplicationController.category(id:java.lang.Integer )
+GET     /category/:id				controllers.ApplicationController.category(id:java.lang.Integer)
+GET		/category_playlists/:id		controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
 GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()
 
+
+# internal
 GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
+GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

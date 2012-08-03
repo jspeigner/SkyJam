@@ -4,13 +4,20 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import models.Album;
 import models.AmazonAccount;
 import models.Artist;
+import models.Genre;
+import models.MusicCategory;
+import models.Playlist;
+import models.PlaylistSong;
 import models.Song;
 import models.StorageObject;
+import models.User;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -43,7 +50,7 @@ public class ImportController extends Controller {
 		
 		System.out.println( defaultS3Account);
 		
-		models.Bucket bucket = models.Bucket.find.where().eq("amazon_account_id", defaultS3Account.id ).findUnique();
+		models.Bucket bucket = models.Bucket.find.where().eq("amazon_account_id", defaultS3Account.getId() ).findUnique();
 		
 		if( defaultS3Account != null )
 		{
@@ -222,7 +229,7 @@ public class ImportController extends Controller {
 					
 					if( artist != null )
 					{
-						Album album = Album.getByNameAndArtistId(albumName, artist.id);
+						Album album = Album.getByNameAndArtistId(albumName, artist.getId());
 						if( album == null )
 						{
 							album = new Album();
@@ -238,7 +245,7 @@ public class ImportController extends Controller {
 							
 						}
 						
-						Song song = Song.getByNameAndAlbumId(songName, album.id);
+						Song song = Song.getByNameAndAlbumId(songName, album.getId());
 						if( song == null )
 						{
 							
@@ -279,6 +286,55 @@ public class ImportController extends Controller {
 		
 		return false;
 		
+	}
+	
+	public static Result generateRandomPlaylists(Integer countPerCategory, Integer songsPerPlaylist)
+	{
+		Set<MusicCategory> categories = MusicCategory.find.findSet();
+		User user = User.find.where().setMaxRows(1).findUnique();
+		Genre genre = Genre.find.where().setMaxRows(1).findUnique();
+		List<Song> songs = Song.find.where().findList();
+		
+		int songsCount = songs.size();
+		Random rnd = new Random();
+		
+		int playlistIndex = 0;
+		for( MusicCategory category : categories )
+		{
+			if( category.getParentId() > 0 )
+			{
+				for(int i =0; i<countPerCategory; i++)
+				{
+					Playlist p = new Playlist();
+					p.status = Playlist.Status.Public;
+					p.name = "Auto Playlist "+( playlistIndex );
+					p.createdDate = Calendar.getInstance().getTime();
+					p.description = "";
+					p.user = user;
+					p.genre = genre;
+					p.musicCategory = category;
+					
+					p.save();
+					
+					for( int songIndex = 0; songIndex < songsPerPlaylist ; songIndex++ )
+					{
+						PlaylistSong playlistSong = new PlaylistSong();
+						playlistSong.createdDate  = Calendar.getInstance().getTime();
+						playlistSong.dislikesCount = playlistSong.likesCount = 0;
+						playlistSong.position = songIndex;
+						playlistSong.song = songs.get( rnd.nextInt(songsCount) );
+						playlistSong.playlist = p;
+						
+						playlistSong.save();
+					}
+					
+					playlistIndex++;
+				}
+			}
+			
+		}
+		
+		return ok("Done");
 	}
 
 }

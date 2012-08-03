@@ -9,7 +9,7 @@ import play.db.ebean.Model;
 public class AppModel extends Model {
 	
 	@Id
-	public Integer id;
+	protected Integer id;
 	
 	
 	public Integer getId()

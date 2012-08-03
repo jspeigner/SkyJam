@@ -1,3 +1,23 @@
-@(category:MusicCategory)
+@(category:MusicCategory, playlists:Set[Playlist])
 
-Hello
+@Layout_main(title = "Playlists for " + category.name ) {
+ 
+<h2>Select a playlist</h2>
+
+
+<div id="playlistsRow" class="row-fluid">
+@if( playlists.size() > 0 ){
+	<ul>
+	@for( playlist <- playlists ){
+		<li class="span@( ( 12 / playlists.size() ).toInt )">
+			<img src="@routes.Assets.at("files/music_category/240x180.gif")" alt="@category.name">
+			<a href="#">@playlist.name</a>
+		</li>
+	}
+	</ul>
+} else {
+<p>There are no playlists found</p>
+}
+</div>
+    
+}
