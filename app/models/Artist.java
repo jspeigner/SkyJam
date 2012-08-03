@@ -5,6 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.avaje.ebean.validation.Length;
+
 import java.util.List;
 
 import play.db.ebean.Model;
@@ -20,12 +22,12 @@ public class Artist extends AppModel {
 
 
 	@Constraints.Required
-	@MaxLength(200)
+	@Length(max=200)
 	public String name;
 	
 	public String description;
 	
-	@MaxLength(200)
+	@Length(max=200)
 	public String url;
 	
 	
@@ -64,4 +66,8 @@ public class Artist extends AppModel {
 		}
 	}
 	
+	public String getName()
+	{
+		return name;
+	}	
 }

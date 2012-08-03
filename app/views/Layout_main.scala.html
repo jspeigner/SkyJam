@@ -10,20 +10,39 @@
         
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap-responsive.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/ui-lightness/jquery-ui-1.8.22.custom.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
         
+        
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
-        <script src="@routes.Assets.at("js/jquery-1.7.1.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("js/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/jquery.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/underscore.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/can.jquery.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/jquery-ui.custom.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/application.js")" type="text/javascript"></script>
         
 	    <!--[if lt IE 9]>
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    <![endif]-->        
-
+		
+		<script type="text/javascript">
+		var application = new Application({
+			urls: {
+				headerFormSearch : "@routes.PlaylistController.searchJson",
+				playlist : "@routes.PlaylistController.playlist(0)"
+			}
+		});
+		
+		$( function(){ 
+			application.onDomReady(); 
+		});
+		
+		</script>
         
     </head>
     <body>
-    
+    	<header>
 			<div class="navbar navbar-fixed-top">
 		      <div class="navbar-inner">
 		        <div class="container">
@@ -49,8 +68,9 @@
 		        </div>
 		      </div>
 		    </div>
-		    
-		     <div class="container" id="body-container">    
+		  </header>
+		  
+		  <div class="container" id="body-container">    
 		     
 		     	@tags.player()
 		     	<div id="body-content">
@@ -66,7 +86,7 @@
 	        		<p class="pull-right"><a href="#body-container">Back to Top</a></p>
 	        	</footer>        		
         		
-        	</div>
+        </div>
 
     </body>
 </html>

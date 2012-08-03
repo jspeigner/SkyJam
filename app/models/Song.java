@@ -47,4 +47,8 @@ public class Song extends AppModel {
 		return Song.find.where().eq("name", name).eq("album_id", albumId).findUnique();
 	}	
 	
+	public String getName()
+	{
+		return name;
+	}
 }

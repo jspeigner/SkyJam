@@ -7,6 +7,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#body-container #body-content { padding: 0 20px 0 20px; }
 	
 
+	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar-inner {
@@ -40,5 +41,16 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 #activityBar { margin: 20px 0 20px 0;}		
 	#activityBar ul { list-style: none; display:block; margin:0; padding:0; }
 		#activityBar ul li { text-align: center;  display:block; }
-			#activityBar ul li img { display:block; }
-			#activityBar ul li a { font-size:1.5em; padding: 20px 0 20px 0; line-height: 3em; }
+			#activityBar ul li img { display:block; padding:0; margin:0 auto 0 auto; }
+			#activityBar ul li a { font-size:1.5em; line-height: 1em; display:block; margin: 1em 0 1em 0; }
+			
+#playlistsRow { margin: 20px 0 20px 0;}
+	#playlistsRow ul { list-style: none; display:block; margin:0; padding:0; }
+	#playlistsRow ul li h2 { font-size:1em;}
+	#playlistsRow ul li a { font-size:1.5em; line-height: 1em; display:block; margin: 1em 0 1em 0; }
+		#playlistsRow ul li ul.songs { margin:0; padding:0; list-style: none; display:block; }
+			#playlistsRow ul li ul.songs li { display:inline; }
+				#playlistsRow ul li .songs img { max-width:60px; max-height:60px; }
+				
+	ul li.playlistSearchDropdown { }				
+		ul li.playlistSearchDropdown small { font-size:0.8em; }

@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import PlayProject._
+import com.github.play2war.plugin._
 
 object ApplicationBuild extends Build {
 
@@ -11,9 +12,14 @@ object ApplicationBuild extends Build {
       // Add your project dependencies here,
 		"mysql" % "mysql-connector-java" % "5.1.18"
     )
+    
+	val projectSettings = Play2WarPlugin.play2WarSettings ++ Seq(
+	  // Your settings
+	  Play2WarKeys.servletVersion := "3.0"
+	)    
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-      // Add your own project settings here      
+		projectSettings: _*      
     )
 
 }

@@ -6,6 +6,11 @@
 GET     /                          	controllers.ApplicationController.index()
 GET     /category/:id				controllers.ApplicationController.category(id:java.lang.Integer)
 GET		/category_playlists/:id		controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
+
+GET		/playlist/search.json		controllers.PlaylistController.searchJson()
+GET		/playlist/:id				controllers.PlaylistController.playlist(id:java.lang.Integer)
+
+
 GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()

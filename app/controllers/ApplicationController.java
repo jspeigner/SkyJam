@@ -49,10 +49,8 @@ public class ApplicationController extends Controller {
 	  
 	  Set<Playlist> playlists = Playlist.find.where().eq("music_category_id", categoryId).setMaxRows(maxPlaylistsCount).findSet();
 	  
-	  System.out.println( playlists );
-	  System.out.println( playlists.size() );
-	  
 	  return ok( Application_playlistByCategory.render(category, playlists) );
   }
+
   
 }

@@ -61,5 +61,10 @@ public class Album extends AppModel {
 		return Album.find.where().eq("name", albumName).eq("artist_id", artistId).findUnique();
 	}
 	
+	public String getName()
+	{
+		return name;
+	}
+	
 	
 }

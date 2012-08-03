@@ -1,0 +1,19 @@
+@(playlist:Playlist)
+
+@Layout_main(title = "Playlist " + playlist.name ) {
+ 
+<h2>MOCKUP ! Playlist - @playlist.name</h2>
+<p>@playlist.description</p>
+<h3>Songs</h3>
+<div class="row">
+			<ul >
+				@for( playlistSong <- ( playlist.getPlaylistSongs() ) ){
+					<li>@playlistSong.song.getName()</li>
+				}
+				
+			</ul>
+
+
+</div>
+    
+}
