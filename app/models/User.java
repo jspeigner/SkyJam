@@ -1,8 +1,11 @@
 package models;
 
+import global.Global;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import javax.persistence.*;
-
 
 import com.avaje.ebean.annotation.EnumValue;
 import com.avaje.ebean.validation.Length;
@@ -55,12 +58,31 @@ public class User extends AppModel {
 	public static User authenticate(String email, String password) {
         return find.where()
             .eq("email", email)
-            .eq("password", password)
+            .eq("password" ,  User.passwordHash( password ) )
             .findUnique();
     }	
 	
-	
+	public static String passwordHash(String message)
+	{
 
+		MessageDigest m;
+		try {
+			m = MessageDigest.getInstance("SHA-1");
+			m.reset();
+			m.update(message.getBytes());
+			
+			return Global.getHex(m.digest());
+			
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+
+	}
+
+	
+	
     public String toString() {
         return "User( #" + id + ")";
     }	
