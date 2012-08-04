@@ -12,6 +12,7 @@ public class AppModel extends Model {
 	protected Integer id;
 	
 	
+	
 	public Integer getId()
 	{
 		return id;
@@ -21,5 +22,7 @@ public class AppModel extends Model {
 	{
 		this.id = id;
 	}
+	
+	
 
 }

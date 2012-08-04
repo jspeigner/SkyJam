@@ -63,5 +63,10 @@ public class UserController extends Controller {
             routes.UserController.login()
         );
     }
+    
+    public static Result homepageRegister()
+    {
+    	return ok("done");
+    }
 	
 }
