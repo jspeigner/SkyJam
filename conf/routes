@@ -15,6 +15,10 @@ GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()
 
+GET		/homepage_register			controllers.UserController.homepageRegister()
+POST 	/homepage_register 			controllers.UserController.homepageRegisterSubmit()
+GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
+
 
 # internal
 GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
