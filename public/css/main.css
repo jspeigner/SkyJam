@@ -1,6 +1,6 @@
 html { background-image: url(../img/bg-1.png),url(../img/bg-2.png), url(../img/bg-3.png); background-attachment:fixed; }
 body {  padding-bottom: 40px; background: transparent !important; }
-
+	body.stub #body-container { padding-top:120px; padding-bottom:120px;}
 footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #E5E5E5; }
 
 #body-container { background-color:white; padding-top: 43px; }
@@ -54,3 +54,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 				
 	ul li.playlistSearchDropdown { }				
 		ul li.playlistSearchDropdown small { font-size:0.8em; }
+		
+
+body.stub  #homepage-register  { width:600px; margin: 0 auto; }
+	body.stub #homepage-register h1 { margin-bottom: 1em; }

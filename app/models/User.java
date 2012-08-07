@@ -20,23 +20,22 @@ import play.data.validation.Constraints.MaxLength;
 
 @Entity 
 @Table(name="users")
+//@models.constraints.Constraints.Unique(id="id",fields={"email","username"})
 public class User extends AppModel {
-	
 
 	@Length(max=30)
-	@Constraints.Required
-	public String username;
+	// @Constraints.Required
+	private String username;
 	
 	@Length(max=40)
 	@Constraints.Required
 	@Email
-	public String email;
+	private String email;
 	
-	@Constraints.Required
-	public String password;
+	private String password;
 
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date registeredDate;
+	private Date registeredDate;
 
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	public Date lastLoginDate;
@@ -48,25 +47,32 @@ public class User extends AppModel {
 		user 
 	}
 	
-	@Constraints.Required
+	
 	@Enumerated(EnumType.STRING)
-	public UserType type;
+	private UserType type;
 	
 
+	
+	
 	public static Model.Finder<Integer,User> find = new Finder<Integer, User>(Integer.class, User.class);
 	
-	public static User authenticate(String email, String password) {
+	public static User authenticate(String email, String password) 
+	{
         return find.where()
             .eq("email", email)
             .eq("password" ,  User.passwordHash( password ) )
             .findUnique();
     }	
 	
+	
+	
 	public static String passwordHash(String message)
 	{
 
 		MessageDigest m;
-		try {
+		
+		try 
+		{
 			m = MessageDigest.getInstance("SHA-1");
 			m.reset();
 			m.update(message.getBytes());
@@ -74,7 +80,9 @@ public class User extends AppModel {
 			return Global.getHex(m.digest());
 			
 			
-		} catch (NoSuchAlgorithmException e) {
+		} 
+		catch (NoSuchAlgorithmException e) 
+		{
 			// TODO Auto-generated catch block
 			return null;
 		}
@@ -85,7 +93,72 @@ public class User extends AppModel {
 	
     public String toString() {
         return "User( #" + id + ")";
-    }	
+    }
+
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+
+	protected String getPassword() {
+		return password;
+	}
+
+
+	/**
+	 * Set a clean text password
+	 * @param password
+	 */
+	public void setPassword(String password) {
+		
+		this.password = User.passwordHash( password );
+	}
+
+
+
+	public Date getRegisteredDate() {
+		return registeredDate;
+	}
+
+
+
+	public void setRegisteredDate(Date registeredDate) {
+		this.registeredDate = registeredDate;
+	}
+
+
+
+	public UserType getType() {
+		return type;
+	}
+
+
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
+
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}	
+	
 	
 
 }

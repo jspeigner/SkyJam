@@ -1,0 +1,23 @@
+@(form: Form[User])
+
+@import helper.twitterBootstrap2._
+
+
+@Layout_stub("Register") {
+	
+	
+	@helper.form(action = routes.UserController.homepageRegisterSubmit(), 'class -> "form-horizontal well", 'id -> "homepage-register") {
+	
+		<h1>Register</h1>
+		
+		<p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>		
+		
+		@helper.inputText(form("email" ), '_showConstraints -> false)	
+				
+		<div class="form-actions">
+			<input class="btn" type="submit" value="Register" />
+		</div>
+    
+	}
+
+}

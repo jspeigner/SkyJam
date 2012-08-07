@@ -1,17 +1,25 @@
 package controllers;
 
+import java.util.Date;
+
+import javax.persistence.PersistenceException;
+
 import play.*;
 import play.mvc.*;
 import play.data.*;
+import play.data.validation.ValidationError;
 
 import models.*;
+import tyrex.resource.jca.dd.DDAuthMechanism;
 import views.html.*;
 
 
 public class UserController extends Controller {
 
+	public static final String AUTH_USER_SESSION_ID = "User.id";	
+
 	
-    // -- Authentication
+    // Authentication
     
     public static class Login {
         
@@ -27,6 +35,8 @@ public class UserController extends Controller {
         
     }
 
+
+
     /**
      * Login page.
      */
@@ -40,17 +50,27 @@ public class UserController extends Controller {
      * Handle login form submission.
      */
     public static Result authenticate() {
+    	
         Form<Login> loginForm = form(Login.class).bindFromRequest();
-        if(loginForm.hasErrors()) {
+        
+        if(loginForm.hasErrors()) 
+        {
             return badRequest(User_login.render(loginForm));
-        } else {
+        }
+        else 
+        {
         	
-            session("email", loginForm.get().email);
+            // session("email", loginForm.get().email);
             
             return redirect(
                 routes.ApplicationController.index()
             );
         }
+    }
+    
+    public static Result homepage()
+    {
+    	return null;
     }
 
     /**
@@ -66,7 +86,95 @@ public class UserController extends Controller {
     
     public static Result homepageRegister()
     {
-    	return ok("done");
+    	Form<User> userForm = form(User.class);
+    	
+    	return ok(User_homepageRegister.render(userForm));
+    }
+    
+    public static Result homepageRegisterSubmit()
+    {
+    	Form<User> userForm = form(User.class).bindFromRequest("email");
+    	
+    	
+    	if(userForm.hasErrors())
+    	{
+    		
+    		return badRequest(User_homepageRegister.render(userForm));
+    	}
+    	else
+    	{
+
+    		User user = userForm.get();
+    		user.setPassword("empty");
+    		user.setUsername( user.getEmail() );
+    		user.setRegisteredDate(new Date());
+    		user.setType(User.UserType.user);
+    		
+    		try
+    		{
+    		
+	    		user.save();
+    		
+	    		
+    		}
+    		catch(PersistenceException p)
+    		{
+    			// email is not unique
+    			userForm.reject( new ValidationError( "email", "Email is already used", null) );
+    			
+    			return badRequest(User_homepageRegister.render(userForm));
+    			
+    		}
+    		
+    		setAuthUser(user);
+    		
+    		return redirect( routes.UserController.homepageRegisterSuccess() );
+    	}
+    }
+    
+    public static Result homepageRegisterSuccess()
+    {
+    	User user = getAuthUser();
+    	
+    	return user != null ?  ok(User_homepageRegisterSuccess.render(user)) : badRequest("User not found");
+    	
+    }
+    
+    protected static User getAuthUser()
+    {
+    	User user = null;
+    	
+    	try
+    	{
+    		user = User.find.byId( Integer.parseInt( session(AUTH_USER_SESSION_ID) ) );
+    		
+    	}
+    	catch( Exception e)
+    	{
+    		user = null;
+    	}
+    	
+    	return user;
+    }
+    
+    protected static boolean setAuthUser(User user)
+    {
+    	if( user != null )
+    	{
+    		try
+    		{
+    			session(AUTH_USER_SESSION_ID, user.getId().toString());
+    			
+    			return true;
+    		}
+    		catch(Exception e)
+    		{
+    			
+    		}
+    		
+    	}
+    	
+    	return false;
     }
 	
 }
