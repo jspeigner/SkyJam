@@ -11,3 +11,4 @@ dist
 eclipse-bin
 .classpath
 .target
+/lib
