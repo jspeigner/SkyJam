@@ -20,7 +20,7 @@ public class Bucket extends AppModel {
 
 
 	@Length(max=1024)
-	public String name;
+	private String name;
 	
 	
 	@ManyToOne
@@ -33,6 +33,18 @@ public class Bucket extends AppModel {
 	public static Bucket getByName(String name)
 	{
 		return Bucket.find.where().eq("name", name).findUnique();
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
 	}		
 	
 	

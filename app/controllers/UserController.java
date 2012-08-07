@@ -77,6 +77,8 @@ public class UserController extends Controller {
      * Logout and clean the session.
      */
     public static Result logout() {
+    	
+    	
         session().clear();
         flash("success", "You've been logged out");
         return redirect(

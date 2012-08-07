@@ -130,7 +130,7 @@ public class ImportController extends Controller {
 	        	
 	            System.out.println("Listing objects");
 	            
-	            ListObjectsRequest request = new ListObjectsRequest().withBucketName( bucket.name );
+	            ListObjectsRequest request = new ListObjectsRequest().withBucketName( bucket.getName() );
 	            
 	            
 	            
@@ -201,7 +201,7 @@ public class ImportController extends Controller {
 		}
 		
 		// return ok("Ok");
-		return ok( Import_importMusicFromS3Account.render(bucket.name ,files) );
+		return ok( Import_importMusicFromS3Account.render(bucket.getName() ,files) );
 	}
 	
 	protected static boolean importS3Object(models.Bucket bucket, S3ObjectSummary object)
@@ -253,9 +253,9 @@ public class ImportController extends Controller {
 							if( storageObject == null )
 							{
 								storageObject = new StorageObject();
-								storageObject.bucket = bucket;
+								storageObject.setBucket(bucket);
 								storageObject.createdDate = Calendar.getInstance().getTime();
-								storageObject.name = name;
+								storageObject.setName(name);
 								storageObject.filesize = object.getSize();
 								storageObject.save();
 							}
