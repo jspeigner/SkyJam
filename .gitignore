@@ -8,4 +8,7 @@ dist
 .settings
 .project
 .cache
-
+eclipse-bin
+.classpath
+.target
+/lib
