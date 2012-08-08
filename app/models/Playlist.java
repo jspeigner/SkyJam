@@ -13,6 +13,12 @@ import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionFactory;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
@@ -25,7 +31,7 @@ public class Playlist extends AppModel {
 
 	
 	@Length(max=200)
-	public String name;
+	private String name;
 	
 	public enum Status
 	{
@@ -36,25 +42,28 @@ public class Playlist extends AppModel {
 	}
 	
 	@Enumerated(EnumType.STRING)
-	public Status status;
+	private Status status;
 	
-	public String description;
-	
-	@ManyToOne
-	public User user;
+	private String description;
 	
 	@ManyToOne
-	public Genre genre;
+	private User user;
 	
 	@ManyToOne
-	public MusicCategory musicCategory;
+	private Genre genre;
+	
+	@ManyToOne
+	private MusicCategory musicCategory;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date createdDate;	
+	private Date createdDate;	
 	
 	@OneToMany(targetEntity=PlaylistSong.class)
 	@OrderBy("position ASC")
-	public List<PlaylistSong> playlistSongs;
+	private List<PlaylistSong> playlistSongs;
+	
+	
+	
 	
 	public static Model.Finder<Integer,Playlist> find = new Finder<Integer, Playlist>(Integer.class, Playlist.class);
 	
@@ -74,8 +83,111 @@ public class Playlist extends AppModel {
 		return limit <= 0 ? playlistSongs : playlistSongs.subList(0, limit);
 	}
 
-	public static List<Playlist> searchWideByName(String query, int maxResults) {
- 
-		return Playlist.find.where().eq("status", Status.Public).ilike("name", "%" + query + "%").setMaxRows(maxResults).findList();
+	public static List<Playlist> searchWideByName(String query, int maxResults) 
+	{
+		
+		String likeQueryString =  "%" + query + "%";
+		
+		Expression e2 = Expr.and(
+				 Expr.eq("status", Status.Public),
+				 Expr.or(
+						 Expr.ilike("name", likeQueryString), 
+						 Expr.or(
+								 Expr.ilike("playlistSongs.song.name", likeQueryString), 
+								 Expr.or(
+										 Expr.ilike("playlistSongs.song.album.name", likeQueryString), 
+										 Expr.ilike("playlistSongs.song.album.artist.name", likeQueryString)
+								)
+								 
+						)
+				)	
+		); 		
+		
+		return Playlist.find.where(e2).setMaxRows(maxResults).findList();
+		
+		/*
+		String sql = "SELECT p.id"
+		         + " FROM playlists p " 
+		         	+ " JOIN playlist_songs ps ON ( p.id = ps.playlist_id )"
+		         	+ " JOIN songs s ON ( s.id = ps.song_id )"
+		         	+ " JOIN albums al ON ( al.id = s.album_id )"
+		         	+ " JOIN artists a ON ( al.artist_id = a.id )" 
+		         	// + " WHERE ( ( p.name LIKE :query ) OR ( s.name LIKE :query ) OR ( al.name LIKE :query ) OR ( a.name LIKE :query ) )"
+		         +" GROUP BY p.id ";
+		 
+		 RawSql rawSql = 
+		  RawSqlBuilder.parse(sql)
+		      // map the sql result columns to bean properties
+		      .columnMapping("p.id", "id")
+		      // we don't need to map this one due to the sql column alias
+		      //.columnMapping("sum(d.order_qty*d.unit_price)", "totalAmount")
+		      .create();
+		
+		 
+		
+		 return Playlist.find.setRawSql(rawSql).where( e ).setMaxRows(maxResults).findList();
+		 */
+		 
+		
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Genre getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Genre genre) {
+		this.genre = genre;
+	}
+
+	public MusicCategory getMusicCategory() {
+		return musicCategory;
+	}
+
+	public void setMusicCategory(MusicCategory musicCategory) {
+		this.musicCategory = musicCategory;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public void setPlaylistSongs(List<PlaylistSong> playlistSongs) {
+		this.playlistSongs = playlistSongs;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
