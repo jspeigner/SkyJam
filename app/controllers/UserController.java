@@ -142,6 +142,11 @@ public class UserController extends Controller {
     	
     }
     
+    public static Result publicProfile(Integer id)
+    {
+    	return null;
+    }
+    
     protected static User getAuthUser()
     {
     	User user = null;

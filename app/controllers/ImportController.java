@@ -306,13 +306,13 @@ public class ImportController extends Controller {
 				for(int i =0; i<countPerCategory; i++)
 				{
 					Playlist p = new Playlist();
-					p.status = Playlist.Status.Public;
-					p.name = "Auto Playlist "+( playlistIndex );
-					p.createdDate = Calendar.getInstance().getTime();
-					p.description = "";
-					p.user = user;
-					p.genre = genre;
-					p.musicCategory = category;
+					p.setStatus(Playlist.Status.Public);
+					p.setName("Auto Playlist "+( playlistIndex ));
+					p.setCreatedDate(Calendar.getInstance().getTime());
+					p.setDescription("");
+					p.setUser(user);
+					p.setGenre(genre);
+					p.setMusicCategory(category);
 					
 					p.save();
 					

@@ -1,20 +1,38 @@
 @(playlist:Any)
 
 <div id="player" class="container">
+	 
 	<div class="navbar">
+	
 	  <div class="navbar-inner">
 	    <div class="container">
 		    	<ul class="nav pull-right">
-				  <li class="name">Playlist - Song Name</li>
-				  <li><a href="#" class="play"><i class="icon-play"></i> Play</a><a href="#" class="pause"><i class="icon-pause"></i> Pause</a></li>
-				  <li><a href="#" class="next-song"><i class="icon-forward"></i> Next Song</a></li>
-				  <li><a href="#" class="volume"><i class="icon-volume-up"></i></a>
-				  <li><a href="#" class="like"><i class="icon-thumbs-up"></i></a>
-				  <li><a href="#" class="dislike"><i class="icon-thumbs-down"></i></a>
-				  <li><a href="#" class="share"><i class="icon-share"></i> Share</a>
+				  <li class="name">Loading...</li>
 				   
 				</ul>
 	    	</div>
 		</div>
 	</div>
+
 </div>
+
+<script type="text/ejs" id="player-template">
+
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <div class="container">
+		    	<ul class="nav pull-right">
+				  <li class="name"><%= playlist.name %> - Song Name</li>
+				  <li><a href="javascript://" class="play"><i class="icon-play"></i> Play</a><a href="javascript://" class="pause"><i class="icon-pause"></i> Pause</a></li>
+				  <li><a href="javascript://" class="next-song"><i class="icon-forward"></i> Next Song</a></li>
+				  <li><a href="javascript://" class="volume"><i class="icon-volume-up"></i></a>
+				  <li><a href="javascript://" class="like"><i class="icon-thumbs-up"></i></a>
+				  <li><a href="javascript://" class="dislike"><i class="icon-thumbs-down"></i></a>
+				  <li><a href="javascript://" class="share"><i class="icon-share"></i> Share</a>
+				   
+				</ul>
+	    	</div>
+		</div>
+	</div>
+
+</script>

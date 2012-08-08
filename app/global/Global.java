@@ -6,6 +6,8 @@ import play.*;
 public class Global extends GlobalSettings {
 	
 	static final String HEXES = "0123456789ABCDEF";
+	
+	public static final String JSON_CONTENT_TYPE = "application/json";
 
 	public static String getHex( byte [] raw ) 
 	{

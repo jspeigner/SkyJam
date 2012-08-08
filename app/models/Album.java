@@ -45,7 +45,7 @@ public class Album extends AppModel {
 	
 	
 	@ManyToOne
-	public StorageObject albumArtStorageObject;
+	private StorageObject albumArtStorageObject;
 	
 	// public Integer albumArtStorageObjectId;
 	
@@ -65,6 +65,23 @@ public class Album extends AppModel {
 	{
 		return name;
 	}
+
+	public StorageObject getAlbumArtStorageObject() {
+		return albumArtStorageObject;
+	}
+
+	public void setAlbumArtStorageObject(StorageObject albumArtStorageObject) {
+		this.albumArtStorageObject = albumArtStorageObject;
+	}
 	
+	public String getAlbumArtUrl()
+	{
+		if(albumArtStorageObject!=null)
+		{
+			return albumArtStorageObject.getUrl();
+		}
+		
+		return null;
+	}		
 	
 }
