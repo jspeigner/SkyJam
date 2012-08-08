@@ -8,9 +8,18 @@
 	
 	@helper.form(action = routes.UserController.homepageRegisterSubmit(), 'class -> "form-horizontal well", 'id -> "homepage-register") {
 	
-		<h1>Register</h1>
+		<h1>Welcome, we're glad you're here!/h1>
 		
-		<p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>		
+		<p>You already know us for streaming the best radio on the internet, and now we've
+		expanded our site with a community of real people - just like you - to
+		help you get even better music playlists .
+		
+		Just leave us your e-mail address to request an invitation to try out the
+		new site. Once you receive an invite, you'll be able to test drive our new community
+		features before anyone else and can lend a hand by helping other SkyJam.fm
+		users by creating awesome playlists.
+		We're counting on your feedback and participation to make SkyJam.fm even
+		more musical for you and the millions of SkyJam users who listen to us every day!</p>		
 		
 		@helper.inputText(form("email" ), '_showConstraints -> false)	
 				
