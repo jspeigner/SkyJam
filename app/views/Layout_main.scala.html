@@ -20,6 +20,7 @@
         <script src="@routes.Assets.at("js/libs/underscore.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/can.jquery.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery-ui.custom.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("/soundmanager2/script/soundmanager2-nodebug-jsmin.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/application.js")" type="text/javascript"></script>
         
         
@@ -38,6 +39,9 @@
 				urls: {
 					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(0)",
 					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)"
+				},
+				soundmanager : {
+					swf_path : "@routes.Assets.at("/soundmanager2/swf/soundmanager2_flash9.swf")"
 				}
 			}
 				
