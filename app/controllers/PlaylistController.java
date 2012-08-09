@@ -61,18 +61,21 @@ public class PlaylistController extends Controller
 		  return ok("");
 	  }
 	  
-	  public static Result getCurrentPlaylistJson(Integer playlistId2)
+	  public static Result getCurrentPlaylistJson(Integer playlistIdPassed)
 	  {
 		  String playlistIdString = session( CURRENT_PLAYLIST_ID_KEY );
+		  
 		  try
 		  {
-			  Integer playlistId = Integer.parseInt(playlistIdString);
+			  Integer playlistId = playlistIdPassed > 0 ? playlistIdPassed : Integer.parseInt(playlistIdString);
+			  
+			  setCurrentPlaylistJson( playlistId );
 			  
 			  Playlist playlist = Playlist.find.byId(playlistId);
 			  if( playlist != null )
 			  {
 				  
-				  return ok("{ \"name\": \""+playlist.getName()+"\", \"id\" : "+ playlist.getId() +"}").as( Global.JSON_CONTENT_TYPE );
+				  return ok( Playlist_getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
 				  
 			  }
 		  }

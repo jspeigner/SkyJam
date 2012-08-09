@@ -6,7 +6,7 @@
 	
 	for(playlist <- playlists)
 	{
-		val jsonPlaylist = new HashMap[String,String]
+		var jsonPlaylist = new HashMap[String,String]
 		
 		jsonPlaylist.put("label", playlist.getName() )
 		jsonPlaylist.put("value", playlist.getId().toString() )

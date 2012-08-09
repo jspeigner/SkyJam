@@ -23,17 +23,17 @@ public class Artist extends AppModel {
 
 	@Constraints.Required
 	@Length(max=200)
-	public String name;
+	private String name;
 	
-	public String description;
+	private String description;
 	
 	@Length(max=200)
-	public String url;
+	private String url;
 	
 	
 	
 	@OneToMany(targetEntity=Album.class)
-	public List<Album> albums;
+	private List<Album> albums;
 	
 	
 	public static Model.Finder<Integer,Artist> find = new Finder<Integer, Artist>(Integer.class, Artist.class);
@@ -52,9 +52,9 @@ public class Artist extends AppModel {
 			if( insertOnFail )
 			{
 				a = new Artist();
-				a.name = name;
-				a.description = "";
-				a.url = "";
+				a.setName(name);
+				a.setDescription("");
+				a.setUrl("");
 				a.save();
 			}
 			
@@ -69,5 +69,37 @@ public class Artist extends AppModel {
 	public String getName()
 	{
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Album> getAlbums() {
+		return albums;
+	}
+
+	public void setAlbums(List<Album> albums) {
+		this.albums = albums;
+	}
+
+	/**
+	 * Get official artist website URL 
+	 * @return
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}	
 }

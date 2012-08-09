@@ -11,26 +11,17 @@
 	<div class="span8"> 
 		<h2>@playlist.getName</h2>
 		<p>@playlist.getDescription</p>
+		<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName()  ).distinct.mkString(", ")</small></p>
 	</div>
 </div>	
 
-<div class="row-fluid controls" >
-	<a href="#" class="btn play"><i class="icon-play"></i> Play</a>
-	<a href="#" class="btn pause"><i class="icon-pause"></i> Play</a>
-	<a href="#" class="btn save"><i class="icon-plus-sign"></i> Save Playlist</a>
+<div class="row-fluid controls player-controls" >
+	<a href="javascript://" class="btn play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
+	<a href="javascript://" class="btn save player-controls-save" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Save Playlist</a>
 </div>
 
-<!-- 
-<h3>Songs</h3>
-<div class="row-fluid">
-			<ul >
-				@for( playlistSong <- ( playlist.getPlaylistSongs() ) ){
-					<li>@playlistSong.song.getName</li>
-				}
-				
-			</ul>
-</div>
- -->
+
+
  
 
 @if( recentActivityUsers.size() > 0 ){

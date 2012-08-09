@@ -21,8 +21,8 @@
 	<div class="navbar">
 	  <div class="navbar-inner">
 	    <div class="container">
-		    	<ul class="nav pull-right">
-				  <li class="name"><%= playlist.name %> - Song Name</li>
+		    	<ul class="nav pull-right player-controls">
+				  <li class="name"><span class="playlist"><%= playlist.name %></span> <span class="song"><% if(song){ %><%= song.name %><% } %></span></li>
 				  <li><a href="javascript://" class="play"><i class="icon-play"></i> Play</a><a href="javascript://" class="pause"><i class="icon-pause"></i> Pause</a></li>
 				  <li><a href="javascript://" class="next-song"><i class="icon-forward"></i> Next Song</a></li>
 				  <li><a href="javascript://" class="volume"><i class="icon-volume-up"></i></a>

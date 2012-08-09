@@ -233,13 +233,12 @@ public class ImportController extends Controller {
 						if( album == null )
 						{
 							album = new Album();
-							album.name = albumName;
-							album.image = "";
-							album.createdDate = Calendar.getInstance().getTime();
-							album.copyrightYear = 1900;
-							album.description ="";
-							album.keywords = "";
-							album.artist = artist;
+							album.setName(albumName);
+							album.setCreatedDate(Calendar.getInstance().getTime());
+							album.setCopyrightYear(1900);
+							album.setDescription("");
+							album.setKeywords("");
+							album.setArtist(artist);
 							
 							album.save();
 							
@@ -262,12 +261,12 @@ public class ImportController extends Controller {
 							
 							
 							song = new Song();
-							song.name = songName;
-							song.album = album;
-							song.keywords = "";
-							song.duration = 0;
-							song.status = Song.Status.visible;
-							song.storageObject = storageObject; 
+							song.setName(songName);
+							song.setAlbum(album);
+							song.setKeywords("");
+							song.setDuration(0);
+							song.setStatus(Song.Status.visible);
+							song.setStorageObject(storageObject); 
 							
 							song.save();
 						}
@@ -319,11 +318,11 @@ public class ImportController extends Controller {
 					for( int songIndex = 0; songIndex < songsPerPlaylist ; songIndex++ )
 					{
 						PlaylistSong playlistSong = new PlaylistSong();
-						playlistSong.createdDate  = Calendar.getInstance().getTime();
-						playlistSong.dislikesCount = playlistSong.likesCount = 0;
-						playlistSong.position = songIndex;
-						playlistSong.song = songs.get( rnd.nextInt(songsCount) );
-						playlistSong.playlist = p;
+						playlistSong.setCreatedDate(Calendar.getInstance().getTime());
+						playlistSong.setDislikesCount(playlistSong.setLikesCount(0));
+						playlistSong.setPosition(songIndex);
+						playlistSong.setSong(songs.get( rnd.nextInt(songsCount) ));
+						playlistSong.setPlaylist(p);
 						
 						playlistSong.save();
 					}
