@@ -34,6 +34,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#player .navbar .nav .active > a, #player  .navbar .nav .active > a:hover { color: white; text-decoration: none; background-color: #AAA; }
 	#player .play {}
 	#player .pause { display:none;}
+	#player .volume-off {display: none;}
 		#player li.name {padding:9px 10px 11px;}
 		#player li a:hover { color: black; background-color: #D4D4D4; }
 		#player .name .song { color: #555; }
@@ -62,3 +63,4 @@ body.stub  #homepage-register  { width:600px; margin: 0 auto; }
 	#playlist-page { }
 		#playlist-page .controls { margin:1em 0 1em 0;}
 		#playlist-page .controls .pause { display:none;}
+		

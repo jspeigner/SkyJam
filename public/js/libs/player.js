@@ -54,8 +54,8 @@ PlayerControl = can.Control({
 	
 	currentSong : null,
 	currentSongSMSound: null,
-	
-	playerState: null,
+	currentPlayerState: null,
+	playFailedCount: 0,
 	
 	init: function( element, options ){
 	  
@@ -63,7 +63,9 @@ PlayerControl = can.Control({
 		
 		this.playlistData = options.playlist;
 		
-		this.playerState = this.PlayerState.STOP;
+		this.currentPlayerState = this.PlayerState.STOP;
+		
+		var defaultSong = null;
 	    
 	    if( this.playlistData.PlaylistSong && ( this.playlistData.PlaylistSong.length > 0 ) )
 	    {
@@ -73,68 +75,166 @@ PlayerControl = can.Control({
 	    		{
 	    			if( playlistData.PlaylistSong[playlistSongId].id == options.default_playlist_song_id )
 	    			{
-	    				this.currentSong = playlistData.PlaylistSong[playlistSongId];
+	    				defaultSong = playlistData.PlaylistSong[playlistSongId];
+	    				
 	    				break;
 	    			}
 	    		}
 	    	}
 	    	else
 	    	{
-	    		this.currentSong = this.playlistData.PlaylistSong[0];
+	    		defaultSong = this.playlistData.PlaylistSong[0];
 	    	}
 	    }
 	    
-	    this.element.html( can.view( PlayerControlInterface.playerTemplateId, { playlist: this.playlistData, song: this.currentSong }) );
+	    this.element.html( can.view( PlayerControlInterface.playerTemplateId, { playlist: this.playlistData, song: null }) );
     
-	    /*
-	    if( this.defaultSong )
+	    
+	    if( defaultSong )
 	    {
-	    	this.playSong(this.defaultSong);
+	    	this.loadSong( defaultSong );
 	    }
-	    */
+	    
   } ,
-  playSong: function(playlistSongData)
+  
+  loadSong: function(playlistSongData)
   {
-	  if( this.playerState != this.PlayerState.PLAY )
+	  
+	  if( this.currentSong && ( this.currentSong.id != playlistSongData.id ) )
 	  {
-		  if( this.currentSong.id != playlistSongData.id)
+		  this.clearCurrentSong();
+		  
+	  }
+	  
+	  this.currentSong = playlistSongData;
+	  
+	  this.currentPlayerState = this.PlayerState.STOP;
+	  
+	  if( !this.currentSongSMSound )
+	  {
+		   
+		this._createCurrentSMSong('PlaylistSong.'+this.currentSong.id, this.currentSong.Song.song_url);
+
+		  
+	  }
+	  
+	  $(".name .song").text( this.currentSong.Song.name );
+	  
+	  return true;
+	  
+  },
+  
+  _createCurrentSMSong: function(id, url)
+  {
+	  var self = this;
+	  
+	  this.currentSongSMSound = soundManager.createSound( { 
+		  id: id, 
+		  url: url,
+		  autoPlay: false,
+		  autoLoad: true,
+		  isMovieStar: true,
+		  
+		  // events
+		  
+		  onload: function(loadSuccess){ 
+			  	self.eventCallbacks.onSMSongLoad( self, this, loadSuccess);  
+		  },
+		  
+		  onfinish: function(){ 
+			  self.eventCallbacks.onSMSongFinish( self,this);
+		  },
+		  whileplaying: function(){
+			  self.eventCallbacks.onSMSongWhilePlaying(self,this);
+		  },
+		  onfailure : function(){ 
+			  self.eventCallbacks.onSMSongFailure(self,this);
+		  }
+		  
+		  
+	  });
+  },
+  onListFinished: function()
+  {
+	  // zero the fail counter
+	  if( this.playFailedCount < this.options.playlist.PlaylistSong.length )
+	  {
+		  this.playFailedCount = 0;
+	  }
+	  
+  },
+  
+  onPlayFailed: function()
+  {
+	  if( ++this.playFailedCount < this.options.playlist.PlaylistSong.length )
+	  {
+		  this.skipToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
+	  }		  
+	  
+  },
+  
+  eventCallbacks: 
+  {
+	  
+	  onSMSongLoad: function(control, smSong, loadSuccess)
+	  {
+		  if( ! loadSuccess )
 		  {
-			  this.clearCurrentSong();
-			  
-			  this.currentSong = playlistSongData;
-			  
+			  // skip to next song on error  
+			  control.onPlayFailed( smSong );
 		  }
-		  
-		  if( !this.currentSongSMSound ){
-			  this.currentSongSMSound = soundManager.createSound( { 
-				  id: 'PlaylistSong.'+this.currentSong.id , 
-				  url: this.currentSong.Song.song_url,
-				  autoPlay: false
-			  });
+		  else
+		  {
+			  --control.playFailedCount;
 		  }
-			  
-		  
-		  
+			 
+	  },
+	  
+	  onSMSongFinish:function(control, smSong)
+	  {
+		  control.skipToNextSong();
+	  },
+	  
+	  onSMSongWhilePlaying: function(control,smSong)
+	  {
+		  // console.log( 'sound '+smSong.id+' playing, '+smSong.position+' of '+smSong.duration );
+	  },
+	  
+	  onSMSongMP4Connect: function( control, smSong, loadSuccess )
+	  {
+		  this.onSMSongLoad(control, smSong, loadSuccess);
+	  },
+	  onSMSongFailure: function(control, smSong)
+	  {
+		  control.onPlayFailed( smSong );
+	  }
+  },
+  
+  playSong: function()
+  {
+	  
+	  if( this.currentSongSMSound )
+	  {
 		  this.currentSongSMSound.play();
 		  
-		  $(".name .song").text( this.currentSong.Song.name );
-		  
-		  this.playerState = this.PlayerState.PLAY;
+		  this.currentPlayerState = this.PlayerState.PLAY;
 		  
 		  $( ".play", this.element).hide();
 		  $( ".pause", this.element).show();
 	  }
-	  
-	  
+
   },
+	  
+	 
   clearCurrentSong: function()
   {
-	  // TBD
-	  if( this.currentSong ){
+	  if( this.currentSong )
+	  {
 		  this.currentSong = null;
 	  }
 	  
-	  if( this.currentSongSMSound ){
+	  if( this.currentSongSMSound )
+	  {
 		  this.currentSongSMSound.destruct();
 		  this.currentSongSMSound = null;
 	  }
@@ -143,9 +243,9 @@ PlayerControl = can.Control({
   
   pauseSong: function()
   {
-	  if( this.playerState == this.PlayerState.PLAY)
+	  if( this.currentPlayerState == this.PlayerState.PLAY)
 	  {
-		  this.playerState = this.PlayerState.PAUSE;
+		  this.currentPlayerState = this.PlayerState.PAUSE;
 		  
 		  this.currentSongSMSound.pause();
 		  
@@ -154,16 +254,63 @@ PlayerControl = can.Control({
 	  }
   },
   
-  ".play a click" : function(el , event){
+  skipToNextSong: function(play)
+  {
+	  play = !!play;
 	  
-	  if( this.currentSong )
-      {
+	  if( this.options.playlist )
+	  {
+		  var nextSong = null;
 		  
-		  this.playSong( this.currentSong );
-		  // console.log("virtually playing "+this.currentSong.Song.song_url);
-      }
-
+		  if( this.currentSong )
+		  {
+			  nextSong = this.getNextSong( this.options.playlist, this.currentSong.id ); 
+				  
+			  this.clearCurrentSong();
+		  }
+		  else
+		  {
+			  nextSong = this.options.playlist.PlaylistSong[0];
+		  }
+		  
+		  if( nextSong )
+		  {
+			  this.loadSong(nextSong);
+			  if( play )
+			  {
+				  this.playSong();
+			  }
+		  }
+			  
+	  }
+  },
+  
+  getNextSong: function(playlist, playlistSongId)
+  {
 	  
+	  var count = playlist.PlaylistSong.length;
+	  
+	  for( i = 0; i < count ; i++)
+	  {
+		  if( playlist.PlaylistSong[i].id == playlistSongId )
+		  {
+			  if( i+1 >= count )
+			  {
+				  this.onListFinished();
+			  }
+			  
+			  return playlist.PlaylistSong[ (i + 1) % count ]; 
+		  }
+			  
+	  }
+	  
+	  return null;
+  },
+  
+  ".play a click" : function(el , event){
+	  	  
+	  		
+		  this.playSong();
 	  
   },
   
@@ -173,12 +320,28 @@ PlayerControl = can.Control({
   },
   
   ".next-song a click" : function(el , event){
-	  
+	  this.skipToNextSong(true);
   },
   
   ".volume a click" : function(el , event){
-	  
+	  if( this.currentSongSMSound )
+	  {
+		  this.currentSongSMSound.mute();
+		  $(".volume", this.element).hide();
+		  $(".volume-off", this.element).show();
+	  }
   },  
+  
+  ".volume-off a click" : function(el , event){
+	  if( this.currentSongSMSound )
+	  {
+		  this.currentSongSMSound.unmute();
+		  $(".volume", this.element).show();
+		  $(".volume-off", this.element).hide();
+		  
+	  }	  
+  },  
+  
   ".like a click" : function(el , event){
 	  
   },  
