@@ -5,6 +5,7 @@ package controllers;
 import global.Global;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,14 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import models.Album;
 import models.Playlist;
+import models.PlaylistSong;
 import models.User;
 import models.UserPlaylistActivity;
 import play.api.libs.json.JerksonJson;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.data.DynamicForm;
 
 import views.html.*;
 
@@ -54,6 +57,70 @@ public class PlaylistController extends Controller
 
 		  }
 	  }
+	  
+	  public static Result trackUserActivity()
+	  {
+		  
+		  try
+		  {
+			  
+			  DynamicForm data = form().bindFromRequest();
+			  
+			  String playlistSongId = data.get("playlist_song_id");
+			  String type = data.get("type");
+			  
+			  UserPlaylistActivity.Type t = UserPlaylistActivity.Type.forName(type);
+			  
+			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
+		  
+			  UserPlaylistActivity p = new UserPlaylistActivity();
+			  p.setCreatedDate(new Date());
+			  p.setPlaylistSong( PlaylistSong.find.byId( Integer.parseInt( playlistSongId ) ) );
+			  p.setType(t);
+			  p.setUser(user);
+			  
+			  p.save();
+		  
+		  
+			  return ok("");
+		  }
+		  catch(Exception e)
+		  {
+			  return badRequest("Wrong data passed");
+		  }
+	  }
+	  
+	  public static Result saveUserRating()
+	  {
+		  try
+		  {
+			  
+			  DynamicForm data = form().bindFromRequest();
+			  
+			  String playlistSongId = data.get("playlist_song_id");
+			  String type = data.get("type");
+			  
+			  UserPlaylistActivity.Type t = UserPlaylistActivity.Type.forName(type);
+			  
+			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
+		  
+			  PlaylistSongRating p = new PlaylistSongRating();
+			  p.setCreatedDate(new Date());
+			  p.setPlaylistSong( PlaylistSong.find.byId( Integer.parseInt( playlistSongId ) ) );
+			  p.setType(t);
+			  p.setUser(user);
+			  
+			  p.save();
+		  
+		  
+			  return ok("");
+		  }
+		  catch(Exception e)
+		  {
+			  return badRequest("Wrong data passed");
+		  }		  
+	  }
+	
 	  
 	  public static Result setCurrentPlaylistJson(Integer id)
 	  {

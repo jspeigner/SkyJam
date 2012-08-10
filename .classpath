@@ -98,6 +98,7 @@
 	<classpathentry kind="lib" path="/home/user/www/jspeigner/skyjam/src/lib/play-2.0.3/repository/cache/org.seleniumhq.selenium/selenium-support/jars/selenium-support-2.16.1.jar"/>
 	<classpathentry kind="lib" path="/home/user/www/jspeigner/skyjam/src/lib/play-2.0.3/repository/cache/org.easytesting/fest-assert/jars/fest-assert-1.4.jar"/>
 	<classpathentry kind="lib" path="/home/user/www/jspeigner/skyjam/src/lib/play-2.0.3/repository/cache/org.easytesting/fest-util/jars/fest-util-1.1.6.jar"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/user/www/jspeigner/skyjam/src/lib/play-2.0.3/framework/sbt/boot/scala-2.9.1/lib/scala-library.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.3.jar"/>

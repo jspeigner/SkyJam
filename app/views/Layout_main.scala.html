@@ -38,7 +38,9 @@
 			player: {
 				urls: {
 					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(0)",
-					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)"
+					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)",
+					
+					save_playlist_activity : "@routes.PlaylistController.trackUserActivity()"
 				},
 				soundmanager : {
 					swf_path : "@routes.Assets.at("/soundmanager2/swf/soundmanager2_flash9.swf")"

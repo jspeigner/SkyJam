@@ -32,7 +32,7 @@ public class PlaylistSong extends AppModel {
 	
 	private Integer dislikesCount;
 	
-	public static Model.Finder<Integer,Song> find = new Finder<Integer, Song>(Integer.class, Song.class);
+	public static Model.Finder<Integer,PlaylistSong> find = new Finder<Integer, PlaylistSong>(Integer.class, PlaylistSong.class);
 
 	public Song getSong() {
 		return song;

@@ -31,22 +31,36 @@ public class UserPlaylistActivity extends AppModel {
 
 
 	@ManyToOne
-	public User user;
+	private User user;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date createdDate;
+	private Date createdDate;
 	
-	public enum Type{
+	public enum Type {
 			play,
 			pause,
-			skip
+			skip;
+			
+			private static final Type[] copyOfValues = values();
+			
+			public static Type forName(String name) {
+		        for (Type value : copyOfValues) {
+		            if (value.name().equals(name)) {
+		                return value;
+		            }
+		        }
+		        return null;
+		    }			
+			
 	};
 	
 	@Enumerated(EnumType.STRING)
-	public Type type;
+	private Type type;
 	
 	@ManyToOne
-	public PlaylistSong playlistSong;
+	private PlaylistSong playlistSong;
+	
+	
 	
 	public static Model.Finder<Integer,UserPlaylistActivity> find = new Finder<Integer, UserPlaylistActivity>(Integer.class, UserPlaylistActivity.class);
 	
@@ -78,7 +92,8 @@ public class UserPlaylistActivity extends AppModel {
 		  		" FROM user_playlist_activities a, playlist_songs ps" +
 		  		" WHERE " +
 		  			" ( a.playlist_song_id = ps.id ) AND " +
-		  			" ( ps.playlist_id = :playlist_id ) " +
+		  			" ( ps.playlist_id = :playlist_id ) AND" +
+		  			" ( a.user_id IS NOT NULL ) " +
 		  		" GROUP BY a.user_id ";
 		  
 		  RawSql rawSql = 
@@ -96,6 +111,38 @@ public class UserPlaylistActivity extends AppModel {
 	    		  	.findList();
 	        		
 	        		
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public PlaylistSong getPlaylistSong() {
+		return playlistSong;
+	}
+
+	public void setPlaylistSong(PlaylistSong playlistSong) {
+		this.playlistSong = playlistSong;
 	}
 
 	

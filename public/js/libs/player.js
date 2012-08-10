@@ -108,7 +108,7 @@ PlayerControl = can.Control({
 	  
 	  this.currentSong = playlistSongData;
 	  
-	  this.currentPlayerState = this.PlayerState.STOP;
+	  // this.currentPlayerState = this.PlayerState.STOP;
 	  
 	  if( !this.currentSongSMSound )
 	  {
@@ -128,19 +128,18 @@ PlayerControl = can.Control({
   {
 	  var self = this;
 	  
-	  this.currentSongSMSound = soundManager.createSound( { 
+	  this.currentSongSMSound = soundManager.createSound({ 
 		  id: id, 
 		  url: url,
 		  autoPlay: false,
 		  autoLoad: true,
-		  isMovieStar: true,
+		  isMovieStar: null,
 		  
 		  // events
 		  
 		  onload: function(loadSuccess){ 
 			  	self.eventCallbacks.onSMSongLoad( self, this, loadSuccess);  
 		  },
-		  
 		  onfinish: function(){ 
 			  self.eventCallbacks.onSMSongFinish( self,this);
 		  },
@@ -168,7 +167,7 @@ PlayerControl = can.Control({
   {
 	  if( ++this.playFailedCount < this.options.playlist.PlaylistSong.length )
 	  {
-		  this.skipToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
+		  this.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
 	  }		  
 	  
   },
@@ -192,7 +191,7 @@ PlayerControl = can.Control({
 	  
 	  onSMSongFinish:function(control, smSong)
 	  {
-		  control.skipToNextSong();
+		  control.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
 	  },
 	  
 	  onSMSongWhilePlaying: function(control,smSong)
@@ -212,6 +211,8 @@ PlayerControl = can.Control({
   
   playSong: function()
   {
+	
+	  
 	  
 	  if( this.currentSongSMSound )
 	  {
@@ -221,7 +222,15 @@ PlayerControl = can.Control({
 		  
 		  $( ".play", this.element).hide();
 		  $( ".pause", this.element).show();
+		  
+
+		  
+		  var activity = new UserPlaylistActivityModel({ playlist_song_id:  this.currentSong.id , type : UserPlaylistActivityModel.ACTIVITY_TYPE.PLAY }); 
+		  activity.save();
+		  
 	  }
+	  
+
 
   },
 	  
@@ -251,10 +260,15 @@ PlayerControl = can.Control({
 		  
 		  $( ".play", this.element).show();
 		  $( ".pause", this.element).hide();
+		  
+
+		  var activity = new UserPlaylistActivityModel({ playlist_song_id:  this.currentSong.id , type : UserPlaylistActivityModel.ACTIVITY_TYPE.PAUSE }); 
+		  activity.save();
+		  
 	  }
   },
   
-  skipToNextSong: function(play)
+  goToNextSong: function(play)
   {
 	  play = !!play;
 	  
@@ -276,6 +290,7 @@ PlayerControl = can.Control({
 		  if( nextSong )
 		  {
 			  this.loadSong(nextSong);
+			  
 			  if( play )
 			  {
 				  this.playSong();
@@ -320,7 +335,12 @@ PlayerControl = can.Control({
   },
   
   ".next-song a click" : function(el , event){
-	  this.skipToNextSong(true);
+	  this.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY  );
+	  
+	  var activity = new UserPlaylistActivityModel({ playlist_song_id:  this.currentSong.id , type : UserPlaylistActivityModel.ACTIVITY_TYPE.SKIP }); 
+	  activity.save();
+	  
+	  
   },
   
   ".volume a click" : function(el , event){
@@ -365,7 +385,18 @@ PlaylistModel = can.Model({
 
 PlaylistSongModel = can.Model({
 	
-});
+}, {});
+
+UserPlaylistActivityModel = can.Model({
+	
+	create: application.config.player.urls.save_playlist_activity
+	
+}, {});
+UserPlaylistActivityModel.ACTIVITY_TYPE = {
+		PLAY : "play",
+		PAUSE : "pause",
+		SKIP: "skip"
+}
 
 
 // resolve on both dom ready and sound manager ready
