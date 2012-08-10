@@ -17,6 +17,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import models.Album;
 import models.Playlist;
 import models.PlaylistSong;
+import models.PlaylistSongRating;
 import models.User;
 import models.UserPlaylistActivity;
 import play.api.libs.json.JerksonJson;
@@ -58,7 +59,7 @@ public class PlaylistController extends Controller
 		  }
 	  }
 	  
-	  public static Result trackUserActivity()
+	  public static Result trackPlaylistSongActivity()
 	  {
 		  
 		  try
@@ -90,7 +91,7 @@ public class PlaylistController extends Controller
 		  }
 	  }
 	  
-	  public static Result saveUserRating()
+	  public static Result savePlaylistSongRating()
 	  {
 		  try
 		  {
@@ -100,7 +101,7 @@ public class PlaylistController extends Controller
 			  String playlistSongId = data.get("playlist_song_id");
 			  String type = data.get("type");
 			  
-			  UserPlaylistActivity.Type t = UserPlaylistActivity.Type.forName(type);
+			  PlaylistSongRating.Type t = PlaylistSongRating.Type.forName(type);
 			  
 			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
 		  

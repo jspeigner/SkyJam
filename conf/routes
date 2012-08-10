@@ -13,7 +13,8 @@ GET		/playlist/get_current_playlist/:id	controllers.PlaylistController.getCurren
 GET		/playlist/set_current_playlist/:id	controllers.PlaylistController.setCurrentPlaylistJson(id:java.lang.Integer)
 GET		/playlist/:id						controllers.PlaylistController.playlist(id:java.lang.Integer)
 
-POST		/playlist/activity/track/		controllers.PlaylistController.trackUserActivity()
+POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
+POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
 
 
 GET     /login                      controllers.UserController.login()

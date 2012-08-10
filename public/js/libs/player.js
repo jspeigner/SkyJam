@@ -389,14 +389,25 @@ PlaylistSongModel = can.Model({
 
 UserPlaylistActivityModel = can.Model({
 	
-	create: application.config.player.urls.save_playlist_activity
+	create: application.config.player.urls.save_playlist_song_activity
 	
 }, {});
 UserPlaylistActivityModel.ACTIVITY_TYPE = {
 		PLAY : "play",
 		PAUSE : "pause",
 		SKIP: "skip"
-}
+};
+
+PlaylistSongRatingModel = can.Model({
+	
+	create: application.config.player.urls.save_playlist_song_rating
+	
+}, {});
+PlaylistSongRatingModel.TYPE = {
+		LIKE : "like",
+		DISLIKE : "dislike"
+		
+};
 
 
 // resolve on both dom ready and sound manager ready
