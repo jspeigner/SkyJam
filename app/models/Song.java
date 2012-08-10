@@ -12,17 +12,17 @@ import play.db.ebean.Model.Finder;
 public class Song extends AppModel {
 	
 	@Length(max=300)
-	public String name;
+	private String name;
 	
 	@ManyToOne
-	public Album album;
+	private Album album;
 	
-	public String keywords;
+	private String keywords;
 	
-	public Integer duration;
+	private Integer duration;
 	
 	@ManyToOne
-	public StorageObject storageObject;
+	private StorageObject storageObject;
 	
 	public enum Status
 	{
@@ -31,7 +31,7 @@ public class Song extends AppModel {
 	};
 	
 	@Enumerated(EnumType.STRING)
-	public Status status;
+	private Status status;
 	
 	
 	/*
@@ -51,4 +51,58 @@ public class Song extends AppModel {
 	{
 		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Album getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(Album album) {
+		this.album = album;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public Integer getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+
+	public StorageObject getStorageObject() {
+		return storageObject;
+	}
+
+	public void setStorageObject(StorageObject storageObject) {
+		this.storageObject = storageObject;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
+	public String getSongUrl()
+	{
+		if(storageObject!=null)
+		{
+			return storageObject.getUrl();
+		}
+		
+		return null;
+	}	
 }

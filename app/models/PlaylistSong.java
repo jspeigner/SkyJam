@@ -18,20 +18,69 @@ public class PlaylistSong extends AppModel {
 
 
 	@ManyToOne
-	public Playlist playlist;
+	private Playlist playlist;
 	
 	@OneToOne
-	public Song song;
+	private Song song;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date createdDate;	
+	private Date createdDate;	
 	
-	public Integer position;
+	private Integer position;
 	
-	public Integer likesCount;
+	private Integer likesCount;
 	
-	public Integer dislikesCount;
+	private Integer dislikesCount;
 	
-	public static Model.Finder<Integer,Song> find = new Finder<Integer, Song>(Integer.class, Song.class);
+	public static Model.Finder<Integer,PlaylistSong> find = new Finder<Integer, PlaylistSong>(Integer.class, PlaylistSong.class);
+
+	public Song getSong() {
+		return song;
+	}
+
+	public void setSong(Song song) {
+		this.song = song;
+	}
+
+	public Playlist getPlaylist() {
+		return playlist;
+	}
+
+	public void setPlaylist(Playlist playlist) {
+		this.playlist = playlist;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
+	}
+
+	public Integer getLikesCount() {
+		return likesCount;
+	}
+
+	public Integer setLikesCount(Integer likesCount) {
+		this.likesCount = likesCount;
+		return likesCount;
+	}
+
+	public Integer getDislikesCount() {
+		return dislikesCount;
+	}
+
+	public void setDislikesCount(Integer dislikesCount) {
+		this.dislikesCount = dislikesCount;
+	}
 	
 }

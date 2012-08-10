@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.avaje.ebean.validation.Length;
@@ -27,6 +28,9 @@ public class MusicCategory extends AppModel {
 	public MusicCategory parent;
 	
 	protected Integer parentId;
+
+	@OneToOne
+	private StorageObject imageStorageObject;
 	
 	/*
 	@ManyToMany
@@ -39,5 +43,23 @@ public class MusicCategory extends AppModel {
 	public Integer getParentId()
 	{
 		return parentId;
+	}
+
+	protected StorageObject getImageStorageObject() {
+		return imageStorageObject;
+	}
+
+	protected void setImageStorageObject(StorageObject imageStorageObject) {
+		this.imageStorageObject = imageStorageObject;
+	}
+	
+	public String getImageUrl()
+	{
+		if(imageStorageObject!=null)
+		{
+			return imageStorageObject.getUrl();
+		}
+		
+		return null;
 	}
 }

@@ -51,7 +51,8 @@ public class User extends AppModel {
 	@Enumerated(EnumType.STRING)
 	private UserType type;
 	
-
+	@OneToOne
+	private StorageObject imageStorageObject;
 	
 	
 	public static Model.Finder<Integer,User> find = new Finder<Integer, User>(Integer.class, User.class);
@@ -159,6 +160,15 @@ public class User extends AppModel {
 		this.email = email;
 	}	
 	
+	public String getImageUrl()
+	{
+		if(imageStorageObject!=null)
+		{
+			return imageStorageObject.getUrl();
+		}
+		
+		return null;
+	}	
 	
 
 }

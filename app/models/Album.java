@@ -19,33 +19,28 @@ public class Album extends AppModel {
 
 
 	@Length(max=200)
-	public String name;
-	
-	@Length(max=20)
-	public String image;
-	
-	// public Integer artistId;
+	private String name;
 	
 	@ManyToOne
-	public Artist artist;
+	private Artist artist;
 	
 	@ManyToOne
-	public Genre genre;
+	private Genre genre;
 	
-	public Integer copyrightYear;
+	private Integer copyrightYear;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date createdDate;
+	private Date createdDate;
 	
-	public String keywords;
+	private String keywords;
 	
 	// public Integer genreId;
 	
-	public String description;
+	private String description;
 	
 	
 	@ManyToOne
-	public StorageObject albumArtStorageObject;
+	private StorageObject albumArtStorageObject;
 	
 	// public Integer albumArtStorageObjectId;
 	
@@ -65,6 +60,75 @@ public class Album extends AppModel {
 	{
 		return name;
 	}
+
+	public StorageObject getAlbumArtStorageObject() {
+		return albumArtStorageObject;
+	}
+
+	public void setAlbumArtStorageObject(StorageObject albumArtStorageObject) {
+		this.albumArtStorageObject = albumArtStorageObject;
+	}
 	
+	public String getAlbumArtUrl()
+	{
+		if(albumArtStorageObject!=null)
+		{
+			return albumArtStorageObject.getUrl();
+		}
+		
+		return null;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Artist getArtist() {
+		return artist;
+	}
+
+	public void setArtist(Artist artist) {
+		this.artist = artist;
+	}
+
+	public Genre getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Genre genre) {
+		this.genre = genre;
+	}
+
+	public Integer getCopyrightYear() {
+		return copyrightYear;
+	}
+
+	public void setCopyrightYear(Integer copyrightYear) {
+		this.copyrightYear = copyrightYear;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}		
 	
 }

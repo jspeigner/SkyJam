@@ -30,13 +30,17 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	}
 
 	#player .navbar-inner { color: #000; }
-	#player .navbar-inner  a { color: #000; }
+	#player .navbar-inner a { color: #000; display:block; }
 	#player .navbar .nav .active > a, #player  .navbar .nav .active > a:hover { color: white; text-decoration: none; background-color: #AAA; }
-	#player a.play {}
-	#player a.pause { display:none;}
-		#player li.name {padding:9px 10px 11px;}
-		#player li a:hover { color: black; background-color: #D4D4D4; }
-		
+	#player .play {}
+	#player .pause { display:none;}
+	#player .volume-off {display: none;}
+		#player li.name {padding:12px 10px 11px 10px; position:relative; }
+			#player li.name .song-progress { position:absolute; z-index:1; top:0; left:0; width:0%; height:100%; background-color: #eee; opacity: 0.3;}
+			#player li.name span { position:relative; z-index:2; }
+		/* #player li a:hover { color: black; background-color: #D4D4D4; } */
+		#player .name .song { color: #555; }
+	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}		
 	
 #activityBar { margin: 20px 0 20px 0;}		
 	#activityBar ul { list-style: none; display:block; margin:0; padding:0; }
@@ -58,3 +62,8 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 
 body.stub  #homepage-register  { width:600px; margin: 0 auto; }
 	body.stub #homepage-register h1 { margin-bottom: 1em; }
+	
+	#playlist-page { }
+		#playlist-page .controls { margin:1em 0 1em 0;}
+		#playlist-page .controls .pause { display:none;}
+		

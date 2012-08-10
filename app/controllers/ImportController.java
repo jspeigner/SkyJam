@@ -130,7 +130,7 @@ public class ImportController extends Controller {
 	        	
 	            System.out.println("Listing objects");
 	            
-	            ListObjectsRequest request = new ListObjectsRequest().withBucketName( bucket.name );
+	            ListObjectsRequest request = new ListObjectsRequest().withBucketName( bucket.getName() );
 	            
 	            
 	            
@@ -201,7 +201,7 @@ public class ImportController extends Controller {
 		}
 		
 		// return ok("Ok");
-		return ok( Import_importMusicFromS3Account.render(bucket.name ,files) );
+		return ok( Import_importMusicFromS3Account.render(bucket.getName() ,files) );
 	}
 	
 	protected static boolean importS3Object(models.Bucket bucket, S3ObjectSummary object)
@@ -233,13 +233,12 @@ public class ImportController extends Controller {
 						if( album == null )
 						{
 							album = new Album();
-							album.name = albumName;
-							album.image = "";
-							album.createdDate = Calendar.getInstance().getTime();
-							album.copyrightYear = 1900;
-							album.description ="";
-							album.keywords = "";
-							album.artist = artist;
+							album.setName(albumName);
+							album.setCreatedDate(Calendar.getInstance().getTime());
+							album.setCopyrightYear(1900);
+							album.setDescription("");
+							album.setKeywords("");
+							album.setArtist(artist);
 							
 							album.save();
 							
@@ -253,21 +252,21 @@ public class ImportController extends Controller {
 							if( storageObject == null )
 							{
 								storageObject = new StorageObject();
-								storageObject.bucket = bucket;
+								storageObject.setBucket(bucket);
 								storageObject.createdDate = Calendar.getInstance().getTime();
-								storageObject.name = name;
+								storageObject.setName(name);
 								storageObject.filesize = object.getSize();
 								storageObject.save();
 							}
 							
 							
 							song = new Song();
-							song.name = songName;
-							song.album = album;
-							song.keywords = "";
-							song.duration = 0;
-							song.status = Song.Status.visible;
-							song.storageObject = storageObject; 
+							song.setName(songName);
+							song.setAlbum(album);
+							song.setKeywords("");
+							song.setDuration(0);
+							song.setStatus(Song.Status.visible);
+							song.setStorageObject(storageObject); 
 							
 							song.save();
 						}
@@ -306,24 +305,24 @@ public class ImportController extends Controller {
 				for(int i =0; i<countPerCategory; i++)
 				{
 					Playlist p = new Playlist();
-					p.status = Playlist.Status.Public;
-					p.name = "Auto Playlist "+( playlistIndex );
-					p.createdDate = Calendar.getInstance().getTime();
-					p.description = "";
-					p.user = user;
-					p.genre = genre;
-					p.musicCategory = category;
+					p.setStatus(Playlist.Status.Public);
+					p.setName("Auto Playlist "+( playlistIndex ));
+					p.setCreatedDate(Calendar.getInstance().getTime());
+					p.setDescription("");
+					p.setUser(user);
+					p.setGenre(genre);
+					p.setMusicCategory(category);
 					
 					p.save();
 					
 					for( int songIndex = 0; songIndex < songsPerPlaylist ; songIndex++ )
 					{
 						PlaylistSong playlistSong = new PlaylistSong();
-						playlistSong.createdDate  = Calendar.getInstance().getTime();
-						playlistSong.dislikesCount = playlistSong.likesCount = 0;
-						playlistSong.position = songIndex;
-						playlistSong.song = songs.get( rnd.nextInt(songsCount) );
-						playlistSong.playlist = p;
+						playlistSong.setCreatedDate(Calendar.getInstance().getTime());
+						playlistSong.setDislikesCount(playlistSong.setLikesCount(0));
+						playlistSong.setPosition(songIndex);
+						playlistSong.setSong(songs.get( rnd.nextInt(songsCount) ));
+						playlistSong.setPlaylist(p);
 						
 						playlistSong.save();
 					}

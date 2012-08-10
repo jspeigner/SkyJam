@@ -1,19 +1,49 @@
-@(playlist:Playlist)
+@(playlist:Playlist, recentActivityUsers: List[User])
 
-@Layout_main(title = "Playlist " + playlist.name ) {
+@Layout_main(title = "Playlist " + playlist.getName ) {
+<div id="playlist-page">
  
-<h2>MOCKUP ! Playlist - @playlist.name</h2>
-<p>@playlist.description</p>
-<h3>Songs</h3>
-<div class="row">
-			<ul >
-				@for( playlistSong <- ( playlist.getPlaylistSongs() ) ){
-					<li>@playlistSong.song.getName()</li>
-				}
-				
-			</ul>
+<div class="row-fluid">
+	<div class="span2">
+		<!-- a first album image -->
+		<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" > 
+	</div>
+	<div class="span8"> 
+		<h2>@playlist.getName</h2>
+		<p>@playlist.getDescription</p>
+		<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName()  ).distinct.mkString(", ")</small></p>
+	</div>
+</div>	
 
-
+<div class="row-fluid controls player-controls" >
+	<a href="javascript://" class="btn play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
+	<a href="javascript://" class="btn save player-controls-save" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Save Playlist</a>
 </div>
+
+
+
+ 
+
+@if( recentActivityUsers.size() > 0 ){
+<div class="row-fluid" style="margin-top:2em">
+<h3>Recent listeners</h3>
+<hr />
+<ul class="thumbnails">
+	@for( user <- recentActivityUsers ){
+		<li class="span1"><a href="@routes.UserController.publicProfile(user.getId())" title="@user.getUsername()">
+			@if( user.getImageUrl() != null ){
+			<img src="@user.getImageUrl()" alt="@user.getUsername()">
+			} else {
+			<img src="@routes.Assets.at("files/user/64x64.png")" alt="@user.getUsername()">
+			}
+		</a></li>
+	}
+</ul>
+</div>
+
+
+</div>	
+}
+
     
 }

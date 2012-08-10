@@ -17,9 +17,10 @@ import play.db.ebean.Model.Finder;
 @Table(name="storage_objects")
 public class StorageObject extends AppModel {
 	
+	public static String AMAZON_S3_URL = "https://s3.amazonaws.com/";
 	
 	@Length(max=255)
-	public String name;
+	private String name;
 	
 	public Long filesize;
 	
@@ -27,7 +28,7 @@ public class StorageObject extends AppModel {
 	public Date createdDate;
 	
 	@ManyToOne
-	public Bucket bucket;
+	private Bucket bucket;
 	
 
 	public static Model.Finder<Integer,StorageObject> find = new Finder<Integer, StorageObject>(Integer.class, StorageObject.class);
@@ -37,5 +38,32 @@ public class StorageObject extends AppModel {
 		return StorageObject.find.where().eq("name", name).findUnique();
 	}
 
+	public String getUrl()
+	{
+		Bucket b  = getBucket();
+		
+		if( ( b != null ) )
+		{
+			return AMAZON_S3_URL + b.getName() + "/" + getName() ;				
+		}
+		
+		return null;
+	}
+
+	public Bucket getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(Bucket bucket) {
+		this.bucket = bucket;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

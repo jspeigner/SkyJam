@@ -1,0 +1,65 @@
+@(playlist: Playlist)
+
+@import com.codahale.jerkson.Json._
+@import scala.collection.mutable.ListBuffer;
+@{
+	var playlistData = new HashMap[String,Any];
+	
+	playlistData.put("name", playlist.getName())
+	playlistData.put("id", playlist.getId().toString())
+	
+	var playlistSongsData = new ListBuffer[Map[String,Any]]
+	
+	
+	for( playlistSong <- playlist.getPlaylistSongs())
+	{
+		var playlistSongData = new HashMap[String,Any]
+		
+		playlistSongData.put("id", playlistSong.getId().toString())
+		playlistSongData.put("likes_count", playlistSong.getLikesCount().toString())
+		playlistSongData.put("dislikes_count", playlistSong.getDislikesCount().toString())
+		
+		{
+			val song = playlistSong.getSong()
+			var songData = new HashMap[String,Any]
+		
+			songData.put("name", song.getName())
+			songData.put("id", song.getId().toString())
+			songData.put("song_url", song.getSongUrl())
+			
+			{
+				val album = song.getAlbum()
+				var albumData = new HashMap[String,Any]
+				albumData.put("id", album.getId().toString())
+				albumData.put("album_art_url", album.getAlbumArtUrl())
+				albumData.put("description", album.getDescription())
+				
+				{
+					val artist = album.getArtist() 
+					var artistData = new HashMap[String,Any]
+					artistData.put("id", artist.getId().toString)
+					artistData.put("name", artist.getName())
+					artistData.put("description", artist.getDescription())
+					
+					albumData.put("Artist", artistData)
+				}
+				
+				
+				songData.put("Album", albumData)
+			}
+			
+		
+			playlistSongData.put("Song", songData)
+		}
+		
+		
+		
+		playlistSongsData.append(playlistSongData)
+	}
+	
+	playlistData.put("PlaylistSong", playlistSongsData)
+	
+	
+	Html(generate(playlistData))
+	 
+}

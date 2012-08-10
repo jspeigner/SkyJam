@@ -10,12 +10,12 @@
 	<ul>
 	@for( playlist <- playlists ){
 		<li class="span@( ( 12 / playlists.size() ).toInt )">
-			<h2><a href="@routes.PlaylistController.playlist(playlist.getId())">@playlist.name</a></h2>
-			<p>@playlist.description</p>
-			<div><a href="#" class="btn btn-large"><i class="icon-play"></i>Play</a></div>
+			<h2><a href="@routes.PlaylistController.playlist(playlist.getId())">@playlist.getName</a></h2>
+			<p>@playlist.getDescription</p>
+			<div><a href="#" class="btn btn-large player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i>Play</a></div>
 			<ul class="row-fluid songs">
 				@for( playlistSong <- ( playlist.getPlaylistSongs(4) ) ){
-					<li class="span@( (12/4).toInt )"><img src="@routes.Assets.at("files/album/240x240.gif")" title="@playlistSong.song.getName()" alt="@playlistSong.song.getName()" ></li>
+					<li class="span@( (12/4).toInt )"><img src="@routes.Assets.at("files/album/240x240.gif")" title="@playlistSong.getSong().getName" alt="@playlistSong.getSong().getName" ></li>
 				}
 				
 			</ul>

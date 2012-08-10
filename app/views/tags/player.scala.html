@@ -5,16 +5,32 @@
 	  <div class="navbar-inner">
 	    <div class="container">
 		    	<ul class="nav pull-right">
-				  <li class="name">Playlist - Song Name</li>
-				  <li><a href="#" class="play"><i class="icon-play"></i> Play</a><a href="#" class="pause"><i class="icon-pause"></i> Pause</a></li>
-				  <li><a href="#" class="next-song"><i class="icon-forward"></i> Next Song</a></li>
-				  <li><a href="#" class="volume"><i class="icon-volume-up"></i></a>
-				  <li><a href="#" class="like"><i class="icon-thumbs-up"></i></a>
-				  <li><a href="#" class="dislike"><i class="icon-thumbs-down"></i></a>
-				  <li><a href="#" class="share"><i class="icon-share"></i> Share</a>
+				  <li class="name">Loading...</li>
 				   
 				</ul>
 	    	</div>
 		</div>
 	</div>
 </div>
+
+<script type="text/ejs" id="player-template">
+
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <div class="container">
+		    	<ul class="nav pull-right player-controls">
+				  <li class="name"><div class="song-progress"></div><span class="playlist"><%= playlist.name %></span> <span class="song"><% if(song){ %><%= song.Song.name %><% } %></span></li>
+				  <li class="play"><a class="btn" href="javascript://" ><i class="icon-play"></i> Play</a></li>
+				  <li class="pause"><a class="btn" href="javascript://" ><i class="icon-pause"></i> Pause</a></li>
+				  <li class="next-song"><a class="btn" href="javascript://"><i class="icon-forward"></i> Next Song</a></li>
+				  <li class="volume"><a class="btn" href="javascript://"><i class="icon-volume-up"></i></a>
+				  <li class="volume-off"><a class="btn" href="javascript://"><i class="icon-volume-off"></i></a>
+				  <li class="like"><a class="btn" href="javascript://"><i class="icon-thumbs-up"></i></a>
+				  <li class="dislike"><a class="btn" href="javascript://"><i class="icon-thumbs-down"></i></a>
+				  <li class="share"><a class="btn" href="javascript://"><i class="icon-share"></i> Share</a>
+				</ul>
+	    	</div>
+		</div>
+	</div>
+
+</script>

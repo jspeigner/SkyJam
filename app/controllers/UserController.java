@@ -77,6 +77,8 @@ public class UserController extends Controller {
      * Logout and clean the session.
      */
     public static Result logout() {
+    	
+    	
         session().clear();
         flash("success", "You've been logged out");
         return redirect(
@@ -138,6 +140,11 @@ public class UserController extends Controller {
     	
     	return user != null ?  ok(User_homepageRegisterSuccess.render(user)) : badRequest("User not found");
     	
+    }
+    
+    public static Result publicProfile(Integer id)
+    {
+    	return null;
     }
     
     protected static User getAuthUser()
