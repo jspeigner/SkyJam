@@ -104,22 +104,30 @@ public class PlaylistController extends Controller
 			  PlaylistSongRating.Type t = PlaylistSongRating.Type.forName(type);
 			  
 			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
-		  
-			  PlaylistSongRating p = new PlaylistSongRating();
-			  p.setCreatedDate(new Date());
-			  p.setPlaylistSong( PlaylistSong.find.byId( Integer.parseInt( playlistSongId ) ) );
-			  p.setType(t);
-			  p.setUser(user);
 			  
-			  p.save();
+			  // XXX check duplicate  user ratings
+			  
+			  if( (user != null) && ( true ) )
+			  {
+		  
+				  PlaylistSongRating p = new PlaylistSongRating();
+				  p.setCreatedDate(new Date());
+				  p.setPlaylistSong( PlaylistSong.find.byId( Integer.parseInt( playlistSongId ) ) );
+				  p.setType(t);
+				  p.setUser(user);
+				  
+				  p.save();
 		  
 		  
-			  return ok("");
+				  return ok("");
+			  }
 		  }
 		  catch(Exception e)
 		  {
-			  return badRequest("Wrong data passed");
-		  }		  
+			  
+		  }		
+		  
+		  return badRequest("Wrong data passed");
 	  }
 	
 	  

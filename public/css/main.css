@@ -35,9 +35,12 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#player .play {}
 	#player .pause { display:none;}
 	#player .volume-off {display: none;}
-		#player li.name {padding:9px 10px 11px;}
-		#player li a:hover { color: black; background-color: #D4D4D4; }
+		#player li.name {padding:12px 10px 11px 10px; position:relative; }
+			#player li.name .song-progress { position:absolute; z-index:1; top:0; left:0; width:0%; height:100%; background-color: #eee; opacity: 0.3;}
+			#player li.name span { position:relative; z-index:2; }
+		/* #player li a:hover { color: black; background-color: #D4D4D4; } */
 		#player .name .song { color: #555; }
+	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}		
 	
 #activityBar { margin: 20px 0 20px 0;}		
 	#activityBar ul { list-style: none; display:block; margin:0; padding:0; }

@@ -93,6 +93,7 @@ PlayerControl = can.Control({
 	    if( defaultSong )
 	    {
 	    	this.loadSong( defaultSong );
+	    	this.playSong();
 	    }
 	    
   } ,
@@ -105,6 +106,8 @@ PlayerControl = can.Control({
 		  this.clearCurrentSong();
 		  
 	  }
+	  
+	  this.setProgressIndicator(0);
 	  
 	  this.currentSong = playlistSongData;
 	  
@@ -122,6 +125,15 @@ PlayerControl = can.Control({
 	  
 	  return true;
 	  
+  },
+  /**
+   * Progress indicator [0,1]
+   */
+  setProgressIndicator:function(value)
+  {
+	  value = ( value > 1 ) ? 1 : ( value < 0 ? 0 : value ); 
+	  
+	  $("li.name .song-progress").css("width",  ( value*100 ) +"%");
   },
   
   _createCurrentSMSong: function(id, url)
@@ -167,7 +179,7 @@ PlayerControl = can.Control({
   {
 	  if( ++this.playFailedCount < this.options.playlist.PlaylistSong.length )
 	  {
-		  this.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
+		  this.goToNextSong( );
 	  }		  
 	  
   },
@@ -191,18 +203,18 @@ PlayerControl = can.Control({
 	  
 	  onSMSongFinish:function(control, smSong)
 	  {
-		  control.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY );
+		  control.goToNextSong( );
 	  },
 	  
 	  onSMSongWhilePlaying: function(control,smSong)
 	  {
 		  // console.log( 'sound '+smSong.id+' playing, '+smSong.position+' of '+smSong.duration );
+		  if( smSong.duration && ( smSong.duration > 0 ))
+		  {
+			  control.setProgressIndicator( smSong.position / smSong.duration );
+		  }
 	  },
 	  
-	  onSMSongMP4Connect: function( control, smSong, loadSuccess )
-	  {
-		  this.onSMSongLoad(control, smSong, loadSuccess);
-	  },
 	  onSMSongFailure: function(control, smSong)
 	  {
 		  control.onPlayFailed( smSong );
@@ -270,7 +282,7 @@ PlayerControl = can.Control({
   
   goToNextSong: function(play)
   {
-	  play = !!play;
+	  play = ( play === undefined ) ? ( this.currentPlayerState == this.PlayerState.PLAY ) : play ;
 	  
 	  if( this.options.playlist )
 	  {
@@ -335,7 +347,7 @@ PlayerControl = can.Control({
   },
   
   ".next-song a click" : function(el , event){
-	  this.goToNextSong( this.currentPlayerState == this.PlayerState.PLAY  );
+	  this.goToNextSong(  );
 	  
 	  var activity = new UserPlaylistActivityModel({ playlist_song_id:  this.currentSong.id , type : UserPlaylistActivityModel.ACTIVITY_TYPE.SKIP }); 
 	  activity.save();
@@ -363,10 +375,17 @@ PlayerControl = can.Control({
   },  
   
   ".like a click" : function(el , event){
+	  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.LIKE });
+	  a.save();
+	  $(".like a").addClass("disabled");
+	  $(".dislike a").addClass("disabled");
 	  
   },  
   ".dislike a click" : function(el , event){
-	  
+	  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.DISLIKE });
+	  a.save(); 
+	  $(".like a").addClass("disabled");
+	  $(".dislike a").addClass("disabled");
   },  
   ".share a click" : function(el , event){
 	  
