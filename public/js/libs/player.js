@@ -1,5 +1,6 @@
 
 PlayerControlInterface = {
+		
 	playerId : "#player",
 	playerTemplateId : "#player-template",
 	playerControl: null,
@@ -18,7 +19,8 @@ PlayerControlInterface = {
 			    	
 			    	if( self.playerControl )
 			    	{
-			    		self.playerControl.destroy();
+			    		self.playerControl.clear();
+			    		
 			    	}
 			    	
 			    	self.playerControl = new PlayerControl( PlayerControlInterface.playerId , { 
@@ -246,6 +248,14 @@ PlayerControl = can.Control({
 
   },
 	  
+  clear: function(){
+	  
+	  this.clearCurrentSong();
+	  this.destroy();
+	  
+	  
+	  
+  },
 	 
   clearCurrentSong: function()
   {
