@@ -36,6 +36,9 @@ GET		/about						controllers.PageController.about()
 GET		/privacy_policy				controllers.PageController.privacyPolicy()
 GET		/terms_of_use				controllers.PageController.termsOfUse()
 
+GET		/profile					controllers.UserController.profile()
+GET		/profile/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
+
 # internal
 GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
 GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)

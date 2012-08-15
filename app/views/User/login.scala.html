@@ -4,9 +4,9 @@
         
         
         
-        @helper.form(action = routes.UserController.authenticate, 'class -> "form-horizontal well", 'id -> "user-sign-in") {
+        @helper.form(action = routes.UserController.authenticate, 'class -> "form-horizontal well span6 offset2", 'id -> "user-sign-in") {
             
-            <h2>Sign in</h2>
+            <h2>Sign in</h2><hr>
             
             @if(form.hasGlobalErrors) { 
                 <div  class="alert alert-error">
@@ -26,7 +26,7 @@
             
 				
 			<div class="form-actions">
-				<input class="btn" type="submit" value="Register" />
+				<input class="btn" type="submit" value="Sign In" />
 			</div>
             
         }

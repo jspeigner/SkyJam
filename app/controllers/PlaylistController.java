@@ -26,7 +26,7 @@ import play.data.DynamicForm;
 
 import views.html.*;
 
-public class PlaylistController extends Controller 
+public class PlaylistController extends AppController 
 {
 	public static String CURRENT_PLAYLIST_ID_KEY = "Playlist.id";
 	

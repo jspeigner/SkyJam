@@ -11,6 +11,8 @@ function Application(config)
 	
 	this.bodyContentSelector = "#body-content";
 	
+	this.pjaxAdditionalFragments = [ "#user-top-menu" ];
+	
 	this.jCurrentForm = null;
 	
 	
@@ -79,7 +81,35 @@ function Application(config)
 		return true;
 	};
 	
-	
+	this.processPjaxRedirect = function(xhr)
+	{
+		var redirectUrl = xhr.getResponseHeader('X-PJAX-REDIRECT');
+		
+		
+		if( redirectUrl )
+		{
+			// emulate pjax click
+			
+			var a = $("<a>").attr("href", redirectUrl);
+			
+			var opts = {
+				fragment : self.bodyContentSelector
+			};
+			
+			var event = jQuery.Event("click");
+			event.currentTarget = a[0];
+			
+			var container = $(self.bodyContentSelector);
+			container.on('pjax:complete', self.onPjaxComplete);			
+			
+			$.pjax.click(event, self.bodyContentSelector, opts);
+			
+			return true;
+			
+		}	
+		
+		return false;
+	}
 
 	
 	this.onFormSubmitSuccess = function(responseText, statusText, xhr, $form)
@@ -99,28 +129,11 @@ function Application(config)
 		
 		// alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +  '\n\nThe output div should have already been updated with the responseText.');
 		
-		var redirectUrl = xhr.getResponseHeader('X-PJAX-REDIRECT');
-		
-		
-		if( redirectUrl )
-		{
-			// emulate pjax click
-			
-			var a = $("<a>").attr("href", redirectUrl);
-			
-			var opts = {
-				fragment : self.bodyContentSelector
-			};
-			
-			var event = jQuery.Event("click");
-			event.currentTarget = a[0];
-			
-			$.pjax.click(event, self.bodyContentSelector, opts);
-			
-			return true;
-			
-		}
 
+		if( self.processPjaxRedirect(xhr) )
+		{
+			return true;
+		}
 		
 		// push state
 		if($.support.pjax)
@@ -172,9 +185,32 @@ function Application(config)
 		
 	};
 	
-	this.onPjaxEnd = function(event, xhrDeferred,options)
+	this.onPjaxComplete = function(event, xhr, textStatus, options)
 	{
-		// update the user menu if exists
+
+		if( textStatus == "success")
+		{
+		
+			if( self.processPjaxRedirect(xhr) )
+			{
+				return true;
+			}
+			
+			var jResponseText = $(xhr.responseText);
+	
+			// update the user menu if exists
+			if( jResponseText.length && self.pjaxAdditionalFragments )
+			{
+				for(var i=0; i<self.pjaxAdditionalFragments.length; i++)
+				{
+					var $fragment = $( self.pjaxAdditionalFragments[i], jResponseText );
+					if($fragment.length)
+					{
+						$( self.pjaxAdditionalFragments[i]).replaceWith($fragment);
+					}
+				}
+			}
+		}
 		
 	};
 	
@@ -231,10 +267,10 @@ function Application(config)
 		
 		
 		// ajax navigation
-		$(document).on('click', 'a', function(event) {
+		$(document).on('click', 'a:not(.no-pjax)', function(event) {
 			
 			var container = $(self.bodyContentSelector);
-			container.on('pjax:end', self.onPjaxEnd);
+			container.on('pjax:complete', self.onPjaxComplete);
 			
 			return $.pjax.click(event, container, {
 				fragment : self.bodyContentSelector
@@ -243,7 +279,14 @@ function Application(config)
 		
 		
 		
-		$("form").ajaxForm({
+		$("form").each(function(){
+			
+			var actionUrl = URI( $(this).attr("action") ).addSearch("_pjax","form");
+			
+			$(this).attr( "action", actionUrl.toString()  );
+		
+		}).ajaxForm({
+			
 			replaceTarget: 	true,
 			delegation: 	true,
 			dataType:		"html",
@@ -252,8 +295,7 @@ function Application(config)
 			success: 		self.onFormSubmitSuccess,
 			fragment: 		self.bodyContentSelector
 			
-		});
-		
+		});;
 	};
 };
 

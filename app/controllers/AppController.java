@@ -23,9 +23,21 @@ public class AppController extends Controller {
 	public static Result pjaxRedirect( Call url )
 	{
 		
-		response().setHeader( PJAX_RESPONSE_REDIRECT_HEADER, url.toString() );
-		setPjaxUrl(url);
-		return ok("");
+		String isPjax =  ( request().queryString().containsKey("_pjax") ) ? request().queryString().get("_pjax")[0] : "";
+		
+		
+		
+		if( isPjax != "" )
+		{
+			response().setHeader( PJAX_RESPONSE_REDIRECT_HEADER, url.toString() );
+			setPjaxUrl(url);
+			
+			return ok("");
+		}
+		else
+		{
+			return redirect(url);
+		}
 
 	}
 	

@@ -63,9 +63,7 @@ public class UserController extends AppController {
      * Login page.
      */
     public static Result login() {
-        return ok(
-            views.html.User.login.render(form(Login.class))
-        );
+        return ok( views.html.User.login.render(form(Login.class)) );
     }
     
     /**
@@ -104,9 +102,8 @@ public class UserController extends AppController {
     	
         session().clear();
         flash("success", "You've been logged out");
-        return redirect(
-            routes.UserController.login()
-        );
+        
+        return pjaxRedirect( routes.UserController.login() );
     }
     
     public static Result homepageRegister()
@@ -185,7 +182,12 @@ public class UserController extends AppController {
     	return null;
     }
     
-    protected static User getAuthUser()
+    public static Result profile()
+    {
+    	return null;
+    }
+    
+    public static User getAuthUser()
     {
     	User user = null;
     	
