@@ -27,6 +27,11 @@ GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSucc
 
 GET		/user/:id					controllers.UserController.publicProfile(id:java.lang.Integer)
 
+GET		/contact_us					controllers.PageController.contactUs()
+GET		/about						controllers.PageController.about()
+GET		/privacy_policy				controllers.PageController.privacyPolicy()
+GET		/terms_of_use				controllers.PageController.termsOfUse()
+
 # internal
 GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
 GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)

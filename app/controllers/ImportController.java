@@ -201,7 +201,7 @@ public class ImportController extends Controller {
 		}
 		
 		// return ok("Ok");
-		return ok( Import_importMusicFromS3Account.render(bucket.getName() ,files) );
+		return ok( views.html.Import.importMusicFromS3Account.render(bucket.getName() ,files) );
 	}
 	
 	protected static boolean importS3Object(models.Bucket bucket, S3ObjectSummary object)

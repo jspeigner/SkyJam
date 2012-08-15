@@ -10,11 +10,10 @@ import play.data.*;
 import play.data.validation.ValidationError;
 
 import models.*;
-import tyrex.resource.jca.dd.DDAuthMechanism;
 import views.html.*;
 
 
-public class UserController extends Controller {
+public class UserController extends AppController {
 
 	public static final String AUTH_USER_SESSION_ID = "User.id";	
 
@@ -35,14 +34,12 @@ public class UserController extends Controller {
         
     }
 
-
-
     /**
      * Login page.
      */
     public static Result login() {
         return ok(
-            User_login.render(form(Login.class))
+            views.html.User.login.render(form(Login.class))
         );
     }
     
@@ -55,7 +52,7 @@ public class UserController extends Controller {
         
         if(loginForm.hasErrors()) 
         {
-            return badRequest(User_login.render(loginForm));
+            return badRequest(views.html.User.login.render(loginForm));
         }
         else 
         {
@@ -90,18 +87,19 @@ public class UserController extends Controller {
     {
     	Form<User> userForm = form(User.class);
     	
-    	return ok(User_homepageRegister.render(userForm));
+    	return ok(views.html.User.homepageRegister.render(userForm));
     }
     
     public static Result homepageRegisterSubmit()
     {
+    	
     	Form<User> userForm = form(User.class).bindFromRequest("email");
     	
     	
     	if(userForm.hasErrors())
     	{
     		
-    		return badRequest(User_homepageRegister.render(userForm));
+    		return ok (views.html.User.homepageRegister.render(userForm));
     	}
     	else
     	{
@@ -114,23 +112,22 @@ public class UserController extends Controller {
     		
     		try
     		{
-    		
 	    		user.save();
-    		
-	    		
     		}
     		catch(PersistenceException p)
     		{
     			// email is not unique
     			userForm.reject( new ValidationError( "email", "Email is already used", null) );
     			
-    			return badRequest(User_homepageRegister.render(userForm));
+    			return ok(views.html.User.homepageRegister.render(userForm));
     			
     		}
     		
     		setAuthUser(user);
     		
-    		return redirect( routes.UserController.homepageRegisterSuccess() );
+    		// return redirect( routes.UserController.homepageRegisterSuccess() );
+    		
+    		return pjaxRedirect( routes.UserController.homepageRegisterSuccess() );
     	}
     }
     
@@ -138,7 +135,7 @@ public class UserController extends Controller {
     {
     	User user = getAuthUser();
     	
-    	return user != null ?  ok(User_homepageRegisterSuccess.render(user)) : badRequest("User not found");
+    	return user != null ?  ok(views.html.User.homepageRegisterSuccess.render(user)) : badRequest("User not found");
     	
     }
     

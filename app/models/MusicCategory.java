@@ -21,11 +21,11 @@ import play.db.ebean.Model.Finder;
 public class MusicCategory extends AppModel {
 	
 	@Length(max=200)
-	public String name;
+	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name="parent_id")
-	public MusicCategory parent;
+	private MusicCategory parent;
 	
 	protected Integer parentId;
 
@@ -61,5 +61,21 @@ public class MusicCategory extends AppModel {
 		}
 		
 		return null;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public MusicCategory getParent() {
+		return parent;
+	}
+
+	public void setParent(MusicCategory parent) {
+		this.parent = parent;
 	}
 }

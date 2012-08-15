@@ -1,6 +1,4 @@
-@(user: User)
-
-@Layout_stub("Registered Successfully") {
+@(user: User)@Layout.stub("Registered Successfully") {
 
 	<h1>Thank you, @user.getUsername().split("@")(0)</h1>
 	<div id="invite_conf_section" style="display:none;">

@@ -103,5 +103,7 @@
 	<classpathentry kind="lib" path="/home/user/www/jspeigner/skyjam/src/lib/play-2.0.3/framework/sbt/boot/scala-2.9.1/lib/scala-library.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-core-1.8.3.jar"/>
+	<classpathentry kind="lib" path="target/scala-2.9.1/classes"/>
+	<classpathentry kind="lib" path="target/scala-2.9.1/classes_managed"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>

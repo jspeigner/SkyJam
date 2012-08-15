@@ -1,0 +1,42 @@
+@(parentCategory:MusicCategory, categories:Set[MusicCategory])@Layout.default("Home", metaKeywords = "Skyjam Music Mp3 playlists", metaDescription = "Online Music") {
+    
+@if( parentCategory != null ){
+	<h2>Select your activity from <i>@parentCategory.getName()</i></h2>
+} else { 
+	<h2>Select your activity</h2>
+}
+
+<div id="activityBar" class="row-fluid">
+	<ul>
+	@for( category <- categories ){
+		<li class="span3">
+		@if( category.getImageUrl() != null ){
+		<img src="@category.getImageUrl()" alt="@category.getName()">
+		} else {
+		<img src="@routes.Assets.at("files/music_category/240x180.gif")" alt="@category.getName">
+		}
+		<a href="@routes.ApplicationController.category(category.getId())">@category.getName()</a></li>
+	}
+	</ul>
+</div>
+ 
+	@if( ( parentCategory != null ) ){ 
+	 
+		@if( ( parentCategory.getParent() != null ) && ( parentCategory.getParent().getId != 0 ) ){
+					<div>
+						<a href="@routes.ApplicationController.category(parentCategory.getParent().getId())">
+							Back to the <i>@parentCategory.getParent().getName()</i>
+						</a>
+					</div>
+		} else {
+			<div><a href="@routes.ApplicationController.index()">Back to the Homepage</a></div>
+		}
+		
+	} else {
+	
+		
+	
+	} 
+	
+    
+}

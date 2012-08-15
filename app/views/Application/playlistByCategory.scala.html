@@ -1,6 +1,4 @@
-@(category:MusicCategory, playlists:Set[Playlist])
-
-@Layout_main(title = "Playlists for " + category.name ) {
+@(category:MusicCategory, playlists:Set[Playlist])@Layout.default(title = "Playlists for " + category.getName ) {
  
 <h2>Select a playlist</h2>
 
@@ -22,9 +20,29 @@
 		</li>
 	}
 	</ul>
+	
+	
 } else {
 <p>There are no playlists found</p>
 }
+
 </div>
+
+		@if( ( ( category.getParent ) != null ) && ( category.getParent().getId() != 0 ) ){
+			<p>
+				<a href="@routes.ApplicationController.category(category.getParent().getId())">
+					Back to the <i>@category.getParent().getName()</i>
+				</a>
+			</p>
+		} else {
+			<p>
+				<a href="@routes.ApplicationController.index()">
+					Back to the Homepage
+				</a>
+			</p>		
+		}
+		
+
+
     
 }

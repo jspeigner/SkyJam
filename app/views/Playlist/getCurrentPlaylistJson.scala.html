@@ -1,8 +1,7 @@
-@(playlist: Playlist)
-
-@import com.codahale.jerkson.Json._
-@import scala.collection.mutable.ListBuffer;
-@{
+@(playlist: Playlist)@{
+	import com.codahale.jerkson.Json._
+	import scala.collection.mutable.ListBuffer
+	
 	var playlistData = new HashMap[String,Any];
 	
 	playlistData.put("name", playlist.getName())

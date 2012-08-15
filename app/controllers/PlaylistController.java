@@ -1,7 +1,5 @@
 package controllers;
 
-
-
 import global.Global;
 
 import java.util.ArrayList;
@@ -39,8 +37,10 @@ public class PlaylistController extends Controller
 		  
 		  List<User> recentListeners = UserPlaylistActivity.getUsersOnPlaylist( playlist, 25);
 		  
-		  return ok( Playlist_playlist.render(playlist, recentListeners) );
+		  return ok( views.html.Playlist.playlist.render(playlist, recentListeners) );
 	  }	
+	  
+	  
 	  
 	  public static Result searchJson()
 	  {
@@ -54,7 +54,7 @@ public class PlaylistController extends Controller
 		  {
 			  List<Playlist> playlists = Playlist.searchWideByName(query, 10);
 			  
-			  return ok(Playlist_searchJson.render(playlists));
+			  return ok(views.html.Playlist.searchJson.render(playlists));
 
 		  }
 	  }
@@ -151,7 +151,7 @@ public class PlaylistController extends Controller
 			  if( playlist != null )
 			  {
 				  
-				  return ok( Playlist_getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
+				  return ok( views.html.Playlist.getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
 				  
 			  }
 		  }
@@ -160,7 +160,7 @@ public class PlaylistController extends Controller
 			  
 		  }
 		  
-		  return badRequest("Playlist not found");
+		  return badRequest("{ error: \"Playlist not found\" }");
 	  }
 	  
 	  public static Result playJson(Integer playlistId)

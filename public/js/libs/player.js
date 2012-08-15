@@ -1,4 +1,3 @@
-
 PlayerControlInterface = {
 		
 	playerId : "#player",
@@ -14,6 +13,7 @@ PlayerControlInterface = {
 		var playlistId = playlistId ? playlistId : 0; 
 		var self = this; 
 		
+		
 		$.when( PlaylistModel.findOne( { id: playlistId } ) ).then(
 			    function(playlistResponse) {
 			    	
@@ -27,7 +27,10 @@ PlayerControlInterface = {
 			    		playlist : playlistResponse 
 			    	} );
 			    }
-		);		
+		);
+		
+		
+		
 	},
 	
 	init: function()
@@ -65,38 +68,45 @@ PlayerControl = can.Control({
 		
 		this.playlistData = options.playlist;
 		
+		
+		
+		
 		this.currentPlayerState = this.PlayerState.STOP;
 		
 		var defaultSong = null;
+		
+		if( options.playlist )
+		{
 	    
-	    if( this.playlistData.PlaylistSong && ( this.playlistData.PlaylistSong.length > 0 ) )
-	    {
-	    	if( options.default_playlist_song_id )
-	    	{
-	    		for(var playlistSongId in this.playlistData.PlaylistSong)
-	    		{
-	    			if( playlistData.PlaylistSong[playlistSongId].id == options.default_playlist_song_id )
-	    			{
-	    				defaultSong = playlistData.PlaylistSong[playlistSongId];
-	    				
-	    				break;
-	    			}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		defaultSong = this.playlistData.PlaylistSong[0];
-	    	}
-	    }
+		    if( this.playlistData.PlaylistSong && ( this.playlistData.PlaylistSong.length > 0 ) )
+		    {
+		    	if( options.default_playlist_song_id )
+		    	{
+		    		for(var playlistSongId in this.playlistData.PlaylistSong)
+		    		{
+		    			if( playlistData.PlaylistSong[playlistSongId].id == options.default_playlist_song_id )
+		    			{
+		    				defaultSong = playlistData.PlaylistSong[playlistSongId];
+		    				
+		    				break;
+		    			}
+		    		}
+		    	}
+		    	else
+		    	{
+		    		defaultSong = this.playlistData.PlaylistSong[0];
+		    	}
+		    }
+		    
+		    this.element.html( can.view( PlayerControlInterface.playerTemplateId, { playlist: this.playlistData, song: null }) );
 	    
-	    this.element.html( can.view( PlayerControlInterface.playerTemplateId, { playlist: this.playlistData, song: null }) );
-    
-	    
-	    if( defaultSong )
-	    {
-	    	this.loadSong( defaultSong );
-	    	this.playSong();
-	    }
+		    
+		    if( defaultSong )
+		    {
+		    	this.loadSong( defaultSong );
+		    	this.playSong();
+		    }
+		}
 	    
   } ,
   
@@ -450,7 +460,7 @@ $.when( df1, df2 ).done( function(){
 		  PlayerControlInterface.init();
 	  
 	  
-		  $(".player-controls-play").on("click", function(){
+		  $(document).on("click", ".player-controls-play", function(){
 			  
 			  var playlistId = $(this).data("playlist-id");
 			  

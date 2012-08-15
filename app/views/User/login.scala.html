@@ -1,6 +1,4 @@
-@(form: Form[UserController.Login])
-
-@Layout_main("Login") {
+@(form: Form[UserController.Login])@Layout.default("Login") {
         
         @helper.form(routes.UserController.authenticate) {
             

@@ -24,7 +24,9 @@ public class ApplicationController extends Controller {
 	  if( Playlist.findCountByMusicCategoryId(parentCategoryId) > 0 )
 	  {
 		  // redirect on step 3 - playlists
-		  return redirect( controllers.routes.ApplicationController.playlistByCategory(parentCategoryId) );
+		  // return redirect( controllers.routes.ApplicationController.playlistByCategory(parentCategoryId) );
+		  
+		  return playlistByCategory(parentCategoryId);
 	  }
 	  
 	  MusicCategory parentCategory = parentCategoryId <= 0 ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
@@ -35,10 +37,12 @@ public class ApplicationController extends Controller {
 	  if( categories.size() == 0 )
 	  {
 		  // there are no sub-categories
-		  return redirect( controllers.routes.ApplicationController.playlistByCategory(parentCategoryId) );
+		  // return redirect( controllers.routes.ApplicationController.playlistByCategory(parentCategoryId) );
+		  
+		  return playlistByCategory(parentCategoryId);
 	  }
 	  
-	  return ok( Application_index.render(parentCategory, categories));	  
+	  return ok( views.html.Application.index.render(parentCategory, categories));	  
   }
   
   public static Result playlistByCategory(Integer categoryId)
@@ -49,7 +53,7 @@ public class ApplicationController extends Controller {
 	  
 	  Set<Playlist> playlists = Playlist.find.where().eq("music_category_id", categoryId).setMaxRows(maxPlaylistsCount).findSet();
 	  
-	  return ok( Application_playlistByCategory.render(category, playlists) );
+	  return ok( views.html.Application.playlistByCategory.render(category, playlists) );
   }
 
   
