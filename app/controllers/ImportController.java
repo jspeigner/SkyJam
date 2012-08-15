@@ -43,7 +43,6 @@ public class ImportController extends Controller {
 	{
 		
 		
-		
 		List<String> files = new ArrayList<String>();
 		
 		AmazonAccount defaultS3Account = AmazonAccount.getDefaultAccount();
@@ -223,7 +222,21 @@ public class ImportController extends Controller {
 					String albumName = nameParts[2];
 					String songName = nameParts[3];
 					
-					System.out.println( artistName + " - " + albumName + " - " + songName );
+					// remove the extension
+					String cleanSongName; 
+					
+					
+			        int p = songName.lastIndexOf(".");
+			        if(p <= 0){
+			        	cleanSongName = songName;
+			        } else {
+			        	cleanSongName = songName.substring(0, p);
+			        }
+					
+					
+					
+					
+					System.out.println( artistName + " - " + albumName + " - " + cleanSongName );
 					
 					Artist artist = Artist.getByName(artistName, true);
 					
@@ -259,9 +272,10 @@ public class ImportController extends Controller {
 								storageObject.save();
 							}
 							
+
 							
 							song = new Song();
-							song.setName(songName);
+							song.setName(cleanSongName);
 							song.setAlbum(album);
 							song.setKeywords("");
 							song.setDuration(0);
@@ -286,6 +300,8 @@ public class ImportController extends Controller {
 		return false;
 		
 	}
+	
+		
 	
 	public static Result generateRandomPlaylists(Integer countPerCategory, Integer songsPerPlaylist)
 	{
