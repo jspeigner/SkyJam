@@ -88,7 +88,7 @@ public class User extends AppModel {
 			m = MessageDigest.getInstance("SHA-1");
 			m.reset();
 			
-			System.out.println( "HASH " + message );
+			// System.out.println( "HASH " + message );
 			
 			m.update(message.getBytes());
 			

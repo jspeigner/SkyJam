@@ -100,7 +100,7 @@ public class UserController extends AppController {
     public static Result logout() {
     	
     	
-        session().clear();
+        session().remove(AUTH_USER_SESSION_ID);
         flash("success", "You've been logged out");
         
         return pjaxRedirect( routes.UserController.login() );
