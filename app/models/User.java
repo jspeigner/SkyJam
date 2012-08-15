@@ -59,16 +59,27 @@ public class User extends AppModel {
 	
 	public static User authenticate(String email, String password) 
 	{
-        return find.where()
+		// System.out.println("Auth "+email+" - "+password);
+		
+        return ( ( email != null ) && ( password != null ) ) ?
+        	
+        	 find.where()
             .eq("email", email)
             .eq("password" ,  User.passwordHash( password ) )
-            .findUnique();
+            .findUnique() :
+            	
+            null;
     }	
 	
 	
 	
 	public static String passwordHash(String message)
 	{
+		
+		if( message == null )
+		{
+			return null;
+		}
 
 		MessageDigest m;
 		
@@ -76,10 +87,12 @@ public class User extends AppModel {
 		{
 			m = MessageDigest.getInstance("SHA-1");
 			m.reset();
+			
+			System.out.println( "HASH " + message );
+			
 			m.update(message.getBytes());
 			
 			return Global.getHex(m.digest());
-			
 			
 		} 
 		catch (NoSuchAlgorithmException e) 

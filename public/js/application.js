@@ -32,13 +32,34 @@ function Application(config)
 		
 	};		
 	
-	this.onFormBeforeSubmit = function(formFields, $form, options)
+	this.disableForm = function($form)
 	{
-		self.jCurrentForm = $form;
-		
+		$form = $($form);
+		$("input, select, textarea").each( function(){
+			var $this = $(this);
 
+			$this.data("previous-disabled-state", $this.prop("disabled") );
+
+			$this.prop("disabled", true);
+		});
 		
-		return true;
+		
+		
+	};
+	
+	this.enableForm = function($form)
+	{
+		$form = $($form);
+		$("input, select, textarea").each(function(){
+			var $this = $(this);
+			
+			if( !$this.data("previous-disabled-state") )
+			{
+				$this.prop("disabled", false);
+			}
+				
+		});
+		
 	};
 	
 	this.stripPjaxParam = function (url) {
@@ -48,8 +69,23 @@ function Application(config)
 		    .replace(/[\?&]$/, '')
 	}
 	
+	
+	this.onFormBeforeSubmit = function(formFields, $form, options)
+	{
+		self.jCurrentForm = $form;
+		
+		self.disableForm($form);
+		
+		return true;
+	};
+	
+	
+
+	
 	this.onFormSubmitSuccess = function(responseText, statusText, xhr, $form)
 	{
+		self.enableForm($form);
+		
 		// for normal html responses, the first argument to the success callback 
 	    // is the XMLHttpRequest object's responseText property 
 	 
@@ -64,6 +100,7 @@ function Application(config)
 		// alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +  '\n\nThe output div should have already been updated with the responseText.');
 		
 		var redirectUrl = xhr.getResponseHeader('X-PJAX-REDIRECT');
+		
 		
 		if( redirectUrl )
 		{
@@ -84,6 +121,8 @@ function Application(config)
 			
 		}
 
+		
+		// push state
 		if($.support.pjax)
 		{
 			
@@ -102,7 +141,7 @@ function Application(config)
 			};
 
 			
-			window.history.replaceState(pjaxState, strResponseTitle, pageUrl);
+			window.history.pushState(pjaxState, strResponseTitle, pageUrl);
 			
 		}		
 		

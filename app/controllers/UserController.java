@@ -3,11 +3,12 @@ package controllers;
 import java.util.Date;
 
 import javax.persistence.PersistenceException;
-
+import javax.persistence.Entity;
 import play.*;
 import play.mvc.*;
 import play.data.*;
-import play.data.validation.ValidationError;
+import play.data.validation.*;
+import play.data.validation.Constraints.*;
 
 import models.*;
 import views.html.*;
@@ -19,19 +20,43 @@ public class UserController extends AppController {
 
 	
     // Authentication
-    
+	//@Entity 
     public static class Login {
         
-        public String email;
-        public String password;
+    	@Required
+    	@Email
+        protected String email;
+    	
+        protected String password;
+        
+        
+        public String getEmail() { return email; }
+        
+        public void setEmail(String e) { email = e; }
+
+        public String getPassword(){ return password; }
+        
+        public void setPassword(String p){ password = p; }      
+        
         
         public String validate() {
+        	
+        	
             if(User.authenticate(email, password) == null) {
-                return "Invalid user or password";
+                return "Invalid email or password";
             }
             return null;
         }
         
+        public User getUser()
+        {
+        	return User.authenticate(email, password);
+        }
+        
+        public String toString()
+        {
+        	return "Login{ " + "email: \""+email+"\", password:\""+password + "\"}";
+        }
     }
 
     /**
@@ -50,18 +75,19 @@ public class UserController extends AppController {
     	
         Form<Login> loginForm = form(Login.class).bindFromRequest();
         
+        // System.out.println("loginForm -> " + loginForm);
+        
         if(loginForm.hasErrors()) 
         {
-            return badRequest(views.html.User.login.render(loginForm));
+            return ok(views.html.User.login.render(loginForm));
         }
         else 
         {
         	
-            // session("email", loginForm.get().email);
+        	
+        	setAuthUser( loginForm.get().getUser() );	
             
-            return redirect(
-                routes.ApplicationController.index()
-            );
+            return  pjaxRedirect(  routes.ApplicationController.index() );
         }
     }
     
@@ -138,6 +164,21 @@ public class UserController extends AppController {
     	return user != null ?  ok(views.html.User.homepageRegisterSuccess.render(user)) : badRequest("User not found");
     	
     }
+    
+    public static Result register()
+    {
+    	return null;
+    }
+
+    public static Result registerSubmit()
+    {
+    	return null;
+    }    
+
+    public static Result registerSuccess()
+    {
+    	return null;
+    }        
     
     public static Result publicProfile(Integer id)
     {

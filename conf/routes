@@ -21,6 +21,10 @@ GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()
 
+GET		/register					controllers.UserController.register()
+POST	/register					controllers.UserController.registerSubmit()
+POST	/register_success			controllers.UserController.registerSuccess()
+
 GET		/homepage_register			controllers.UserController.homepageRegister()
 POST 	/homepage_register 			controllers.UserController.homepageRegisterSubmit()
 GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
