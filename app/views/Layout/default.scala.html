@@ -25,9 +25,7 @@
         
         <script src="@routes.Assets.at("soundmanager2/script/soundmanager2-nodebug-jsmin.js")" type="text/javascript"></script>
         
-        
         <script src="@routes.Assets.at("js/application.js")" type="text/javascript"></script>
-        
         
 	    <!--[if lt IE 9]>
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -75,9 +73,10 @@
 		            <span class="icon-bar"></span>
 		          </a>
 		          <a class="brand" href="@routes.ApplicationController.index()">Skyjam</a>
+		          
 		          <div class="nav-collapse">
           			
-		            <ul class="nav pull-right">
+		            <ul class="nav pull-right" id="user-top-menu">
 		              <li class="active"><a href="@routes.ApplicationController.index()">Home</a></li>
 		              <li><a href="@routes.UserController.login()">Log In</a></li>
 		              <li><a href="#contact">Sign Up</a></li>

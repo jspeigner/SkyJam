@@ -172,6 +172,12 @@ function Application(config)
 		
 	};
 	
+	this.onPjaxEnd = function(event, xhrDeferred,options)
+	{
+		// update the user menu if exists
+		
+	};
+	
 	
 	// this is quick and dirty implementation
 	this.onDomReady = function()
@@ -225,9 +231,15 @@ function Application(config)
 		
 		
 		// ajax navigation
-		$("a").pjax(self.bodyContentSelector, {
-			fragment : self.bodyContentSelector
-		});
+		$(document).on('click', 'a', function(event) {
+			
+			var container = $(self.bodyContentSelector);
+			container.on('pjax:end', self.onPjaxEnd);
+			
+			return $.pjax.click(event, container, {
+				fragment : self.bodyContentSelector
+			});
+		});		
 		
 		
 		
