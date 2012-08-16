@@ -1,0 +1,17 @@
+@(userPassed:User = null)@{ 
+				import com.codahale.jerkson.Json._
+
+				val user = if( userPassed == null ) UserController.getAuthUser() else userPassed
+				
+				var userData:HashMap[String,String] = null;
+				if( user != null )
+				{
+					userData = new HashMap[String,String];
+					
+					userData.put("username", user.getUsername())
+					userData.put("id", user.getId().toString())
+					userData.put("email", user.getEmail())
+				}
+				
+				Html(generate(userData))
+}

@@ -187,6 +187,12 @@ public class UserController extends AppController {
     	return null;
     }
     
+    public static Result getAuthUserJson()
+    {
+    	User user = getAuthUser();
+    	return ok( views.html.User.getUserJson.render(user) ).as("application/json");
+    }
+    
     public static User getAuthUser()
     {
     	User user = null;
@@ -223,5 +229,8 @@ public class UserController extends AppController {
     	
     	return false;
     }
+    
+    
+    
 	
 }

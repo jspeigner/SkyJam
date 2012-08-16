@@ -1,7 +1,6 @@
-@(playlists: List[Playlist])
-
-@import com.codahale.jerkson.Json._
-@{
+@(playlists: List[Playlist])@{
+	import com.codahale.jerkson.Json._
+	
 	val jsonList = new scala.collection.mutable.ListBuffer[Map[String,String]]()
 	
 	for(playlist <- playlists)

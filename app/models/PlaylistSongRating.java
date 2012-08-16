@@ -49,6 +49,10 @@ public class PlaylistSongRating extends AppModel {
 	@ManyToOne
 	private PlaylistSong playlistSong;
 
+	
+	
+	public static Model.Finder<Integer,PlaylistSongRating> find = new Finder<Integer, PlaylistSongRating>(Integer.class, PlaylistSongRating.class);
+	
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -65,11 +69,11 @@ public class PlaylistSongRating extends AppModel {
 		this.user = user;
 	}
 
-	public Type getType() {
+	public PlaylistSongRating.Type getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(PlaylistSongRating.Type type) {
 		this.type = type;
 	}
 

@@ -4,7 +4,6 @@ PlayerControlInterface = {
 	playerTemplateId : "#player-template",
 	playerControl: null,
 	
-	
 	setPlaylist : function(playlistId){
 		
 	},
@@ -26,6 +25,8 @@ PlayerControlInterface = {
 			    	self.playerControl = new PlayerControl( PlayerControlInterface.playerId , { 
 			    		playlist : playlistResponse 
 			    	} );
+			    	
+			    	self.playerControl.setUser(application.user);
 			    }
 		);
 		
@@ -35,12 +36,21 @@ PlayerControlInterface = {
 	
 	init: function()
 	{
+		$(document).on("application:user", this.onUserChange );
+		
 		PlayerControlInterface.loadPlaylist();
 	},
 	
 	onSoundManagerTimeout: function()
 	{
 		
+	},
+	onUserChange: function( event, userData )
+	{
+		if( PlayerControlInterface.playerControl )
+		{
+			PlayerControlInterface.playerControl.setUser(userData);
+		}
 	}
 	
 	
@@ -61,6 +71,8 @@ PlayerControl = can.Control({
 	currentSongSMSound: null,
 	currentPlayerState: null,
 	playFailedCount: 0,
+	user:null,
+	userPlaylistData:null,
 	
 	init: function( element, options ){
 	  
@@ -107,8 +119,94 @@ PlayerControl = can.Control({
 		    	this.playSong();
 		    }
 		}
+		
+		this.refreshUserButtons();
 	    
   } ,
+  
+  setUser: function(userData)
+  {
+	  this.user = userData;
+	  
+	  if( this.user != null  )
+	  {
+		  
+		  this.refreshUserPlaylistData();
+		  
+	  }
+	  else
+	  {
+		  this.userPlaylistData = null;
+		  
+	  }
+	  
+	  this.refreshUserButtons();
+	  
+	  
+  },
+  
+  refreshUserPlaylistData: function()
+  {
+	  var self = this;
+	  
+	  if( this.options.playlist )
+	  {
+		  
+		  $.get( application.config.player.urls.get_user_playlist_data.replace("0", this.options.playlist.id ), {}, function(data, xhr, status){
+			  
+			  self.onUserPlaylistDataLoaded(data, self.user );
+			  
+		  }).error( function(){
+			  
+			  self.userPlaylistData = null;
+			  
+		  });
+		  
+		  return true;
+	  }	  
+	  
+	  return false;
+	  
+	  	  
+  },
+  
+  onUserPlaylistDataLoaded: function(data, user)
+  {
+	  this.userPlaylistData = data;
+	  
+	  this.refreshUserButtons();
+	  
+  },
+  
+  getUserPlaylistDataByPlaylistSongId : function(playlistSongId)
+  {
+	  if( this.userPlaylistData )
+	  {
+		  var playlistSongData = {};
+		  
+		  $.each( this.userPlaylistData , function(innerModelName, innerModel ){
+			 
+			  playlistSongData[innerModelName] = [];
+			 
+			 $.each( innerModel, function(entryIndex, entry){
+				 if( entry.playlist_song_id == playlistSongId ){
+					 playlistSongData[ innerModelName ].push( entry);
+				 }
+					
+			 } );
+			 
+		  } );
+		  
+		  return playlistSongData;
+		  
+	  }
+	  else 
+	  {
+		  return null;
+	  }
+		  
+	
+  },
   
   loadSong: function(playlistSongData)
   {
@@ -129,11 +227,12 @@ PlayerControl = can.Control({
 	  {
 		   
 		this._createCurrentSMSong('PlaylistSong.'+this.currentSong.id, this.currentSong.Song.song_url);
-
 		  
 	  }
 	  
 	  $(".name .song").text( this.currentSong.Song.name );
+	  
+	  this.refreshUserButtons();
 	  
 	  return true;
 	  
@@ -300,6 +399,53 @@ PlayerControl = can.Control({
 	  }
   },
   
+  refreshUserButtons: function(){
+	  
+	  if( this.user != null ){
+		  
+		  if( this.options.playlist ) {
+			  
+			  if( this.currentSong ){
+				  var userPlaylistSongData = this.getUserPlaylistDataByPlaylistSongId( this.currentSong.id );
+				  
+				  if ( userPlaylistSongData )
+				  {
+					  if( userPlaylistSongData.PlaylistSongRating && userPlaylistSongData.PlaylistSongRating.length ){
+						  this.disableRatingButtons();
+					  } else {
+						  this.enableRatingButtons();
+					  }
+					  
+					  
+				  }
+				  else
+				  {
+					  this.disableRatingButtons();
+				  }
+				  
+				  this.enableShareButton();
+				  
+			  } else {
+				  this.disableUserButtons();
+			  }
+			  
+			  
+			  
+			  
+		  } else {
+			  this.disableUserButtons();
+		  }
+		  
+			 
+		  
+		  
+		  
+	  }  else {
+		  this.disableUserButtons();
+	  }
+		  
+  },
+  
   goToNextSong: function(play)
   {
 	  play = ( play === undefined ) ? ( this.currentPlayerState == this.PlayerState.PLAY ) : play ;
@@ -332,8 +478,31 @@ PlayerControl = can.Control({
 	  }
   },
   
-  getNextSong: function(playlist, playlistSongId)
+  disableUserButtons:function(){
+	  this.disableShareButton();
+	  this.disableRatingButtons();
+  },
+  
+  enableUserButtons:function(){
+	  this.enableShareButton();
+	  this.enableRatingButtons();
+  },
+  disableRatingButtons: function(){
+	  $( ".like a, .dislike a",this.element).addClass("disabled");
+  },
+  enableRatingButtons: function()
   {
+	  $( ".like a, .dislike a",this.element).removeClass("disabled");
+  },
+  enableShareButton: function(){
+	  $( ".share a",this.element).removeClass("disabled");
+  },
+  disableShareButton: function(){
+	  $(".share a" ,this.element).addClass("disabled");
+  },
+  
+  
+  getNextSong: function(playlist, playlistSongId){
 	  
 	  var count = playlist.PlaylistSong.length;
 	  
@@ -382,6 +551,8 @@ PlayerControl = can.Control({
 		  $(".volume", this.element).hide();
 		  $(".volume-off", this.element).show();
 	  }
+	  
+	  return false;
   },  
   
   ".volume-off a click" : function(el , event){
@@ -392,28 +563,60 @@ PlayerControl = can.Control({
 		  $(".volume-off", this.element).hide();
 		  
 	  }	  
+	  
+	  return false;
   },  
   
   ".like a click" : function(el , event){
-	  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.LIKE });
-	  a.save();
-	  $(".like a").addClass("disabled");
-	  $(".dislike a").addClass("disabled");
+	  
+	  if(!el.is(".disabled")){
+		  
+		  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.LIKE });
+		  
+		  var self = this;
+		  $.when( a.save()).then( function(){ 
+			  self.refreshUserPlaylistData();
+		  });
+		  
+		  // update the playlist data
+		  
+		  
+		  this.disableRatingButtons();
+		  
+		  
+	  }
+		 
+	  return false;
 	  
   },  
   ".dislike a click" : function(el , event){
-	  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.DISLIKE });
-	  a.save(); 
-	  $(".like a").addClass("disabled");
-	  $(".dislike a").addClass("disabled");
+	  
+	  if(!el.is(".disabled")){
+		  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.DISLIKE });
+		  a.save(); 
+		  
+		  var self = this;
+		  $.when( a.save()).then( function(){ 
+			  self.refreshUserPlaylistData();
+		  });
+		  
+		  this.disableRatingButtons();
+		  
+	  }
+	  
+	  return false;
   },  
   ".share a click" : function(el , event){
+	  if(!el.is(".disabled")){
+		  
+	  }
 	  
+	  return false;
   }      
   
 });
 
-
+// Models
 
 PlaylistModel = can.Model({
 	
@@ -442,13 +645,14 @@ PlaylistSongRatingModel = can.Model({
 	create: application.config.player.urls.save_playlist_song_rating
 	
 }, {});
+
 PlaylistSongRatingModel.TYPE = {
 		LIKE : "like",
 		DISLIKE : "dislike"
 		
 };
 
-
+// Init the player
 // resolve on both dom ready and sound manager ready
 
 var df1 = $.Deferred(), df2 = $.Deferred();
@@ -458,6 +662,7 @@ $.when( df1, df2 ).done( function(){
 	  if( $("#player").length )
 	  {
 		  PlayerControlInterface.init();
+		  PlayerControlInterface.onUserChange(null, application.user);
 	  
 	  
 		  $(document).on("click", ".player-controls-play", function(){

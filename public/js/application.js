@@ -15,6 +15,18 @@ function Application(config)
 	
 	this.jCurrentForm = null;
 	
+	this.user = null;
+	
+	this.getUser = function ()
+	{
+		return self.user;
+	};
+	
+	this.setUser = function (newUser)
+	{
+		this.user = newUser;
+		$.event.trigger("application:user", [ this.user ]);
+	};
 	
 	this.autocompleteItemRender = function( ul, item ) {
 		
@@ -48,6 +60,15 @@ function Application(config)
 		
 		
 	};
+	
+	this.refreshAuthUser = function()
+	{
+		$.get( self.config.urls.getAuthUser, {}, function(data, textStatus, jqXHR){
+			
+			self.setUser(data);
+			
+		}, "json" );
+	}
 	
 	this.enableForm = function($form)
 	{
@@ -86,23 +107,30 @@ function Application(config)
 		var redirectUrl = xhr.getResponseHeader('X-PJAX-REDIRECT');
 		
 		
-		if( redirectUrl )
+		if( redirectUrl && ( !xhr.pjaxRedirected  ) )
 		{
 			// emulate pjax click
 			
-			var a = $("<a>").attr("href", redirectUrl);
+			xhr.pjaxRedirected = true;
 			
-			var opts = {
-				fragment : self.bodyContentSelector
-			};
+			var a = $("<a>").attr("href", redirectUrl).click( 
+					function(e){ 
+						e.preventDefault(); 
+						return false; 
+					}
+			);
 			
 			var event = jQuery.Event("click");
 			event.currentTarget = a[0];
 			
 			var container = $(self.bodyContentSelector);
-			container.on('pjax:complete', self.onPjaxComplete);			
+			// container.on('pjax:complete', self.onPjaxComplete);		
 			
-			$.pjax.click(event, self.bodyContentSelector, opts);
+			// ajax navigation
+				
+			$.pjax.click(event, container, {fragment : self.bodyContentSelector });
+			
+			
 			
 			return true;
 			
@@ -115,25 +143,21 @@ function Application(config)
 	this.onFormSubmitSuccess = function(responseText, statusText, xhr, $form)
 	{
 		self.enableForm($form);
-		
-		// for normal html responses, the first argument to the success callback 
-	    // is the XMLHttpRequest object's responseText property 
-	 
-	    // if the ajaxForm method was passed an Options Object with the dataType 
-	    // property set to 'xml' then the first argument to the success callback 
-	    // is the XMLHttpRequest object's responseXML property 
-	 
-	    // if the ajaxForm method was passed an Options Object with the dataType 
-	    // property set to 'json' then the first argument to the success callback 
-	    // is the json data object returned by the server 		
-		
-		// alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +  '\n\nThe output div should have already been updated with the responseText.');
-		
 
+		if( $form.attr("id") == "user-sign-in" )
+		{
+			// refresh the user data
+			self.refreshAuthUser();
+		}
+		
+		/*
 		if( self.processPjaxRedirect(xhr) )
 		{
 			return true;
 		}
+		*/
+		
+		self.onPjaxComplete(null, xhr, statusText);
 		
 		// push state
 		if($.support.pjax)
@@ -179,16 +203,35 @@ function Application(config)
 			}
 
 			
+			
 		}
 		
 		self.jCurrentForm = null;
 		
 	};
 	
+	this.updatePageFragments = function(responseText)
+	{
+		var jResponseText = $(responseText);
+		
+		// update the user menu if exists
+		if( jResponseText.length && self.pjaxAdditionalFragments )
+		{
+			for(var i=0; i<self.pjaxAdditionalFragments.length; i++)
+			{
+				var $fragment = $( self.pjaxAdditionalFragments[i], jResponseText );
+				if($fragment.length)
+				{
+					$( self.pjaxAdditionalFragments[i]).replaceWith($fragment);
+				}
+			}
+		}		
+	}
+	
 	this.onPjaxComplete = function(event, xhr, textStatus, options)
 	{
 
-		if( textStatus == "success")
+		if( ( textStatus == "success" ) )
 		{
 		
 			if( self.processPjaxRedirect(xhr) )
@@ -196,22 +239,31 @@ function Application(config)
 				return true;
 			}
 			
-			var jResponseText = $(xhr.responseText);
-	
-			// update the user menu if exists
-			if( jResponseText.length && self.pjaxAdditionalFragments )
-			{
-				for(var i=0; i<self.pjaxAdditionalFragments.length; i++)
-				{
-					var $fragment = $( self.pjaxAdditionalFragments[i], jResponseText );
-					if($fragment.length)
-					{
-						$( self.pjaxAdditionalFragments[i]).replaceWith($fragment);
-					}
-				}
-			}
+			self.updatePageFragments(xhr.responseText);
+
 		}
 		
+		
+		// logout
+		if( event )
+		{
+			event.preventDefault();
+			
+			if( event.relatedTarget && $(event.relatedTarget).is(".logout") )
+			{
+				self.refreshAuthUser();
+			}
+			
+		}
+		
+		
+	};
+	
+	this.onPjaxError = function(e, xhr, textStatus, errorThrown, options)
+	{
+		e.preventDefault();
+		
+		return false;
 	};
 	
 	
@@ -265,37 +317,73 @@ function Application(config)
 			inputHeaderFormSearchJq.data( "autocomplete" )._renderItem = this.autocompleteItemRender;			
 		}
 		
+		var pjaxContainer = $(self.bodyContentSelector);
+		pjaxContainer.on('pjax:complete', self.onPjaxComplete);		
+		pjaxContainer.on('pjax:error', self.onPjaxError);
 		
 		// ajax navigation
-		$(document).on('click', 'a:not(.no-pjax)', function(event) {
+		$(document).on('click', 'a:not(.no-pjax):not(#player > *)', function(event) {
 			
-			var container = $(self.bodyContentSelector);
-			container.on('pjax:complete', self.onPjaxComplete);
-			
-			return $.pjax.click(event, container, {
+			$.pjax.click(event, pjaxContainer, {
 				fragment : self.bodyContentSelector
 			});
+			
+			return false;
 		});		
 		
 		
+		// on logout click
+		$(document).on( "click", "#user-top-menu .logout", function(event){
+			
+			var logoutUrl = $(this).attr("href");
+			
+			$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
+				self.updatePageFragments(data);
+				self.refreshAuthUser();
+			});
+			
+			/*
+			var container = $(self.bodyContentSelector);
+			container.on('pjax:complete', function(){
+				// on logout done
+				self.setUser(null);
+			});
+			$.pjax.click(event, container, {
+				fragment : self.bodyContentSelector
+			});
+			*/
+			return false;
+		});
 		
-		$("form").each(function(){
-			
-			var actionUrl = URI( $(this).attr("action") ).addSearch("_pjax","form");
-			
-			$(this).attr( "action", actionUrl.toString()  );
+		$(document).on("submit", "form:not(.no-pjax)", function(event){
+	        	
+	            event.preventDefault();
+	            
+	            var pjaxAction = URI($(this).attr("action"));
+	            pjaxAction.addSearch("_pjax", "form");
+	            
+	            $(this).attr("action", pjaxAction.toString() );
+	            
+	            $(this).ajaxSubmit({
+	    			replaceTarget: 	true,
+	    			// delegation: 	true,
+	    			dataType:		"html",
+	    			target: 		self.bodyContentSelector,
+	    			fragment: 		self.bodyContentSelector,
+
+	    			beforeSubmit: 	self.onFormBeforeSubmit,
+	    			success: 		self.onFormSubmitSuccess
+
+	            });
+	        			
+		});
 		
-		}).ajaxForm({
-			
-			replaceTarget: 	true,
-			delegation: 	true,
-			dataType:		"html",
-			target: 		self.bodyContentSelector,
-			beforeSubmit: 	self.onFormBeforeSubmit,
-			success: 		self.onFormSubmitSuccess,
-			fragment: 		self.bodyContentSelector
-			
-		});;
+
 	};
+	
+	if( config.user )
+	{
+		this.setUser(config.user);
+	}
 };
 

@@ -14,7 +14,7 @@
         
         
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
-        <script src="@routes.Assets.at("js/libs/jquery-1.7.2.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/jquery-1.7.2.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/URI.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.URI.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/bootstrap.min.js")" type="text/javascript"></script>
@@ -37,7 +37,8 @@
 		var application = new Application({
 			urls: {
 				headerFormSearch : "@routes.PlaylistController.searchJson",
-				playlist : "@routes.PlaylistController.playlist(0)"
+				playlist : "@routes.PlaylistController.playlist(0)",
+				getAuthUser : "@routes.UserController.getAuthUserJson()"
 
 			},
 			player: {
@@ -48,11 +49,14 @@
 					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity()",
 					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating()",
 					
+					get_user_playlist_data: "@routes.PlaylistController.getUserPlaylistData(0)"
+					
 				},
 				soundmanager : {
 					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf")"
 				}
-			}
+			},
+			user : @views.html.User.getUserJson()
 				
 		});
 		

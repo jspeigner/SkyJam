@@ -103,24 +103,39 @@ public class PlaylistController extends AppController
 			  
 			  PlaylistSongRating.Type t = PlaylistSongRating.Type.forName(type);
 			  
-			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
+			  User user = UserController.getAuthUser();
 			  
-			  // XXX check duplicate  user ratings
-			  
-			  if( (user != null) && ( true ) )
+			  if( (user != null) )
 			  {
-		  
-				  PlaylistSongRating p = new PlaylistSongRating();
-				  p.setCreatedDate(new Date());
-				  p.setPlaylistSong( PlaylistSong.find.byId( Integer.parseInt( playlistSongId ) ) );
-				  p.setType(t);
-				  p.setUser(user);
+				  Integer playlistSongIdInt = Integer.parseInt( playlistSongId );
 				  
-				  p.save();
-		  
-		  
-				  return ok("");
+				  if( PlaylistSongRating.find.where().eq("user", user).eq("playlistSong.id", playlistSongIdInt).findRowCount() == 0 )
+				  {
+					  
+					  PlaylistSongRating p = new PlaylistSongRating();
+					  p.setCreatedDate(new Date());
+					  p.setPlaylistSong( PlaylistSong.find.byId( playlistSongIdInt ) );
+					  p.setType(t);
+					  p.setUser(user);
+					  
+					  p.save();
+					  
+			  
+					  // return getUserPlaylistData(playlistSongIdInt);
+					  return ok("");
+					  
+				  }
+				  else
+				  {
+					  return badRequest("Rating was already saved");
+				  }
+				  
 			  }
+			  else 
+			  {
+				  return badRequest("User not found");
+			  }
+				 
 		  }
 		  catch(Exception e)
 		  {
@@ -163,19 +178,24 @@ public class PlaylistController extends AppController
 		  return badRequest("{ error: \"Playlist not found\" }");
 	  }
 	  
-	  public static Result playJson(Integer playlistId)
+	  public static Result getUserPlaylistData(Integer playlistId)
 	  {
-		  return null;
-	  }
-	  
-	  public static Result pauseJson()
-	  {
-		  return null;
-	  }
-	  
-	  public static Result skipJson()
-	  {
-		  return null;
+		  User user = UserController.getAuthUser();
+		  
+		  if( user != null )
+		  {
+			  
+			  List<PlaylistSongRating> ratings = PlaylistSongRating.find.where().eq("playlistSong.playlist.id", playlistId).eq("user", user).findList(); 
+			  
+			  return ok(views.html.Playlist.getUserPlaylistData.render(user,ratings)).as( Global.JSON_CONTENT_TYPE);
+			  
+		  }
+		  else
+		  {
+			  return badRequest("User not found");
+		  }
+		
+		  
 	  }
 	
 }

@@ -5,6 +5,8 @@ import global.Global;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.*;
 
 import com.avaje.ebean.annotation.EnumValue;
@@ -71,7 +73,11 @@ public class User extends AppModel {
             null;
     }	
 	
-	
+	public List<ValidationError> validate()
+	{
+		
+		return null;
+	}
 	
 	public static String passwordHash(String message)
 	{

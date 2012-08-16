@@ -1,0 +1,31 @@
+@(user:User, playlistSongRatings: List[PlaylistSongRating])@{
+
+	import com.codahale.jerkson.Json._
+	
+	var jsonPlaylist = new HashMap[String, Any]
+	
+	
+	
+	var jsonplaylistSongRatingData = new scala.collection.mutable.ListBuffer[Any]
+	
+	for(rating <- playlistSongRatings)
+	{
+		var jsonRatingData = new HashMap[String,String]
+			
+		jsonRatingData.put("type", rating.getType().toString() )
+		jsonRatingData.put("playlist_song_id", rating.getPlaylistSong().getId().toString() )
+		jsonRatingData.put("id", rating.getId().toString())
+		jsonRatingData.put("created_date", rating.getCreatedDate().toString())
+		
+		
+		jsonplaylistSongRatingData.append( jsonRatingData )
+		
+	}
+	
+	
+	jsonPlaylist.put("PlaylistSongRating", jsonplaylistSongRatingData);
+	
+	
+	Html(generate(jsonPlaylist))		
+
+}
