@@ -60,8 +60,8 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 		ul li.playlistSearchDropdown small { font-size:0.8em; }
 		
 
-body.stub  #homepage-register  { width:600px; margin: 0 auto; }
-	body.stub #homepage-register h1 { margin-bottom: 1em; }
+#homepage-register  { width:600px; margin: 0 auto; }
+	#homepage-register h1 { margin-bottom: 1em; }
 	
 	#playlist-page { }
 		#playlist-page .controls { margin:1em 0 1em 0;}

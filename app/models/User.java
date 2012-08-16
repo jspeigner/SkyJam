@@ -4,8 +4,11 @@ import global.Global;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -25,8 +28,8 @@ import play.data.validation.Constraints.MaxLength;
 //@models.constraints.Constraints.Unique(id="id",fields={"email","username"})
 public class User extends AppModel {
 
-	@Length(max=30)
-	// @Constraints.Required
+	@Length(max=30,min=1)
+	@Constraints.Required
 	private String username;
 	
 	@Length(max=40)
@@ -34,13 +37,15 @@ public class User extends AppModel {
 	@Email
 	private String email;
 	
+	@Constraints.Required
+	@Length(max=40, min=1)
 	private String password;
 
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date registeredDate;
 
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	public Date lastLoginDate;
+	private Date lastLoginDate;
 	
 	
 	public enum UserType
@@ -73,10 +78,28 @@ public class User extends AppModel {
             null;
     }	
 	
-	public List<ValidationError> validate()
+	public Map<String,List<ValidationError>> validate()
 	{
+		Map<String,List<ValidationError>> validationErrors = new HashMap<String,List<ValidationError>>(); 
 		
-		return null;
+		if( User.find.where().eq("email", email ).findRowCount() > 0 )
+		{
+			List<ValidationError> emailErrors = new ArrayList<ValidationError>();
+			emailErrors.add(new ValidationError( "email", "Email is already taken", null));
+			
+			validationErrors.put( "email", emailErrors );
+		}
+
+		if( User.find.where().eq("username", username ).findRowCount() > 0 )
+		{
+			List<ValidationError> usernameErrors = new ArrayList<ValidationError>();
+			
+			usernameErrors.add(new ValidationError( "username", "Username is already taken", null) );
+			
+			validationErrors.put( "username", usernameErrors );
+		}
+		
+		return validationErrors.size() > 0 ? validationErrors : null;
 	}
 	
 	public static String passwordHash(String message)
@@ -187,6 +210,14 @@ public class User extends AppModel {
 		}
 		
 		return null;
+	}
+
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
 	}	
 	
 

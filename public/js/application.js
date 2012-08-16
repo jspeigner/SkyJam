@@ -331,52 +331,56 @@ function Application(config)
 			return false;
 		});		
 		
-		
-		// on logout click
-		$(document).on( "click", "#user-top-menu .logout", function(event){
-			
-			var logoutUrl = $(this).attr("href");
-			
-			$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
-				self.updatePageFragments(data);
-				self.refreshAuthUser();
+		if( application.config.pjax )
+		{
+			// on logout click
+			$(document).on( "click", "#user-top-menu .logout", function(event){
+				
+				var logoutUrl = $(this).attr("href");
+				
+				$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
+					self.updatePageFragments(data);
+					self.refreshAuthUser();
+				});
+				
+				/*
+				var container = $(self.bodyContentSelector);
+				container.on('pjax:complete', function(){
+					// on logout done
+					self.setUser(null);
+				});
+				$.pjax.click(event, container, {
+					fragment : self.bodyContentSelector
+				});
+				*/
+				return false;
 			});
 			
-			/*
-			var container = $(self.bodyContentSelector);
-			container.on('pjax:complete', function(){
-				// on logout done
-				self.setUser(null);
-			});
-			$.pjax.click(event, container, {
-				fragment : self.bodyContentSelector
-			});
-			*/
-			return false;
-		});
-		
-		$(document).on("submit", "form:not(.no-pjax)", function(event){
-	        	
-	            event.preventDefault();
-	            
-	            var pjaxAction = URI($(this).attr("action"));
-	            pjaxAction.addSearch("_pjax", "form");
-	            
-	            $(this).attr("action", pjaxAction.toString() );
-	            
-	            $(this).ajaxSubmit({
-	    			replaceTarget: 	true,
-	    			// delegation: 	true,
-	    			dataType:		"html",
-	    			target: 		self.bodyContentSelector,
-	    			fragment: 		self.bodyContentSelector,
+			$(document).on("submit", "form:not(.no-pjax)", function(event){
+		        	
+		            event.preventDefault();
+		            
+		            var pjaxAction = URI($(this).attr("action"));
+		            pjaxAction.addSearch("_pjax", "form");
+		            
+		            $(this).attr("action", pjaxAction.toString() );
+		            
+		            $(this).ajaxSubmit({
+		    			replaceTarget: 	true,
+		    			// delegation: 	true,
+		    			dataType:		"html",
+		    			target: 		self.bodyContentSelector,
+		    			fragment: 		self.bodyContentSelector,
 
-	    			beforeSubmit: 	self.onFormBeforeSubmit,
-	    			success: 		self.onFormSubmitSuccess
+		    			beforeSubmit: 	self.onFormBeforeSubmit,
+		    			success: 		self.onFormSubmitSuccess
 
-	            });
-	        			
-		});
+		            });
+		        			
+			});			
+		}
+		
+
 		
 
 	};

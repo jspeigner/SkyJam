@@ -1,6 +1,8 @@
 package controllers;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import play.mvc.*;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
+import sun.org.mozilla.javascript.ObjToIntMap.Iterator;
 
 import models.*;
 import views.html.*;
@@ -126,7 +129,7 @@ public class UserController extends AppController {
     	}
     	else
     	{
-
+  			
     		User user = userForm.get();
     		user.setPassword("empty");
     		user.setUsername( user.getEmail() );
@@ -164,18 +167,61 @@ public class UserController extends AppController {
     
     public static Result register()
     {
-    	return null;
+    	Form<User> userForm = form(User.class);
+    	
+    	return ok(views.html.User.register.render(userForm));
     }
 
     public static Result registerSubmit()
     {
-    	return null;
+    	Form<User> userForm = form(User.class).bindFromRequest("username","email","password");
+    	
+    	
+    	if(userForm.hasErrors())
+    	{
+    		
+    		return ok (views.html.User.register.render(userForm));
+    	}
+    	else
+    	{
+    		System.out.println(userForm);    		
+    		
+    		User user = userForm.get();
+    		
+    		user.setRegisteredDate(new Date());
+    		user.setType(User.UserType.user);
+    		user.setLastLoginDate(null);
+    		
+    		try
+    		{
+	    		user.save();
+    		}
+    		catch(Exception e)
+    		{
+    			// email is not unique
+    			userForm.reject("Exception "+e.toString());
+    			
+    			return ok(views.html.User.register.render(userForm));
+    			
+    		}
+    		
+    		
+    		setAuthUser(user);
+    		
+    		
+    		// return redirect( routes.UserController.homepageRegisterSuccess() );
+    		
+    		return pjaxRedirect( routes.UserController.registerSuccess() );
+    	}
     }    
 
     public static Result registerSuccess()
     {
-    	return null;
-    }        
+    	User user = getAuthUser();
+    	
+    	return user != null ?  ok(views.html.User.registerSuccess.render(user)) : badRequest("User not found");
+    	
+    }               
     
     public static Result publicProfile(Integer id)
     {

@@ -25,7 +25,7 @@ GET     /logout                     controllers.UserController.logout()
 
 GET		/register					controllers.UserController.register()
 POST	/register					controllers.UserController.registerSubmit()
-POST	/register_success			controllers.UserController.registerSuccess()
+GET		/register_success			controllers.UserController.registerSuccess()
 
 GET		/user/get_current.json		controllers.UserController.getAuthUserJson()
 
