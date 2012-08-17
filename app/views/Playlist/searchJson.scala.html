@@ -1,16 +1,21 @@
 @(playlists: List[Playlist])@{
 	import com.codahale.jerkson.Json._
 	
-	val jsonList = new scala.collection.mutable.ListBuffer[Map[String,String]]()
+	val jsonList = new scala.collection.mutable.ListBuffer[Any]()
 	
 	for(playlist <- playlists)
 	{
-		var jsonPlaylist = new HashMap[String,String]
+		var jsonPlaylist = new HashMap[String,Any]
 		
 		jsonPlaylist.put("label", playlist.getName() )
 		jsonPlaylist.put("value", playlist.getId().toString() )
 		jsonPlaylist.put("description", playlist.getDescription() )
 		jsonPlaylist.put("id", playlist.getId().toString())
+		
+		val artists = playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct;
+		jsonPlaylist.put("artists",  artists)
+		
+		
 		
 		jsonList.append(jsonPlaylist)
 	}

@@ -30,7 +30,7 @@ function Application(config)
 	
 	this.autocompleteItemRender = function( ul, item ) {
 		
-		var maxDescriptionChars = 50;
+		var maxDescriptionChars = 100;
 		var description = item.description.substring(0,maxDescriptionChars);
 		
 		if( item.description.length > maxDescriptionChars)
@@ -38,10 +38,20 @@ function Application(config)
 			description += "...";
 		}
 		
+		var artists = item.artists.join(", ");
+		
+		var artistsText = "With Artists: "+artists;
+		
 		return $( "<li></li>" )
 			.addClass('playlistSearchDropdown')
 			.data( "item.autocomplete", item )
-			.append( "<a>" + item.label + "<br><small>" + description + "</small></a>" )
+			.append( 
+					$("<a>")
+						.append( $("<span>").addClass("name").text( item.label ) )
+						.append( $("<span>").addClass("artists").text(artistsText) )
+						.append( $("<span>").addClass("description").text( description) )
+			)
+			
 			.appendTo( ul );
 		
 	};		
