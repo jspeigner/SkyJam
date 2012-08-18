@@ -38,9 +38,11 @@ function Application(config)
 			description += "...";
 		}
 		
+		var artistsMaxChars = 80;
+		
 		var artists = item.artists.join(", ");
 		
-		var artistsText = "With Artists: "+artists;
+		var artistsText = "With Artists: "+(  artists.length > artistsMaxChars ? ( artists.substring(0, artistsMaxChars)+"..." ) : artists );
 		
 		return $( "<li></li>" )
 			.addClass('playlistSearchDropdown')

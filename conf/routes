@@ -26,6 +26,8 @@ GET     /logout                     controllers.UserController.logout()
 GET		/register					controllers.UserController.register()
 POST	/register					controllers.UserController.registerSubmit()
 GET		/register_success			controllers.UserController.registerSuccess()
+GET		/register_with_fb			controllers.UserController.registerWithFacebook()
+
 
 GET		/user/get_current.json		controllers.UserController.getAuthUserJson()
 

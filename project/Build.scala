@@ -11,6 +11,9 @@ object ApplicationBuild extends Build {
     val appDependencies = Seq(
       // Add your project dependencies here,
 		"mysql" % "mysql-connector-java" % "5.1.18"
+//		,
+//		"org.apache.commons" % "commons-codec" % "1.6",
+
     )
     
 	val projectSettings = Play2WarPlugin.play2WarSettings ++ Seq(

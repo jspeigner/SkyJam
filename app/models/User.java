@@ -9,8 +9,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.persistence.*;
+
+import org.apache.commons.codec.binary.Base64;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.avaje.ebean.annotation.EnumValue;
 import com.avaje.ebean.validation.Length;
@@ -21,6 +26,7 @@ import play.data.format.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
+
 
 
 @Entity 
@@ -37,7 +43,6 @@ public class User extends AppModel {
 	@Email
 	private String email;
 	
-	@Constraints.Required
 	@Length(max=40, min=1)
 	private String password;
 
@@ -218,6 +223,101 @@ public class User extends AppModel {
 
 	public void setLastLoginDate(Date lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
+	}	
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class FacebookRegistrationSignedRequestFields
+	{
+		public String name;
+		public String email;
+		public String password;
+		
+		public FacebookRegistrationSignedRequestFields(){};
+	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class FacebookRegistrationSignedRequest
+	{
+		public String user_id;
+		
+		public FacebookRegistrationSignedRequestFields registration;
+		
+		public FacebookRegistrationSignedRequest(){};
+	}
+	
+	public static Map<String,String> getSignedRequestRegisterParams(String facebookSignedRequest)
+	{
+		
+		String payload = null;
+		
+	    int count = 0;
+        
+        //Retrieve payload (Note: encoded signature is used for internal verification and it is optional)
+        payload = facebookSignedRequest.split("[.]", 2)[1];		
+		
+		
+		payload = padBase64( payload.replace('-', '+').replace('_', '/').trim() );
+		
+		// Decode payload
+        try 
+        {
+        	Base64 base64Decoder = new Base64() ;
+        	byte[] decodedPayload = base64Decoder.decode(payload.getBytes());
+        	
+        	
+            // byte[] decodedPayload = Base64.decodeBase64(payload.getBytes());
+            
+            // payload = new String(decodedPayload, "UTF8");
+            
+            
+            
+            ObjectMapper om = new ObjectMapper();
+            
+            FacebookRegistrationSignedRequest f = om.readValue(decodedPayload, FacebookRegistrationSignedRequest.class);
+            
+            Map<String,String> results = new HashMap<String,String>();
+            
+            results.put("username", f.registration.name);
+            results.put("password", f.registration.password);
+            results.put("email", f.registration.email);
+            results.put("facebook_user_id", f.user_id);
+            
+            
+            return results;
+            
+        } 
+        catch (Exception e) 
+        {
+            
+            
+        }		
+        
+        
+        
+        return null;
+		
+	}
+	
+	protected static String padBase64(String b64) {
+	    String padding = "";
+	    // If you are a java developer, *this* is the critical bit.. FB expects
+	    // the base64 decode to do this padding for you (as the PHP one
+	    // apparently
+	    // does...
+	    switch (b64.length() % 4) {
+	    case 0:
+	        break;
+	    case 1:
+	        padding = "===";
+	        break;
+	    case 2:
+	        padding = "==";
+	        break;
+	    default:
+	        padding = "=";
+	    }
+	    return b64 + padding;
+
 	}	
 	
 

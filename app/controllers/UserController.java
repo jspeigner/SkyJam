@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Entity;
 import play.*;
 import play.mvc.*;
+import play.mvc.Http.Request;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
@@ -118,6 +119,7 @@ public class UserController extends AppController {
     
     public static Result homepageRegisterSubmit()
     {
+    	DynamicForm form = form().bindFromRequest();
     	
     	Form<User> userForm = form(User.class).bindFromRequest("email");
     	
@@ -174,7 +176,19 @@ public class UserController extends AppController {
 
     public static Result registerSubmit()
     {
-    	Form<User> userForm = form(User.class).bindFromRequest("username","email","password");
+    	Form<User> userForm;
+    	// process the FB signed_request
+    	DynamicForm form = form().bindFromRequest();
+    	
+    	if( form.field("signed_request").value() != null )
+    	{
+    		Map<String,String> signedRequestData = User.getSignedRequestRegisterParams( form.field("signed_request").value() );
+    		userForm = form(User.class).bind(signedRequestData, "username","email","password");
+    	}
+    	else
+    	{
+    		userForm = form(User.class).bindFromRequest("username","email","password");
+    	}
     	
     	
     	if(userForm.hasErrors())
@@ -221,7 +235,18 @@ public class UserController extends AppController {
     	
     	return user != null ?  ok(views.html.User.registerSuccess.render(user)) : badRequest("User not found");
     	
-    }               
+    }
+    
+    public static Result registerWithFacebook()
+    {
+    	String facebookAppId = Play.application().configuration().getString("application.facebook_app_id");
+    	
+    	Request r = request();
+    	
+    	return ok(views.html.User.registerWithFacebook.render(facebookAppId, r));
+    }
+    
+
     
     public static Result publicProfile(Integer id)
     {
