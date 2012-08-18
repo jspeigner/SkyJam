@@ -275,6 +275,26 @@ function Application(config)
 	{
 		e.preventDefault();
 		
+		if( xhr.responseText )
+		{
+			// display the error body
+			var bodyResponse = xhr.responseText.toString().split(/(<body>|<\/body>)/ig);
+			if( bodyResponse && bodyResponse.length > 2 )
+			{
+				var parsedResponse = $(bodyResponse[2]);
+				
+				
+				
+				$(self.bodyContentSelector).html( parsedResponse );
+				
+				$("title").text("Error");				
+			}
+			
+
+			
+		}
+		
+		
 		return false;
 	};
 	
