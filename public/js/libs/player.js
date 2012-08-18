@@ -28,7 +28,9 @@ PlayerControlInterface = {
 			    	
 			    	self.playerControl.setUser(application.user);
 			    }
-		);
+		).fail( function(){
+				// playlist is empty
+		});
 		
 		
 		
