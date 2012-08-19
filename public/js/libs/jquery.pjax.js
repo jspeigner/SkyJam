@@ -564,7 +564,25 @@ function extractContainer(data, xhr, options) {
   obj.url = stripPjaxParam(xhr.getResponseHeader('X-PJAX-URL') || options.requestUrl)
 
   // Attempt to parse response html into elements
-  var $data = $(data)
+  
+   
+  
+  var re = /<body[\s\S]*\/body>/;
+  var check=data.match(re);
+  
+  if(check && check.length>0) 
+  {
+	  check=check[0].replace(/^<body/, '<div');
+	  check=check.replace(/body>$/, 'div>');
+
+  } 
+  else 
+  {
+	  check=data;  
+  }
+  
+  $data = $(check);
+
 
   // If response data is empty, return fast
   if ($data.length === 0)

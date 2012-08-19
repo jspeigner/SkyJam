@@ -135,8 +135,6 @@ function Application(config)
 			var event = jQuery.Event("click");
 			event.currentTarget = a[0];
 			
-			var container = $(self.bodyContentSelector);
-			// container.on('pjax:complete', self.onPjaxComplete);		
 			
 			// ajax navigation
 				
@@ -169,6 +167,7 @@ function Application(config)
 		}
 		*/
 		
+		// process redirect and page fragments
 		self.onPjaxComplete(null, xhr, statusText);
 		
 		// push state
@@ -178,6 +177,8 @@ function Application(config)
 			var formActionUrl = $form.attr("action");
 			
 			var pageUrl = self.stripPjaxParam(xhr.getResponseHeader('X-PJAX-URL') || formActionUrl );
+			
+			var strResponseTitle = "";
 			
 			var pjaxState = {
 				      id: "form_"+(new Date).getTime(),
@@ -195,46 +196,30 @@ function Application(config)
 		}		
 		
 		
-		if( responseText && this.fragment )
+		if( responseText )
 		{
-			var jResponseText = $(responseText);
 			
-			var jResponseTextFragment = $(this.fragment, jResponseText );
-			
-			var formActionUrl = self.jCurrentForm ? self.jCurrentForm.attr("action") : null;
-			
-			if(jResponseTextFragment.length)
-			{
-				$( self.bodyContentSelector ).replaceWith( jResponseTextFragment );
-			}
-			
-			var strResponseTitle = $("title", jResponseText ).text();
-			if( strResponseTitle ) 
-			{
-				$("head title").text(strResponseTitle);
-			}
-
-			
-			
+			// self.updatePageFragments(responseText, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments) );
+			self.updatePageFragments(responseText, [ self.bodyContentSelector ] );
 		}
 		
 		self.jCurrentForm = null;
 		
 	};
 	
-	this.updatePageFragments = function(responseText)
+	this.updatePageFragments = function(responseText, pageFragments)
 	{
-		var jResponseText = $(responseText);
+		var jResponseText = jQuery.parseHtmlPage(responseText);
 		
 		// update the user menu if exists
-		if( jResponseText.length && self.pjaxAdditionalFragments )
+		if( pageFragments )
 		{
-			for(var i=0; i<self.pjaxAdditionalFragments.length; i++)
+			for(var i=0; i<pageFragments.length; i++)
 			{
-				var $fragment = $( self.pjaxAdditionalFragments[i], jResponseText );
+				var $fragment = $( pageFragments[i], jResponseText );
 				if($fragment.length)
 				{
-					$( self.pjaxAdditionalFragments[i]).replaceWith($fragment);
+					$( pageFragments[i]).html($fragment);
 				}
 			}
 		}		
@@ -251,7 +236,7 @@ function Application(config)
 				return true;
 			}
 			
-			self.updatePageFragments(xhr.responseText);
+			self.updatePageFragments(xhr.responseText, ["title" ].concat(self.pjaxAdditionalFragments));
 
 		}
 		
@@ -278,19 +263,27 @@ function Application(config)
 		if( xhr.responseText )
 		{
 			// display the error body
-			var bodyResponse = xhr.responseText.toString().split(/(<body>|<\/body>)/ig);
-			if( bodyResponse && bodyResponse.length > 2 )
+			  var re = /<body[\s\S]*\/body>/;
+			  var check=data.match(re);
+			  
+			  if(check && check.length>0) 
+			  {
+				  check=check[0].replace(/^<body/, '<div');
+				  check=check.replace(/body>$/, 'div>');
+
+			  } 
+			  else 
+			  {
+				  check=data;  
+			  }
+			  
+			$data = $(check);
+			
+			if(jResponseTextFragment.length)
 			{
-				var parsedResponse = $(bodyResponse[2]);
-				
-				
-				
-				$(self.bodyContentSelector).html( parsedResponse );
-				
-				$("title").text("Error");				
+				$( self.bodyContentSelector ).html( jResponseTextFragment );
 			}
 			
-
 			
 		}
 		
@@ -349,30 +342,37 @@ function Application(config)
 			inputHeaderFormSearchJq.data( "autocomplete" )._renderItem = this.autocompleteItemRender;			
 		}
 		
-		var pjaxContainer = $(self.bodyContentSelector);
-		pjaxContainer.on('pjax:complete', self.onPjaxComplete);		
-		pjaxContainer.on('pjax:error', self.onPjaxError);
 		
-		// ajax navigation
-		$(document).on('click', 'a:not(.no-pjax):not(#player > *)', function(event) {
-			
-			$.pjax.click(event, pjaxContainer, {
-				fragment : self.bodyContentSelector
-			});
-			
-			return false;
-		});		
 		
 		if( application.config.pjax )
 		{
+			
+			var pjaxContainer = $(self.bodyContentSelector);
+			pjaxContainer.on('pjax:complete', self.onPjaxComplete);		
+			pjaxContainer.on('pjax:error', self.onPjaxError);
+			
+			// ajax navigation
+			$(document).on('click', 'a:not(.no-pjax):not(#player > *)', function(event) {
+				
+				$.pjax.click(event, pjaxContainer, {
+					fragment : self.bodyContentSelector,	
+					timeout: 0
+				});
+				
+				return false;
+			});			
+			
+			
 			// on logout click
 			$(document).on( "click", "#user-top-menu .logout", function(event){
 				
 				var logoutUrl = $(this).attr("href");
 				
 				$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
-					self.updatePageFragments(data);
+					
+					self.updatePageFragments(data, self.pjaxAdditionalFragments);
 					self.refreshAuthUser();
+					
 				});
 				
 				/*
@@ -422,4 +422,47 @@ function Application(config)
 		this.setUser(config.user);
 	}
 };
+
+
+jQuery.parseHtmlPage = function(htmlString){
+		
+	  // empty set
+	  var results = $();
+	
+	  var reBody = /<body[\s\S]*\/body>/;
+	  var body=htmlString.match(reBody);
+	  
+	  if(body && body.length>0) 
+	  {
+		  body=body[0].replace(/^<body/, '<div');
+		  body=body.replace(/body>$/, 'div>');
+
+	  } 
+	  else 
+	  {
+		  body=htmlString;  
+	  }
+	  
+	  results = results.add( $(body).addClass("bodyTag") );
+	
+	  var reHead = /<head[\s\S]*\/head>/;
+	  var head=htmlString.match(reHead);
+	  
+	  if(head && head.length>0) 
+	  {
+		  head=head[0].replace(/^<head/, '<div');
+		  head=head.replace(/head>$/, 'div>');
+		  
+		  results = results.add( $(head).addClass("headTag") );
+		   
+
+	  } 
+	  else 
+	  {
+		    
+	  }
+	  
+	  return results;
+	
+}
 

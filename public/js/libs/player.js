@@ -32,8 +32,6 @@ PlayerControlInterface = {
 				// playlist is empty
 		});
 		
-		
-		
 	},
 	
 	init: function()
@@ -617,6 +615,12 @@ PlayerControl = can.Control({
   }      
   
 });
+
+PlayerControl.event = {
+		PLAYLIST_LOADED : "player:playlist_loaded",
+		SONG_STARTED : "player:song_started"
+};
+
 
 // Models
 
