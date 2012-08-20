@@ -40,7 +40,9 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 			#player li.name span { position:relative; z-index:2; }
 		/* #player li a:hover { color: black; background-color: #D4D4D4; } */
 		#player .name .song { color: #555; }
-	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}		
+	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}
+		#player-share-modal ul { list-style:none; }
+			#player-share-modal ul li a { font-size:20px; line-height:1.5em;}		
 		
 	
 #activityBar { margin: 20px 0 20px 0;}		
