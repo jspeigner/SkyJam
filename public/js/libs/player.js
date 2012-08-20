@@ -1,6 +1,6 @@
 PlayerControlInterface = {
 		
-	playerId : "#player",
+	playerId : "#player-container",
 	playerTemplateId : "#player-template",
 	playerControl: null,
 	
@@ -152,7 +152,7 @@ PlayerControl = can.Control({
 	  if( this.options.playlist )
 	  {
 		  
-		  $.get( application.config.player.urls.get_user_playlist_data.replace("0", this.options.playlist.id ), {}, function(data, xhr, status){
+		  $.get( application.config.player.urls.get_user_playlist_data.replace( application.config.urls.idPlaceholder , this.options.playlist.id ), {}, function(data, xhr, status){
 			  
 			  self.onUserPlaylistDataLoaded(data, self.user );
 			  
@@ -609,10 +609,71 @@ PlayerControl = can.Control({
   ".share a click" : function(el , event){
 	  if(!el.is(".disabled")){
 		  
+		  $("#player-share-modal", this.element).modal("show");
+		  
 	  }
 	  
 	  return false;
-  }      
+  },
+  
+  "#player-share-modal a.facebook click" : function(el, event){
+	  var playlistUrl = application.config.urls.playlist.replace( application.config.urls.idPlaceholder, this.options.playlist.id );
+	  var description = 'Playing ' + this.options.playlist.name + " " + this.currentSong.song + " " + this.currentSong.Song.Album.Artist.name + " - " + this.currentSong.Song.name;
+	  // var playlist = ;
+	  
+      // calling the API ...
+      var obj = {
+        method: 		'feed',
+        name: 			'Skyjam',
+        description:	description,
+        link: 			playlistUrl
+
+      };
+
+      function callback(response) {
+        // document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+      }
+
+      FB.ui(obj, callback);	  
+      
+      $("#player-share-modal", this.element).modal("hide");
+  } ,
+  "#player-share-modal a.twitter click" : function(el, event){
+	  
+	  // $("#player-share-modal", this.element).modal("hide");
+	  
+	  var playlistUrl = application.config.urls.playlist.replace( application.config.urls.idPlaceholder, this.options.playlist.id );
+	  var description = 'Listening to ' + this.options.playlist.name + " " + this.currentSong.song + " " + this.currentSong.Song.Album.Artist.name + " - " + this.currentSong.Song.name+ " #skyjam";
+	  
+	  var twittBox =$("#player-share-twitter-modal");
+	  
+	  $("#player-share-modal", this.element).modal("hide");
+	  
+	  twttr.anywhere(function (T) {
+		  
+		    T("#player-share-modal-modal-body").tweetBox({
+		    	height: 100,
+		      	width: 500,
+		      	defaultContent: description,
+		      	onTweet: function(){
+		      		twittBox.modal("hide");
+		      		
+		      		
+		      		
+		      }
+		    });
+		    
+		    
+		 
+	  });	  
+	  
+	  twittBox.modal("show");
+	  
+	  /*
+	  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://xxx/" data-text="yyy" data-size="large">Tweet</a>
+	  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	  */
+  }   
   
 });
 
@@ -627,7 +688,7 @@ PlayerControl.event = {
 PlaylistModel = can.Model({
 	
 	// update with id templates
-	findOne : application.config.player.urls.get_current_playlist.replace("0","{id}")
+	findOne : application.config.player.urls.get_current_playlist.replace(application.config.urls.idPlaceholder,"{id}")
 	
 },{});
 
@@ -665,7 +726,7 @@ var df1 = $.Deferred(), df2 = $.Deferred();
 
 $.when( df1, df2 ).done( function(){
 	
-	  if( $("#player").length )
+	  if( $("#player-container").length )
 	  {
 		  PlayerControlInterface.init();
 		  PlayerControlInterface.onUserChange(null, application.user);

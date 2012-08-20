@@ -41,7 +41,7 @@ public class PlaylistController extends AppController
 		  MusicCategory m = musicCategoryId != null ? MusicCategory.find.byId(musicCategoryId) : null;
 		  
 		  return ok( views.html.Playlist.playlist.render(playlist, recentListeners, m) );
-	  }	
+	  }
 	  
 	  public static Result playlist(Integer playlistId)
 	  {

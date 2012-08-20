@@ -17,6 +17,9 @@ GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.get
 
 GET 	/playlist/browse							controllers.PlaylistController.browseCategories()
 
+POST	/twitter_callback							controllers.ApplicationController.twitterCallback()
+GET		/twitter_callback							controllers.ApplicationController.twitterCallback()
+
 POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
 POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
 

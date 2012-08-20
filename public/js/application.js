@@ -305,7 +305,7 @@ function Application(config)
 			pjaxContainer.on('pjax:error', self.onPjaxError);
 			
 			// ajax navigation
-			$(document).on('click', 'a:not(.no-pjax):not(#player > *)', function(event) {
+			$(document).on('click', 'a:not(.no-pjax):not(#player-container > *)', function(event) {
 				
 				$.pjax.click(event, pjaxContainer, {
 					fragment : self.bodyContentSelector,	

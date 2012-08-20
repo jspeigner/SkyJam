@@ -241,9 +241,9 @@ public class UserController extends AppController {
     {
     	String facebookAppId = Play.application().configuration().getString("application.facebook_app_id");
     	
-    	Request r = request();
     	
-    	return ok(views.html.User.registerWithFacebook.render(facebookAppId, r));
+    	
+    	return ok(views.html.User.registerWithFacebook.render(facebookAppId));
     }
     
 

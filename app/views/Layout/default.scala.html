@@ -1,4 +1,4 @@
-@(title: String, metaKeywords: String = "", metaDescription: String = "")(content: Html)<!DOCTYPE html>
+@(title: String, metaKeywords: String = "", metaDescription: String = "", context:play.mvc.Http.Context = play.mvc.Http.Context.current())(content: Html)<!DOCTYPE html>
 <html>
     <head>
     	<meta charset="utf-8">
@@ -39,24 +39,27 @@
 		var application = new Application({
 			pjax : true,
 			urls: {
-				headerFormSearch : "@routes.PlaylistController.searchJson",
-				playlist : "@routes.PlaylistController.playlist(0, null)",
-				getAuthUser : "@routes.UserController.getAuthUserJson()"
+				
+				idPlaceholder : "999",
+				
+				headerFormSearch : "@routes.PlaylistController.searchJson.absoluteURL(context.request())",
+				playlist : "@routes.PlaylistController.playlist(999, null).absoluteURL(context.request())",
+				getAuthUser : "@routes.UserController.getAuthUserJson().absoluteURL(context.request())"
 
 			},
 			player: {
 				urls: {
-					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(0)",
-					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)",
+					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(999).absoluteURL(context.request())",
+					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(999).absoluteURL(context.request())",
 					
-					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity()",
-					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating()",
+					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity().absoluteURL(context.request())",
+					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating().absoluteURL(context.request())",
 					
-					get_user_playlist_data: "@routes.PlaylistController.getUserPlaylistData(0)"
+					get_user_playlist_data: "@routes.PlaylistController.getUserPlaylistData(999).absoluteURL(context.request())"
 					
 				},
 				soundmanager : {
-					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf")"
+					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf").absoluteURL(context.request())"
 				}
 			},
 			user : @views.html.User.getUserJson()
@@ -71,7 +74,7 @@
 		<script src="@routes.Assets.at("js/libs/player.js")" type="text/javascript"></script>
         
 	<!-- facebook -->
-	<!-- 
+	 
 	<script>
 	  window.fbAsyncInit = function() {
 	    FB.init({
@@ -94,7 +97,8 @@
 	     ref.parentNode.insertBefore(js, ref);
 	   }(document));
 	</script>        
-     -->
+	<script src="http://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
+    
     </head>
     <body class="main">
     	<header>

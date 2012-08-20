@@ -1,18 +1,9 @@
-@(facebookAppId:String, request:play.mvc.Http.Request)
+@(facebookAppId:String)
 @Layout.default("Register with facebook") {
-<!-- 
-<fb:registration 
-  fields="name,birthday,gender,location,email" 
-  redirect-uri="@routes.UserController.registerWithFacebook.absoluteURL(request)"
-  width="530">
-</fb:registration>
-
- -->
- 
  
  <iframe src="https://www.facebook.com/plugins/registration?
              client_id=@play.Play.application().configuration().getString("application.facebook_app_id")&
-             redirect_uri=@java.net.URLEncoder.encode(routes.UserController.register.absoluteURL(request),"UTF8")&
+             redirect_uri=@java.net.URLEncoder.encode(routes.UserController.register.absoluteURL(play.mvc.Http.Context.current().request()),"UTF8")&
              fields=[{'name':'name'},{'name':'email'},{'name':'password'}]"
         scrolling="auto"
         frameborder="no"

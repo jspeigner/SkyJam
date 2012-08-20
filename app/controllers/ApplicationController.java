@@ -55,6 +55,12 @@ public class ApplicationController extends Controller {
 	  
 	  return ok( views.html.Application.playlistByCategory.render(category, playlists) );
   }
+  
+  public static Result twitterCallback()
+  {
+	return ok("");  
+  }
+  
 
   
 }

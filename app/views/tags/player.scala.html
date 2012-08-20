@@ -1,20 +1,25 @@
 @(playlist:Any)
 
-<div id="player" class="container">
-	<div class="navbar">
-	  <div class="navbar-inner">
-	    <div class="container">
-		    	<ul class="nav pull-right">
-				  <li class="name"><!-- Loading... --></li>
-				   
-				</ul>
-	    	</div>
+<div id="player-container">
+
+	<div id="player" class="container">
+		<div class="navbar">
+		  <div class="navbar-inner">
+		    <div class="container">
+			    	<ul class="nav pull-right">
+					  <li class="name"><!-- Loading... --></li>
+					   
+					</ul>
+		    	</div>
+			</div>
 		</div>
 	</div>
+
 </div>
 
-<script type="text/ejs" id="player-template">
 
+<script type="text/ejs" id="player-template">
+<div id="player" class="container">
 	<div class="navbar">
 	  <div class="navbar-inner">
 	    <div class="container">
@@ -32,5 +37,34 @@
 	    	</div>
 		</div>
 	</div>
+</div>
+<div class="modal hide" id="player-share-modal">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal">×</button>
+	    <h3>Share</h3>
+	  </div>
+	  <div class="modal-body">
+	    	<h3>Share on:</h3>
+			<ul>
+				<li><a class="facebook" href="javascript://">Facebook</a></li>
+				<li><a class="twitter" href="javascript://">Twitter</a></li>
+			</ul>
+	
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#" class="btn" data-dismiss="modal">Close</a>
+
+	  </div>
+</div>
+<div class="modal hide" id="player-share-twitter-modal">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal">×</button>
+	    <h3>Share on Twitter</h3>
+	  </div>
+	  <div class="modal-body" id="player-share-modal-modal-body">
+				
+	  </div>
+
+</div>
 
 </script>
