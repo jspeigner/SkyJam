@@ -28,35 +28,8 @@
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    <![endif]-->        
 		
-		<script type="text/javascript">
-		var application = new Application({
-			urls: {
-				headerFormSearch : "@routes.PlaylistController.searchJson",
-				playlist : "@routes.PlaylistController.playlist(0)"
 
-			},
-			player: {
-				urls: {
-					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(0)",
-					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)",
-					
-					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity()",
-					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating()",
-					
-				},
-				soundmanager : {
-					swf_path : "@routes.Assets.at("/soundmanager2/swf/soundmanager2_flash9.swf")"
-				}
-			}
-				
-		});
-		
-		$( function(){ 
-			application.onDomReady(); 
-		});
-		
-		</script>
-		<script src="@routes.Assets.at("js/libs/player.js")" type="text/javascript"></script>
+
         
     </head>
     <body class="main">
@@ -69,13 +42,13 @@
 		            <span class="icon-bar"></span>
 		            <span class="icon-bar"></span>
 		          </a>
-		          <a class="brand" href="@routes.ApplicationController.index()">Skyjam</a>
+		          <a class="brand" href="javascript://">Skyjam</a>
 		          <div class="nav-collapse">
           			
 		            <ul class="nav pull-right">
-		              <li class="active"><a href="@routes.ApplicationController.index()">Home</a></li>
-		              <li><a href="@routes.UserController.login()">Log In</a></li>
-		              <li><a href="#contact">Sign Up</a></li>
+		              <li class="active"><a href="javascript://">Home</a></li>
+		              <li><a href="javascript://">Log In</a></li>
+		              <li><a href="javascript://">Sign Up</a></li>
 		            </ul>     
 		            
 		            <form class="navbar-search pull-right" action="">
@@ -90,16 +63,12 @@
 		  
 		  <div class="container" id="body-container">    
 		     
-		     	@tags.player()
+		     	
 		     	<div id="body-content">
         		@content
         		</div>
         		
 	        	<footer class="clearfix">
-	        		<p class="pull-left"><a href="@routes.ApplicationController.index()">Homepage</a> | <a href="#">Terms of Use</a> | <a href="#">Privacy Policy</a> | <a href="#">About</a> | <a href="#">Contact Us</a></p>
-	        		
-	        		    
-	        		
 	        		
 	        		<p class="pull-right"><a href="#body-container">Back to Top</a></p>
 	        	</footer>        		

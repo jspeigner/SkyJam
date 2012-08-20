@@ -3,33 +3,33 @@
 # ~~~~
 
 # Home page
-GET     /hidden_homepage                          			controllers.ApplicationController.index()
-GET     /category/:id						controllers.ApplicationController.category(id:java.lang.Integer)
-GET		/category_playlists/:id				controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
+GET     /x/hidden_homepage                          			controllers.ApplicationController.index()
+GET     /x/category/:id						controllers.ApplicationController.category(id:java.lang.Integer)
+GET		/x/category_playlists/:id				controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
 
-GET		/playlist/search.json				controllers.PlaylistController.searchJson()
-GET		/playlist/get_current_playlist.json	controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer = -1)
-GET		/playlist/get_current_playlist/:id	controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer )
-GET		/playlist/set_current_playlist/:id	controllers.PlaylistController.setCurrentPlaylistJson(id:java.lang.Integer)
-GET		/playlist/:id						controllers.PlaylistController.playlist(id:java.lang.Integer)
+GET		/x/playlist/search.json				controllers.PlaylistController.searchJson()
+GET		/x/playlist/get_current_playlist.json	controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer = -1)
+GET		/x/playlist/get_current_playlist/:id	controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer )
+GET		/x/playlist/set_current_playlist/:id	controllers.PlaylistController.setCurrentPlaylistJson(id:java.lang.Integer)
+GET		/x/playlist/:id						controllers.PlaylistController.playlist(id:java.lang.Integer)
 
-POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
-POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
+POST		/x/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
+POST		/x/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
 
 
-GET     /login                      controllers.UserController.login()
-POST    /login                      controllers.UserController.authenticate()
-GET     /logout                     controllers.UserController.logout()
+GET     /x/login                      controllers.UserController.login()
+POST    /x/login                      controllers.UserController.authenticate()
+GET     /x/logout                     controllers.UserController.logout()
 
 GET		/			controllers.UserController.homepageRegister()
 POST 	/ 			controllers.UserController.homepageRegisterSubmit()
 GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
 
-GET		/user/:id					controllers.UserController.publicProfile(id:java.lang.Integer)
+GET		/x/user/:id					controllers.UserController.publicProfile(id:java.lang.Integer)
 
 # internal
-GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
-GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)
+GET		/x/import/s3_music			controllers.ImportController.importMusicFromS3Account()
+GET		/x/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

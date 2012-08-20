@@ -20,7 +20,7 @@ import play.data.validation.Constraints.MaxLength;
 
 @Entity 
 @Table(name="users")
-//@models.constraints.Constraints.Unique(id="id",fields={"email","username"})
+
 public class User extends AppModel {
 
 	@Length(max=30)
