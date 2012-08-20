@@ -195,35 +195,18 @@ function Application(config)
 			
 		}		
 		
-		
+		/*
 		if( responseText )
 		{
 			
-			// self.updatePageFragments(responseText, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments) );
-			self.updatePageFragments(responseText, [ self.bodyContentSelector ] );
+			// jQuery.updatePageFragments(responseText, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments) );
+			jQuery.updatePageFragments(responseText, [ self.bodyContentSelector ] );
 		}
+		*/
 		
 		self.jCurrentForm = null;
 		
 	};
-	
-	this.updatePageFragments = function(responseText, pageFragments)
-	{
-		var jResponseText = jQuery.parseHtmlPage(responseText);
-		
-		// update the user menu if exists
-		if( pageFragments )
-		{
-			for(var i=0; i<pageFragments.length; i++)
-			{
-				var $fragment = $( pageFragments[i], jResponseText );
-				if($fragment.length)
-				{
-					$( pageFragments[i]).html($fragment);
-				}
-			}
-		}		
-	}
 	
 	this.onPjaxComplete = function(event, xhr, textStatus, options)
 	{
@@ -236,7 +219,7 @@ function Application(config)
 				return true;
 			}
 			
-			self.updatePageFragments(xhr.responseText, ["title" ].concat(self.pjaxAdditionalFragments));
+			jQuery.updatePageFragments(xhr.responseText, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments));
 
 		}
 		
@@ -370,7 +353,7 @@ function Application(config)
 				
 				$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
 					
-					self.updatePageFragments(data, self.pjaxAdditionalFragments);
+					jQuery.updatePageFragments(data, self.pjaxAdditionalFragments);
 					self.refreshAuthUser();
 					
 				});
@@ -424,45 +407,5 @@ function Application(config)
 };
 
 
-jQuery.parseHtmlPage = function(htmlString){
-		
-	  // empty set
-	  var results = $();
-	
-	  var reBody = /<body[\s\S]*\/body>/;
-	  var body=htmlString.match(reBody);
-	  
-	  if(body && body.length>0) 
-	  {
-		  body=body[0].replace(/^<body/, '<div');
-		  body=body.replace(/body>$/, 'div>');
 
-	  } 
-	  else 
-	  {
-		  body=htmlString;  
-	  }
-	  
-	  results = results.add( $(body).addClass("bodyTag") );
-	
-	  var reHead = /<head[\s\S]*\/head>/;
-	  var head=htmlString.match(reHead);
-	  
-	  if(head && head.length>0) 
-	  {
-		  head=head[0].replace(/^<head/, '<div');
-		  head=head.replace(/head>$/, 'div>');
-		  
-		  results = results.add( $(head).addClass("headTag") );
-		   
-
-	  } 
-	  else 
-	  {
-		    
-	  }
-	  
-	  return results;
-	
-}
 

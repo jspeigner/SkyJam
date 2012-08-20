@@ -11,9 +11,9 @@
 	@for( category <- categories ){
 		<li class="span3">
 		@if( category.getImageUrl() != null ){
-		<img src="@category.getImageUrl()" alt="@category.getName()">
+		<img src="@category.getImageUrl()" alt="@category.getName()"  width="240" height="180">
 		} else {
-		<img src="@routes.Assets.at("files/music_category/240x180.gif")" alt="@category.getName">
+		<img src="@routes.Assets.at("files/music_category/240x180.gif")" alt="@category.getName" width="240" height="180">
 		}
 		<a href="@routes.ApplicationController.category(category.getId())">@category.getName()</a></li>
 	}

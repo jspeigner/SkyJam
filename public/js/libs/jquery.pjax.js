@@ -206,6 +206,8 @@ function pjax(options) {
   }
 
   options.success = function(data, status, xhr) {
+	  
+	  
     var container = extractContainer(data, xhr, options)
 
     if (!container.contents) {
@@ -226,9 +228,15 @@ function pjax(options) {
       window.history.replaceState(pjax.state, container.title, container.url)
     }
 
+    // don't update the document
+    /*
     if (container.title) document.title = container.title
     context.html(container.contents)
-
+    */
+    
+    
+    
+    
     // Scroll to top by default
     if (typeof options.scrollTo === 'number')
       $(window).scrollTop(options.scrollTo)
@@ -564,9 +572,19 @@ function extractContainer(data, xhr, options) {
   obj.url = stripPjaxParam(xhr.getResponseHeader('X-PJAX-URL') || options.requestUrl)
 
   // Attempt to parse response html into elements
+  var extractTitle = function (text) {
+	  var m = /<title>(.*)<\/title>/.exec(text); 
+	  if (m && m[1]) {
+	    return m[1].replace(/<\/?title>/g," ").replace(/\s+/," ");
+	  }
+	  return; // returns undefined
+  };
   
+  obj.title = extractTitle(data);
+  
+  obj.contents = true;
    
-  
+  /*
   var re = /<body[\s\S]*\/body>/;
   var check=data.match(re);
   
@@ -609,7 +627,10 @@ function extractContainer(data, xhr, options) {
   } else if (!/<html/i.test(data)) {
     obj.contents = $data
   }
-
+ 
+  
+  
+  
   // Clean up any <title> tags
   if (obj.contents) {
     // Remove any parent title elements
@@ -621,7 +642,9 @@ function extractContainer(data, xhr, options) {
 
   // Trim any whitespace off the title
   if (obj.title) obj.title = $.trim(obj.title)
-
+*/
+  
+  
   return obj
 }
 
