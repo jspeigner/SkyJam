@@ -1,4 +1,4 @@
-@(playlist:Playlist, recentActivityUsers: List[User])@Layout.default(title = "Playlist " + playlist.getName ) {
+@(playlist:Playlist, recentActivityUsers: List[User], category:MusicCategory)@Layout.default(title = "Playlist " + playlist.getName ) {
 	<div id="playlist-page">
 	 
 		<div class="row-fluid">
@@ -22,10 +22,10 @@
 		
 		
 		
-		@if( (  playlist.getMusicCategory() ) != null ){
+		@if( category != null ){
 			<div>
-				<a href="@routes.ApplicationController.category(playlist.getMusicCategory().getId())">
-					Back to the playlists of <i>@playlist.getMusicCategory().getName()</i>
+				<a href="@routes.ApplicationController.category(category.getId())">
+					Back to the playlists of <i>@category.getName()</i>
 				</a>
 			</div>
 			}

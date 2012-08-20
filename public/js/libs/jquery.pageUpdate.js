@@ -46,19 +46,22 @@
 		
 	};
 
-	$.updatePageFragments = function(responseText, pageFragments)
+	$.updatePageFragments = function(responseText, targetPageFragments, sourcePageFragments )
 	{
+		sourcePageFragments = sourcePageFragments || targetPageFragments;
+		
 		var jResponseText = jQuery.parseHtmlPage(responseText);
 		
 		// update the user menu if exists
-		if( pageFragments )
+		if( targetPageFragments )
 		{
-			for(var i=0; i<pageFragments.length; i++)
+			for(var i=0; i<targetPageFragments.length; i++)
 			{
-				var $fragment = $( pageFragments[i], jResponseText );
+				var $fragment = $( sourcePageFragments[i], jResponseText );
+				
 				if($fragment.length)
 				{
-					$( pageFragments[i]).html( $fragment.html() );
+					$( targetPageFragments[i]).html( $fragment.html() );
 				}
 			}
 		}		

@@ -13,6 +13,7 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import models.Album;
+import models.MusicCategory;
 import models.Playlist;
 import models.PlaylistSong;
 import models.PlaylistSongRating;
@@ -31,16 +32,21 @@ public class PlaylistController extends AppController
 	public static String CURRENT_PLAYLIST_ID_KEY = "Playlist.id";
 	
 	
-	  public static Result playlist(Integer playlistId)
+	  public static Result playlist(Integer playlistId, Integer musicCategoryId)
 	  {
 		  Playlist playlist = Playlist.find.byId(playlistId);
 		  
 		  List<User> recentListeners = UserPlaylistActivity.getUsersOnPlaylist( playlist, 25);
 		  
-		  return ok( views.html.Playlist.playlist.render(playlist, recentListeners) );
+		  MusicCategory m = musicCategoryId != null ? MusicCategory.find.byId(musicCategoryId) : null;
+		  
+		  return ok( views.html.Playlist.playlist.render(playlist, recentListeners, m) );
 	  }	
 	  
-	  
+	  public static Result playlist(Integer playlistId)
+	  {
+		  return playlist(playlistId, null);
+	  }
 	  
 	  public static Result searchJson()
 	  {
@@ -57,6 +63,11 @@ public class PlaylistController extends AppController
 			  return ok(views.html.Playlist.searchJson.render(playlists));
 
 		  }
+	  }
+	  
+	  public static Result browseCategories()
+	  {
+		  return null;
 	  }
 	  
 	  public static Result trackPlaylistSongActivity()

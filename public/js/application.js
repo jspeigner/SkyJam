@@ -195,15 +195,6 @@ function Application(config)
 			
 		}		
 		
-		/*
-		if( responseText )
-		{
-			
-			// jQuery.updatePageFragments(responseText, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments) );
-			jQuery.updatePageFragments(responseText, [ self.bodyContentSelector ] );
-		}
-		*/
-		
 		self.jCurrentForm = null;
 		
 	};
@@ -245,28 +236,7 @@ function Application(config)
 		
 		if( xhr.responseText )
 		{
-			// display the error body
-			  var re = /<body[\s\S]*\/body>/;
-			  var check=data.match(re);
-			  
-			  if(check && check.length>0) 
-			  {
-				  check=check[0].replace(/^<body/, '<div');
-				  check=check.replace(/body>$/, 'div>');
-
-			  } 
-			  else 
-			  {
-				  check=data;  
-			  }
-			  
-			$data = $(check);
-			
-			if(jResponseTextFragment.length)
-			{
-				$( self.bodyContentSelector ).html( jResponseTextFragment );
-			}
-			
+			jQuery.updatePageFragments(xhr.responseText, ["title", self.bodyContentSelector ], ["title", "body" ] );
 			
 		}
 		

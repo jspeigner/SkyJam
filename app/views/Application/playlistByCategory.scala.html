@@ -1,14 +1,11 @@
 @(category:MusicCategory, playlists:Set[Playlist])@Layout.default(title = "Playlists for " + category.getName ) {
- 
 <h2>Select a playlist</h2>
-
-
 <div id="playlistsRow" class="row-fluid">
 @if( playlists.size() > 0 ){
 	<ul>
 	@for( playlist <- playlists ){
 		<li class="span@( ( 12 / playlists.size() ).toInt )">
-			<h2><a href="@routes.PlaylistController.playlist(playlist.getId())">@playlist.getName</a></h2>
+			<h2><a href="@routes.PlaylistController.playlist(playlist.getId(), category.getId())">@playlist.getName</a></h2>
 			<p>@playlist.getDescription</p>
 			<div><a href="#" class="btn btn-large player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i>Play</a></div>
 			<ul class="row-fluid songs">

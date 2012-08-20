@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -52,8 +53,8 @@ public class Playlist extends AppModel {
 	@ManyToOne
 	private Genre genre;
 	
-	@ManyToOne
-	private MusicCategory musicCategory;
+	@ManyToMany
+	public List<MusicCategory> musicCategories;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date createdDate;	
@@ -70,7 +71,7 @@ public class Playlist extends AppModel {
 	
 	public static int findCountByMusicCategoryId(Integer musicCategoryId)
 	{
-		return find.where().eq("music_category_id", musicCategoryId).findRowCount();
+		return find.where().eq("musicCategories", MusicCategory.find.byId(musicCategoryId) ).findRowCount();
 	}
 	
 	public List<PlaylistSong> getPlaylistSongs()
@@ -163,14 +164,6 @@ public class Playlist extends AppModel {
 		this.genre = genre;
 	}
 
-	public MusicCategory getMusicCategory() {
-		return musicCategory;
-	}
-
-	public void setMusicCategory(MusicCategory musicCategory) {
-		this.musicCategory = musicCategory;
-	}
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -189,5 +182,13 @@ public class Playlist extends AppModel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	private List<MusicCategory> getMusicCategories() {
+		return musicCategories;
+	}
+
+	private void setMusicCategories(List<MusicCategory> musicCategories) {
+		this.musicCategories = musicCategories;
 	}
 }

@@ -3,6 +3,8 @@ package models;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -10,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import models.Playlist.Status;
 
 import com.avaje.ebean.validation.Length;
 
@@ -31,6 +35,16 @@ public class MusicCategory extends AppModel {
 
 	@OneToOne
 	private StorageObject imageStorageObject;
+	
+	public enum Type
+	{
+		
+		category,
+		popular
+	}
+	
+	@Enumerated(EnumType.STRING)
+	private Type type;	
 	
 	/*
 	@ManyToMany

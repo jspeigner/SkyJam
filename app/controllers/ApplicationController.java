@@ -32,7 +32,7 @@ public class ApplicationController extends Controller {
 	  MusicCategory parentCategory = parentCategoryId <= 0 ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
 	  
 	  int parentCategoriesCount = 4;
-	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent_id", parentCategoryId).setMaxRows(parentCategoriesCount).findSet();
+	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent_id", parentCategoryId).eq("type", "category").setMaxRows(parentCategoriesCount).findSet();
 	  
 	  if( categories.size() == 0 )
 	  {
@@ -51,7 +51,7 @@ public class ApplicationController extends Controller {
 	  
 	  int maxPlaylistsCount = 4;
 	  
-	  Set<Playlist> playlists = Playlist.find.where().eq("music_category_id", categoryId).setMaxRows(maxPlaylistsCount).findSet();
+	  Set<Playlist> playlists = Playlist.find.where().eq("musicCategories.id", categoryId).setMaxRows(maxPlaylistsCount).findSet();
 	  
 	  return ok( views.html.Application.playlistByCategory.render(category, playlists) );
   }
