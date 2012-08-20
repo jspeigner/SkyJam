@@ -106,30 +106,6 @@ public class Playlist extends AppModel {
 		
 		return Playlist.find.where(e2).setMaxRows(maxResults).findList();
 		
-		/*
-		String sql = "SELECT p.id"
-		         + " FROM playlists p " 
-		         	+ " JOIN playlist_songs ps ON ( p.id = ps.playlist_id )"
-		         	+ " JOIN songs s ON ( s.id = ps.song_id )"
-		         	+ " JOIN albums al ON ( al.id = s.album_id )"
-		         	+ " JOIN artists a ON ( al.artist_id = a.id )" 
-		         	// + " WHERE ( ( p.name LIKE :query ) OR ( s.name LIKE :query ) OR ( al.name LIKE :query ) OR ( a.name LIKE :query ) )"
-		         +" GROUP BY p.id ";
-		 
-		 RawSql rawSql = 
-		  RawSqlBuilder.parse(sql)
-		      // map the sql result columns to bean properties
-		      .columnMapping("p.id", "id")
-		      // we don't need to map this one due to the sql column alias
-		      //.columnMapping("sum(d.order_qty*d.unit_price)", "totalAmount")
-		      .create();
-		
-		 
-		
-		 return Playlist.find.setRawSql(rawSql).where( e ).setMaxRows(maxResults).findList();
-		 */
-		 
-		
 	}
 
 	public Status getStatus() {
