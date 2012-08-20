@@ -2,15 +2,16 @@
 
 @Layout_stub("Registered Successfully") {
 
-	<h1>Thank you, @user.getUsername().split("@")(0)</h1>
-	<div id="invite_conf_section" style="display:none;">
-    <div style="margin: 0pt; float: left;" class="searchBoxSprite" id="top_navbar_logo"><a href="/" title="Ask.com"></a></div>
-    <div style="padding: 13px 0pt 0pt 15px; float: left;" class="txt_xxlg b abstract">Thanks!</div>
-     <p class="abstract txt_lg" style="padding-top:15px;clear:both;">
-    We're excited to welcome you as one of the founding members of our new<br>
-    user community. Please understand that in the early days of our new site<br>
-    our invitations are limited - but keep checking your email, you'll hear from<br>
+	<!-- <h1>Thank you, @user.getUsername().split("@")(0)</h1> -->
+<form action="/" method="POST" class="form-horizontal well" id="homepage-register">
+	<h1>Thanks!</h1>
+<hr>
+
+
+     <p>We're excited to welcome you as one of the founding members of our new
+    user community. Please understand that in the early days of our new site
+    our invitations are limited - but keep checking your email, you'll hear from
     us soon!
     </p>
-</div>
+</form>
 }
