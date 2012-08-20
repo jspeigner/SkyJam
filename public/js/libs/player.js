@@ -3,6 +3,8 @@ PlayerControlInterface = {
 	playerId : "#player-container",
 	playerTemplateId : "#player-template",
 	playerControl: null,
+	volume: null,
+	defaultVolume:50,
 	
 	setPlaylist : function(playlistId){
 		
@@ -23,7 +25,8 @@ PlayerControlInterface = {
 			    	}
 			    	
 			    	self.playerControl = new PlayerControl( PlayerControlInterface.playerId , { 
-			    		playlist : playlistResponse 
+			    		playlist : playlistResponse,
+					volume : self.volume
 			    	} );
 			    	
 			    	self.playerControl.setUser(application.user);
@@ -36,10 +39,18 @@ PlayerControlInterface = {
 	
 	init: function()
 	{
+		this.volume = this.defaultVolume;
+
 		$(document).on("application:user", this.onUserChange );
+		$(document).on(PlayerControl.event.VOLUME_CHANGED, this.onVolumeChange );
 		
 		PlayerControlInterface.loadPlaylist();
 	},
+
+	onVolumeChange: function(event, volume){
+		PlayerControlInterface.volume = volume;
+	},
+	
 	
 	onSoundManagerTimeout: function()
 	{
@@ -73,10 +84,13 @@ PlayerControl = can.Control({
 	playFailedCount: 0,
 	user:null,
 	userPlaylistData:null,
+	volume:50,
 	
 	init: function( element, options ){
 	  
 		var self = this;
+		
+		this.volume = options.volume === undefined ? this.volume : options.volume;
 		
 		this.playlistData = options.playlist;
 		
@@ -125,7 +139,7 @@ PlayerControl = can.Control({
 			range: "min",
 			min: 0,
 			max: 100,
-			value: 50,
+			value: this.volume,
 			slide: function( event, ui ) {
 				
 				// $( "#amount" ).val( ui.value );
@@ -141,6 +155,18 @@ PlayerControl = can.Control({
   } ,
   
   onVolumeChange: function(volume){
+	  
+	  volume = Math.max( 0, Math.min(100, volume) );
+   	  this.volume = volume;
+	  
+	  if( this.currentSongSMSound )
+	  {
+		
+		this.currentSongSMSound.setVolume( volume );
+
+	  }
+	$(document).trigger(PlayerControl.event.VOLUME_CHANGED, [ volume ]);
+	  
 	  
   },
   
@@ -271,12 +297,15 @@ PlayerControl = can.Control({
   {
 	  var self = this;
 	  
+	  // var defaultVolume = $( ".volume .volume-slider-vertical", this.element ).slider("value");
+	  
 	  this.currentSongSMSound = soundManager.createSound({ 
 		  id: id, 
 		  url: url,
 		  autoPlay: false,
 		  autoLoad: true,
 		  isMovieStar: null,
+		  volume: this.volume,
 		  
 		  // events
 		  
@@ -295,6 +324,10 @@ PlayerControl = can.Control({
 		  
 		  
 	  });
+	  
+	  
+	  
+	  
   },
   onListFinished: function()
   {
@@ -564,7 +597,7 @@ PlayerControl = can.Control({
 	  
   },
   
-  ".volume a mouseover" : function(el , event){
+  ".volume mouseover" : function(el , event){
 	  if( this.currentSongSMSound )
 	  {
 		  $(".volume-control", this.element).show();
@@ -579,7 +612,7 @@ PlayerControl = can.Control({
 	  return false;
   },  
   
-  ".volume a mouseout" : function(el, event){
+  ".volume mouseout" : function(el, event){
 	  $(".volume-control", this.element).hide();
   },
   
@@ -704,7 +737,8 @@ PlayerControl = can.Control({
 
 PlayerControl.event = {
 		PLAYLIST_LOADED : "player:playlist_loaded",
-		SONG_STARTED : "player:song_started"
+		SONG_STARTED : "player:song_started",
+		VOLUME_CHANGED : "player:volume_changed"
 };
 
 

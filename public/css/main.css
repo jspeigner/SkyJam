@@ -46,7 +46,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 			
 	#player .volume .volume-control { position: absolute; width: 45px; background: #BBB;border: 1px solid gray;height: 200px;z-index: 1; border-radius:5px; }
 		#player .volume a { position:absolute; z-index:2; } 		
-			#player .volume .slider-vertical { height: 140px;}
+			#player .volume .volume-slider-vertical { height: 140px; margin: 45px auto 10px auto; }
 		
 	
 #activityBar { margin: 20px 0 20px 0;}		
