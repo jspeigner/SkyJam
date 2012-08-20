@@ -42,7 +42,11 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 		#player .name .song { color: #555; }
 	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}
 		#player-share-modal ul { list-style:none; }
-			#player-share-modal ul li a { font-size:20px; line-height:1.5em;}		
+			#player-share-modal ul li a { font-size:20px; line-height:1.5em;}
+			
+	#player .volume .volume-control { position: absolute; width: 45px; background: #BBB;border: 1px solid gray;height: 200px;z-index: 1; border-radius:5px; }
+		#player .volume a { position:absolute; z-index:2; } 		
+			#player .volume .slider-vertical { height: 140px;}
 		
 	
 #activityBar { margin: 20px 0 20px 0;}		

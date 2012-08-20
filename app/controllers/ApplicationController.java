@@ -51,7 +51,7 @@ public class ApplicationController extends Controller {
 	  
 	  int maxPlaylistsCount = 4;
 	  
-	  Set<Playlist> playlists = Playlist.find.where().eq("musicCategories.id", categoryId).eq("type", Playlist.Status.Public).setMaxRows(maxPlaylistsCount).findSet();
+	  Set<Playlist> playlists = Playlist.find.where().eq("musicCategories.id", categoryId).eq("status", Playlist.Status.Public).setMaxRows(maxPlaylistsCount).findSet();
 	  
 	  return ok( views.html.Application.playlistByCategory.render(category, playlists) );
   }

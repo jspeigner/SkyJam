@@ -120,9 +120,29 @@ PlayerControl = can.Control({
 		    }
 		}
 		
+		$( ".volume .volume-slider-vertical", this.element ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 50,
+			slide: function( event, ui ) {
+				
+				// $( "#amount" ).val( ui.value );
+				
+				self.onVolumeChange( ui.value );
+				
+			}
+		});
+		
+		
 		this.refreshUserButtons();
 	    
   } ,
+  
+  onVolumeChange: function(volume){
+	  
+  },
   
   setUser: function(userData)
   {
@@ -544,16 +564,24 @@ PlayerControl = can.Control({
 	  
   },
   
-  ".volume a click" : function(el , event){
+  ".volume a mouseover" : function(el , event){
 	  if( this.currentSongSMSound )
 	  {
+		  $(".volume-control", this.element).show();
+		  
+		  /*
 		  this.currentSongSMSound.mute();
 		  $(".volume", this.element).hide();
 		  $(".volume-off", this.element).show();
+		  */
 	  }
 	  
 	  return false;
   },  
+  
+  ".volume a mouseout" : function(el, event){
+	  $(".volume-control", this.element).hide();
+  },
   
   ".volume-off a click" : function(el , event){
 	  if( this.currentSongSMSound )
@@ -657,9 +685,6 @@ PlayerControl = can.Control({
 		      	defaultContent: description,
 		      	onTweet: function(){
 		      		twittBox.modal("hide");
-		      		
-		      		
-		      		
 		      }
 		    });
 		    
