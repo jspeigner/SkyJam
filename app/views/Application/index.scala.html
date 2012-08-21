@@ -3,7 +3,7 @@
 @if( parentCategory != null ){
 	<h2>Select your activity from <i>@parentCategory.getName()</i></h2>
 } else { 
-	<h2>Select your activity</h2>
+	<h2>Select your activity or <a href="@routes.PlaylistController.browseCategories()">browse popular Playlists</a></h2>
 }
 
 <div id="activityBar" class="row-fluid">
@@ -34,9 +34,7 @@
 		
 	} else {
 	
-		<div>
-			<a href="@routes.PlaylistController.browseCategories()">Browse all</a>
-		</div>
+
 	
 	} 
 	

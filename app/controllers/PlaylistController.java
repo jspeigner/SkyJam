@@ -94,6 +94,14 @@ public class PlaylistController extends AppController
 		  {
 		  
 			  cat = MusicCategory.find.where().eq("id", musicCategoryId).eq("type", MusicCategory.Type.popular).findUnique();
+			  
+			  // top level category
+			  if( cat.getParentId() == 0 )
+			  {
+				  List<MusicCategory> subCategories = cat.getChildren(); 
+				  
+				  cat = ( subCategories != null && subCategories.size() > 0) ? subCategories.get(0) : null;				  
+			  }
 		  }
 		  
 		  if( cat != null )
@@ -218,6 +226,9 @@ public class PlaylistController extends AppController
 			  {
 				  
 				  playlist.setLoadedTimes( playlist.getLoadedTimes()+1 );
+				  playlist.save();
+				  
+				  // System.out.println(playlist.getLoadedTimes());
 				  
 				  return ok( views.html.Playlist.getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
 				  

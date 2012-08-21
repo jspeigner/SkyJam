@@ -30,9 +30,10 @@
 									<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" > 
 								</div>
 								<div class="span8"> 
-									<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a></h2>
+									<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a><a href="javascript://" class="btn play player-controls-play pull-right" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a></h2>
 									<p>@playlist.getDescription</p>
 									<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+									
 								</div>
 							</div>						
 						
