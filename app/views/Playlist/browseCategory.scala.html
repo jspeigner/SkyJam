@@ -1,0 +1,64 @@
+@(topLevelCategories: List[MusicCategory], siblingCategories : List[MusicCategory], currentCategory: MusicCategory, playlists: Page[Playlist] )@Layout.default(title = "Browse playlists" ) {
+<div id="playlists-browse-all">
+	<h1>Browse playlists</h1>
+	<hr />
+	
+	<ul class="nav nav-pills">
+		@for(category <- topLevelCategories){
+		  <li class="@(if(category.isParentOf(currentCategory))"active")"><a href="@routes.PlaylistController.browseCategory(category.getId)">@category.getName</a></li>
+		}
+
+	</ul>
+	<hr />
+	<div class="categories row-fluid">
+		<div class="span2">
+			<ul class="nav nav-list">
+				@for(category <- siblingCategories){
+				<li class="@(if(category.getId == currentCategory.getId)"active")"><a href="@routes.PlaylistController.browseCategory(category.getId)"><i class="icon-chevron-right @(if(category.getId == currentCategory.getId)"icon-white")"></i> @category.getName</a></li>
+				}
+			</ul>
+		</div>
+		<div class="playlists span9 clearfix">
+			@if( ( playlists != null ) && ( playlists.getList.size > 0 )){
+				<ul>
+					@for(playlist <- playlists.getList ){
+						<li class="clearfix">
+						
+							<div class="row-fluid">
+								<div class="span2">
+									<!-- a first album image -->
+									<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" > 
+								</div>
+								<div class="span8"> 
+									<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a></h2>
+									<p>@playlist.getDescription</p>
+									<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+								</div>
+							</div>						
+						
+						</li>
+					}
+				</ul>
+				
+				@if(playlists.hasNext || playlists.hasPrev){
+				<ul class="pager pull-left">
+					@if(playlists.hasPrev){
+  					<li><a href="@routes.PlaylistController.browseCategory(currentCategory.getId,playlists.getPageIndex - 1)">Previous</a></li>
+  					} else {
+  					<li class="disabled"><a href="javascript://">Previous</a></li>
+  					}
+  					@if(playlists.hasNext){
+  					<li><a href="@routes.PlaylistController.browseCategory(currentCategory.getId,playlists.getPageIndex + 1)">Next</a></li>
+  					} else {
+  					<li class="disabled"><a href="javascript://">Next</a></li>
+  					}
+				</ul>
+				}
+				
+			} else {
+				<p>There are no playlists found in the category</p>
+			}
+		</div>
+	</div>
+</div>
+}

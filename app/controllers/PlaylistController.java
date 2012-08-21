@@ -12,6 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.avaje.ebean.Page;
+
 import models.Album;
 import models.MusicCategory;
 import models.Playlist;
@@ -67,7 +69,45 @@ public class PlaylistController extends AppController
 	  
 	  public static Result browseCategories()
 	  {
-		  return null;
+		  return browseCategory(-1, 0);
+		  
+		  // return ok(views.html.Playlist.browseCategories.render(topLevelCategories));
+	  }
+	  
+	  public static Result browseCategory(Integer musicCategoryId, Integer page)
+	  {
+		  int playlistsPerPage = 5;
+		  
+		  List<MusicCategory> topLevelCategories = MusicCategory.find.where().eq("type", MusicCategory.Type.popular ).eq("parent_id", 0).findList();
+		  
+		  MusicCategory cat = null;
+		  
+		  
+		  if(musicCategoryId <= 0 ){
+			  // set the default category
+			  
+			  List<MusicCategory> subCategories = topLevelCategories.get(0).getChildren(); 
+			  
+			  cat = ( subCategories != null && subCategories.size() > 0) ? subCategories.get(0) : null;
+		  }
+		  else
+		  {
+		  
+			  cat = MusicCategory.find.where().eq("id", musicCategoryId).eq("type", MusicCategory.Type.popular).findUnique();
+		  }
+		  
+		  if( cat != null )
+		  {
+			  List<MusicCategory> siblingCategories = MusicCategory.find.where().eq("parent", cat.getParent()).findList();
+			  
+			  Page<Playlist> playlists = Playlist.pageByCategory(page, playlistsPerPage, cat, "loadedTimes", "desc");
+			  
+			  return ok(views.html.Playlist.browseCategory.render(topLevelCategories, siblingCategories, cat, playlists));
+		  }
+		  else
+		  {
+			  return badRequest("Category not found");
+		  }
 	  }
 	  
 	  public static Result trackPlaylistSongActivity()
@@ -176,6 +216,8 @@ public class PlaylistController extends AppController
 			  Playlist playlist = Playlist.find.byId(playlistId);
 			  if( playlist != null )
 			  {
+				  
+				  playlist.setLoadedTimes( playlist.getLoadedTimes()+1 );
 				  
 				  return ok( views.html.Playlist.getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
 				  

@@ -18,6 +18,7 @@ import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionFactory;
 import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Page;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.validation.Length;
@@ -63,7 +64,7 @@ public class Playlist extends AppModel {
 	@OrderBy("position ASC")
 	private List<PlaylistSong> playlistSongs;
 	
-	
+	private Integer loadedTimes;
 	
 	
 	public static Model.Finder<Integer,Playlist> find = new Finder<Integer, Playlist>(Integer.class, Playlist.class);
@@ -73,6 +74,15 @@ public class Playlist extends AppModel {
 	{
 		return find.where().eq("musicCategories", MusicCategory.find.byId(musicCategoryId) ).findRowCount();
 	}
+	
+	public static Page<Playlist> pageByCategory(int page, int pageSize, MusicCategory m, String sortBy, String order) {
+        return 
+            find.where()
+                .eq("musicCategories", m)
+                .orderBy(sortBy + " " + order)
+                .findPagingList(pageSize)
+                .getPage(page);
+    }	
 	
 	public List<PlaylistSong> getPlaylistSongs()
 	{
@@ -166,5 +176,13 @@ public class Playlist extends AppModel {
 
 	private void setMusicCategories(List<MusicCategory> musicCategories) {
 		this.musicCategories = musicCategories;
+	}
+
+	public Integer getLoadedTimes() {
+		return loadedTimes;
+	}
+
+	public void setLoadedTimes(Integer loadedTimes) {
+		this.loadedTimes = loadedTimes;
 	}
 }

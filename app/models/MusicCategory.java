@@ -1,5 +1,6 @@
 package models;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -38,8 +39,7 @@ public class MusicCategory extends AppModel {
 	
 	public enum Type
 	{
-		
-		category,
+		activity,
 		popular
 	}
 	
@@ -75,6 +75,40 @@ public class MusicCategory extends AppModel {
 		}
 		
 		return null;
+	}
+	
+	public List<MusicCategory> getChildren()
+	{
+		return MusicCategory.find.where().eq("parent", this).findList();
+	}
+	
+	public boolean isParentOf(MusicCategory m)
+	{
+		if(m != null )
+		{
+			if( m.getParent().getId() == this.getId() )
+			{
+				return true;
+			}
+			else
+			{
+				// recursive search
+				List<MusicCategory> children = MusicCategory.find.where().eq("parent", m).findList();
+				for( MusicCategory child : children )
+				{
+					if( child.isParentOf(m))
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public String getName() {

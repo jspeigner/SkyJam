@@ -15,7 +15,9 @@ GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.get
 GET		/playlist/:id								controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
 GET		/playlist/:id/:musicCategoryId				controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
 
-GET 	/playlist/browse							controllers.PlaylistController.browseCategories()
+GET 	/playlists/browse							controllers.PlaylistController.browseCategories()
+GET		/playlists/browse/:musicCategoryId			controllers.PlaylistController.browseCategory( musicCategoryId:java.lang.Integer, page: java.lang.Integer ?= 0)
+
 
 POST	/twitter_callback							controllers.ApplicationController.twitterCallback()
 GET		/twitter_callback							controllers.ApplicationController.twitterCallback()

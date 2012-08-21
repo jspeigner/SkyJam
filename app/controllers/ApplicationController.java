@@ -32,7 +32,7 @@ public class ApplicationController extends Controller {
 	  MusicCategory parentCategory = parentCategoryId <= 0 ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
 	  
 	  int parentCategoriesCount = 4;
-	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent_id", parentCategoryId).eq("type", "category").setMaxRows(parentCategoriesCount).findSet();
+	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent_id", parentCategoryId).eq("type", MusicCategory.Type.activity).setMaxRows(parentCategoriesCount).findSet();
 	  
 	  if( categories.size() == 0 )
 	  {
