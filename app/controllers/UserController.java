@@ -20,8 +20,8 @@ import views.html.*;
 
 public class UserController extends AppController {
 
-	public static final String AUTH_USER_SESSION_ID = "User.id";	
-
+	public static final String AUTH_USER_COOKIE_ID = "User.id";	
+	public static final int AUTH_USER_COOKIE_LIFETIME = 7*24*3600;
 	
     // Authentication
 	//@Entity 
@@ -99,12 +99,13 @@ public class UserController extends AppController {
     }
 
     /**
-     * Logout and clean the session.
+     * Logout and clean the User.
      */
     public static Result logout() {
     	
     	
-        session().remove(AUTH_USER_SESSION_ID);
+        UserController.setAuthUser(null);
+        
         flash("success", "You've been logged out");
         
         return pjaxRedirect( routes.UserController.login() );
@@ -270,7 +271,9 @@ public class UserController extends AppController {
     	
     	try
     	{
-    		user = User.find.byId( Integer.parseInt( session(AUTH_USER_SESSION_ID) ) );
+    		Http.Cookie cookie = request().cookies().get(AUTH_USER_COOKIE_ID);
+    		
+    		user = User.find.byId( Integer.parseInt( cookie.value() ) );
     		
     	}
     	catch( Exception e)
@@ -287,7 +290,8 @@ public class UserController extends AppController {
     	{
     		try
     		{
-    			session(AUTH_USER_SESSION_ID, user.getId().toString());
+    			
+    			response().setCookie(AUTH_USER_COOKIE_ID, user.getId().toString(), AUTH_USER_COOKIE_LIFETIME);
     			
     			return true;
     		}
@@ -297,6 +301,12 @@ public class UserController extends AppController {
     		}
     		
     	}
+    	else
+    	{
+    		// remote the logged user
+    		response().discardCookies(AUTH_USER_COOKIE_ID);
+    	}
+    	
     	
     	return false;
     }

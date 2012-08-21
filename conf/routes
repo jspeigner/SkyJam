@@ -11,9 +11,9 @@ GET		/playlist/search.json						controllers.PlaylistController.searchJson()
 GET		/playlist/get_current_playlist.json			controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer = -1)
 GET		/playlist/get_current_playlist/:id			controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer )
 GET		/playlist/set_current_playlist/:id			controllers.PlaylistController.setCurrentPlaylistJson(id:java.lang.Integer)
+GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.getUserPlaylistData(playlistId:java.lang.Integer)
 GET		/playlist/:id								controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
 GET		/playlist/:id/:musicCategoryId				controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
-GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.getUserPlaylistData(playlistId:java.lang.Integer)
 
 GET 	/playlist/browse							controllers.PlaylistController.browseCategories()
 

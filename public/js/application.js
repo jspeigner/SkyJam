@@ -136,9 +136,15 @@ function Application(config)
 			event.currentTarget = a[0];
 			
 			
+			var self = this;
+			$("form", $( self.bodyContentSelector) ).each(function(){
+				self.disableForm($(this));
+			});
+			
+			
 			// ajax navigation
 				
-			$.pjax.click(event, container, {fragment : self.bodyContentSelector });
+			$.pjax.click(event, $(self.bodyContentSelector), {fragment : self.bodyContentSelector, timeout:0 });
 			
 			
 			
@@ -159,13 +165,6 @@ function Application(config)
 			// refresh the user data
 			self.refreshAuthUser();
 		}
-		
-		/*
-		if( self.processPjaxRedirect(xhr) )
-		{
-			return true;
-		}
-		*/
 		
 		// process redirect and page fragments
 		self.onPjaxComplete(null, xhr, statusText);
@@ -323,7 +322,7 @@ function Application(config)
 				
 				$.get( logoutUrl, {}, function(data, textStatus, jqXHR){
 					
-					jQuery.updatePageFragments(data, self.pjaxAdditionalFragments);
+					jQuery.updatePageFragments(data, ["title", self.bodyContentSelector ].concat(self.pjaxAdditionalFragments) );
 					self.refreshAuthUser();
 					
 				});
