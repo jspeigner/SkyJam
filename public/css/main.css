@@ -5,9 +5,8 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 
 #body-container { background-color:white; padding-top: 43px; }
 	#body-container #body-content { padding: 0 20px 0 20px; }
-	
-
 	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
+	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar-inner {
@@ -43,9 +42,12 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#player .navbar .nav > li > a  { padding:1px 10px 1px 10px; line-height: 25px;}
 		#player-share-modal ul { list-style:none; }
 			#player-share-modal ul li a { font-size:20px; line-height:1.5em;}
+	
+	#player .player-controls li a.btn { margin-left:5px; margin-right:5px;}
+	
 			
 	#player .volume .volume-control { position: absolute; width: 45px; background: #BBB;border: 1px solid gray;height: 200px;z-index: 1; border-radius:5px; }
-		#player .volume a { position:absolute; z-index:2; } 		
+		#player .volume a.btn { position:relative; z-index:2; } 		
 			#player .volume .volume-slider-vertical { height: 140px; margin: 45px auto 10px auto; }
 		
 	
@@ -93,3 +95,5 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#playlists-browse-all .playlists ul li {  margin-bottom:1em;}
 	
 	#playlists-browse-all .playlists .pager { margin-top:2em; }
+	
+	#playlists-browse-all .pla
