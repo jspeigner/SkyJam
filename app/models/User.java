@@ -17,6 +17,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import be.objectify.deadbolt.models.Permission;
+import be.objectify.deadbolt.models.Role;
+import be.objectify.deadbolt.models.RoleHolder;
+
 import com.avaje.ebean.annotation.EnumValue;
 import com.avaje.ebean.validation.Length;
 
@@ -29,10 +33,11 @@ import play.data.validation.Constraints.MaxLength;
 
 
 
+
 @Entity 
 @Table(name="users")
-//@models.constraints.Constraints.Unique(id="id",fields={"email","username"})
-public class User extends AppModel {
+public class User extends AppModel implements RoleHolder 
+{
 
 	@Length(max=30,min=1)
 	@Constraints.Required
@@ -52,20 +57,11 @@ public class User extends AppModel {
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date lastLoginDate;
 	
-	
-	public enum UserType
-	{
-		admin,
-		user 
-	}
-	
-	
-	@Enumerated(EnumType.STRING)
-	private UserType type;
-	
 	@OneToOne
 	private StorageObject imageStorageObject;
 	
+	@ManyToMany
+    public List<UserRole> roles;		
 	
 	public static Model.Finder<Integer,User> find = new Finder<Integer, User>(Integer.class, User.class);
 	
@@ -183,17 +179,6 @@ public class User extends AppModel {
 		this.registeredDate = registeredDate;
 	}
 
-
-
-	public UserType getType() {
-		return type;
-	}
-
-
-
-	public void setType(UserType type) {
-		this.type = type;
-	}
 
 
 
@@ -318,6 +303,17 @@ public class User extends AppModel {
 	    }
 	    return b64 + padding;
 
+	}
+
+
+	@Override
+	public List<? extends Permission> getPermissions() {
+		return null;
+	}
+
+	@Override
+	public List<? extends Role> getRoles() {
+		return roles;
 	}	
 	
 

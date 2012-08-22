@@ -1,0 +1,47 @@
+package security;
+
+import controllers.UserController;
+import be.objectify.deadbolt.AbstractDeadboltHandler;
+import be.objectify.deadbolt.DynamicResourceHandler;
+import be.objectify.deadbolt.models.RoleHolder;
+
+
+import play.mvc.Http;
+import play.mvc.Result;
+
+
+public class MyDeadboltHandler extends AbstractDeadboltHandler
+{
+	
+
+	
+    public Result beforeRoleCheck(Http.Context context)
+    {
+    	 Http.Context.current.set(context);
+        // returning null means that everything is OK.  Return a real result if you want a redirect to a login page or
+        // somewhere else
+        return null;
+    }
+
+    public RoleHolder getRoleHolder(Http.Context context)
+    {
+    	 Http.Context.current.set(context);
+    	System.out.println("Get User" + UserController.getAuthUser() );
+    	
+        return UserController.getAuthUser();
+    }
+
+    public DynamicResourceHandler getDynamicResourceHandler(Http.Context context)
+    {
+    	 Http.Context.current.set(context);
+        // return new MyDynamicResourceHandler();
+    	return null;
+    }
+
+    public Result onAccessFailure(Http.Context context, String content)
+    {
+    	 Http.Context.current.set(context);
+        // you can return any result from here - forbidden, etc
+        return forbidden("Access forbidden");
+    }
+}

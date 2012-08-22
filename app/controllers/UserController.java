@@ -1,11 +1,17 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Entity;
+
+import be.objectify.deadbolt.actions.Restrict;
+
+import com.avaje.ebean.Ebean;
+
 import play.*;
 import play.mvc.*;
 import play.mvc.Http.Request;
@@ -85,9 +91,11 @@ public class UserController extends AppController {
         }
         else 
         {
+        	User user = loginForm.get().getUser();
+        	setAuthUser( user );
         	
-        	
-        	setAuthUser( loginForm.get().getUser() );	
+        	user.setLastLoginDate(new Date());
+        	user.save();
             
             return  pjaxRedirect(  routes.ApplicationController.index() );
         }
@@ -137,11 +145,13 @@ public class UserController extends AppController {
     		user.setPassword("empty");
     		user.setUsername( user.getEmail() );
     		user.setRegisteredDate(new Date());
-    		user.setType(User.UserType.user);
+    		user.roles = new ArrayList<UserRole>();
+    		user.roles.add(UserRole.findByName("user"));
     		
     		try
     		{
 	    		user.save();
+	    		Ebean.saveManyToManyAssociations(user,"roles");
     		}
     		catch(PersistenceException p)
     		{
@@ -204,17 +214,23 @@ public class UserController extends AppController {
     		User user = userForm.get();
     		
     		user.setRegisteredDate(new Date());
-    		user.setType(User.UserType.user);
     		user.setLastLoginDate(null);
+    		user.roles = new ArrayList<UserRole>();
+    		user.roles.add(UserRole.findByName("user"));
+    		
     		
     		try
     		{
 	    		user.save();
+	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		
     		}
     		catch(Exception e)
     		{
     			// email is not unique
     			userForm.reject("Exception "+e.toString());
+    			
+    			
     			
     			return ok(views.html.User.register.render(userForm));
     			
@@ -254,9 +270,10 @@ public class UserController extends AppController {
     	return null;
     }
     
+    @Restrict("user")
     public static Result profile()
     {
-    	return null;
+    	return ok("user profile");
     }
     
     public static Result getAuthUserJson()
@@ -310,8 +327,5 @@ public class UserController extends AppController {
     	
     	return false;
     }
-    
-    
-    
 	
 }
