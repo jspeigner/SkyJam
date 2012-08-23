@@ -2,6 +2,7 @@ package models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,14 +15,18 @@ import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.ExpressionFactory;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Page;
+import com.avaje.ebean.Query;
 import com.avaje.ebean.RawSql;
 import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.validation.Length;
+
+import controllers.UserController;
 
 import play.data.format.Formats;
 import play.db.ebean.Model;
@@ -63,9 +68,9 @@ public class Playlist extends AppModel {
 	@OneToMany(targetEntity=PlaylistSong.class)
 	@OrderBy("position ASC")
 	private List<PlaylistSong> playlistSongs;
-	
+
+
 	private Integer loadedTimes;
-	
 	
 	public static Model.Finder<Integer,Playlist> find = new Finder<Integer, Playlist>(Integer.class, Playlist.class);
 	
@@ -116,6 +121,49 @@ public class Playlist extends AppModel {
 		
 		return Playlist.find.where(e2).setMaxRows(maxResults).findList();
 		
+	}
+	
+	public static List<Playlist> getRecentPlaylists(User user, int limit)
+	{
+		String sql   
+	    // = " select t0.id, t0.name AS c1, t0.status  AS  c2, t0.description  AS  c3, t0.created_date  AS  c4, t0.loaded_times  AS  c5, t0.user_id, t0.genre_id  AS  c7 " +
+		// = "SELECT t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times, t0.user_id, t0.genre_id " +
+		= "SELECT t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
+	    		"from playlists t0 " +
+	    		"join playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
+	    		"join user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
+	    		"WHERE u2.user_id = "+( user.getId() ) + " " +
+	    		"GROUP BY t0.id " +
+	    		"ORDER BY u2.created_date DESC ";  
+	  
+		RawSql rawSql =   
+	    RawSqlBuilder  
+	        // let ebean parse the SQL so that it can  
+	        // add expressions to the WHERE and HAVING   
+	        // clauses  
+	        .parse(sql)  
+	        // map resultSet columns to bean properties  
+	        .columnMapping("t0.id",  "id")  
+//	        .columnMapping("t0.user_id",  "user")  
+	        .columnMapping("t0.name",  "name")	        
+	        .columnMapping("t0.status",  "status")
+	        .columnMapping("t0.description",  "description")
+	        .columnMapping("t0.created_date",  "createdDate")	        
+	        .columnMapping("t0.loaded_times",  "loadedTimes")	        
+//	        .columnMapping("t0.genre_id",  "genre_id")
+	        
+	        .create();  
+	  
+	  
+		Query<Playlist> query = Ebean.find(Playlist.class);  
+	    query.setRawSql(rawSql)          
+	    // add expressions to the WHERE and HAVING clauses  
+	      
+	    .setMaxRows(limit);
+	  
+	    return query.findList();  
+		
+		// return Playlist.find.where().eq("playlistSongs.userPlaylistActivities.user", user).setMaxRows(limit).findSet(); 
 	}
 
 	public Status getStatus() {
@@ -184,5 +232,21 @@ public class Playlist extends AppModel {
 
 	public void setLoadedTimes(Integer loadedTimes) {
 		this.loadedTimes = loadedTimes;
+	}
+
+	public static List<Playlist> getSavedPlaylists(User user, int limit) {
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public boolean isSavedByUser()
+	{
+		return isSavedByUser(UserController.getAuthUser());
+	}
+	
+	public boolean isSavedByUser(User user)
+	{
+		return (user==null) || ( UserSavedPlaylist.find.where().eq("user", user).eq("playlist", this ).findRowCount() > 0 ); 
 	}
 }

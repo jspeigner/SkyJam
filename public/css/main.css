@@ -96,4 +96,9 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	
 	#playlists-browse-all .playlists .pager { margin-top:2em; }
 	
-	#playlists-browse-all .pla
+#user-profile {}
+	#user-profile .user-image a {margin: 10px 0 0 0; max-width: auto; display: block;}
+	#user-profile #recent-playlists ul { list-style: none;}
+		#user-profile #recent-playlists ul li .span2 a { display: block; margin-top:10px; height: 100%; }
+	#user-profile #saved-playlists ul {list-style: none;}
+		#user-profile #saved-playlists ul li .span2 a { display: block; margin-top:10px; height: 100%; }

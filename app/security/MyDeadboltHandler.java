@@ -1,6 +1,8 @@
 package security;
 
+import controllers.AppController;
 import controllers.UserController;
+import controllers.routes;
 import be.objectify.deadbolt.AbstractDeadboltHandler;
 import be.objectify.deadbolt.DynamicResourceHandler;
 import be.objectify.deadbolt.models.RoleHolder;
@@ -25,8 +27,8 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
 
     public RoleHolder getRoleHolder(Http.Context context)
     {
-    	 Http.Context.current.set(context);
-    	System.out.println("Get User" + UserController.getAuthUser() );
+    	Http.Context.current.set(context);
+    	// System.out.println("Get User" + UserController.getAuthUser() );
     	
         return UserController.getAuthUser();
     }
@@ -42,6 +44,9 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
     {
     	 Http.Context.current.set(context);
         // you can return any result from here - forbidden, etc
-        return forbidden("Access forbidden");
+    	 
+        // return forbidden("Access forbidden");
+    	 
+    	 return AppController.pjaxRedirect(routes.UserController.login());
     }
 }

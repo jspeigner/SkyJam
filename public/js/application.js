@@ -48,7 +48,7 @@ function Application(config)
 			.addClass('playlistSearchDropdown')
 			.data( "item.autocomplete", item )
 			.append( 
-					$("<a>")
+					$("<a>").attr("href", self.config.urls.playlist.replace( application.config.urls.idPlaceholder , item.id) )
 						.append( $("<span>").addClass("name").text( item.label ) )
 						.append( $("<span>").addClass("artists").text(artistsText) )
 						.append( $("<span>").addClass("description").text( description) )
@@ -285,15 +285,33 @@ function Application(config)
 				},
 				select: function( event, ui ) {
 					
-					window.location = self.config.urls.playlist.replace("0", ui.item.id);
+					// window.location = self.config.urls.playlist.replace( application.config.urls.idPlaceholder , ui.item.id);
 					
-					return false;
+					return true;
 				}
 			});
 			
 			inputHeaderFormSearchJq.data( "autocomplete" )._renderItem = this.autocompleteItemRender;			
 		}
 		
+		
+		$(document).on('click', '.player-controls-save-as-favorite', function(){
+			
+			if( !$(this).is(".disabled") )
+			{
+				PlayerControlInterface.saveUserPlaylist( $(this).data("playlist-id") );
+			}
+			
+		});
+		
+		$(document).on('click', '.player-controls-save', function(){
+			
+			if( !$(this).is(".disabled") )
+			{
+				PlayerControlInterface.saveUserPlaylist( $(this).data("playlist-id") );
+			}
+			
+		});		
 		
 		
 		if( application.config.pjax )

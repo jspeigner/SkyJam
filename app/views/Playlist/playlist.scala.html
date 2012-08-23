@@ -15,12 +15,10 @@
 		
 		<div class="row-fluid controls player-controls" >
 			<a href="javascript://" class="btn play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
-			<a href="javascript://" class="btn save player-controls-save" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Save Playlist</a>
+			
+			<a href="javascript://" class="btn save player-controls-save-as-favorite @(if(playlist.isSavedByUser()){"hide"})" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Save Playlist</a>
+			<!-- <a href="javascript://" class="btn save player-controls-delete-from-favorite @(if(!playlist.isSavedByUser()){"hide"})" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Delete From Saved</a>  -->
 		</div>
-		
-	
-		
-		
 		
 		@if( category != null ){
 			<div>
@@ -28,7 +26,7 @@
 					Back to the playlists of <i>@category.getName()</i>
 				</a>
 			</div>
-			}
+		}
 		
 		
 		@if( recentActivityUsers.size() > 0 ){

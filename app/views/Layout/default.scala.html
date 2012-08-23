@@ -44,7 +44,10 @@
 				
 				headerFormSearch : "@routes.PlaylistController.searchJson.absoluteURL(context.request())",
 				playlist : "@routes.PlaylistController.playlist(999, null).absoluteURL(context.request())",
-				getAuthUser : "@routes.UserController.getAuthUserJson().absoluteURL(context.request())"
+				getAuthUser : "@routes.UserController.getAuthUserJson().absoluteURL(context.request())",
+				
+				saveFavoritePlaylist : "@routes.PlaylistController.saveFavoritePlaylist(999).absoluteURL(context.request())",
+				deleteFavoritePlaylist: "@routes.PlaylistController.deleteFavoritePlaylist(999).absoluteURL(context.request())",
 
 			},
 			player: {

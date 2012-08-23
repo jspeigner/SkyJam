@@ -12,8 +12,10 @@ GET		/playlist/get_current_playlist.json			controllers.PlaylistController.getCur
 GET		/playlist/get_current_playlist/:id			controllers.PlaylistController.getCurrentPlaylistJson(id:java.lang.Integer )
 GET		/playlist/set_current_playlist/:id			controllers.PlaylistController.setCurrentPlaylistJson(id:java.lang.Integer)
 GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.getUserPlaylistData(playlistId:java.lang.Integer)
-GET		/playlist/:id								controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
-GET		/playlist/:id/:musicCategoryId				controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
+
+
+GET		/playlist/view/:id								controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
+GET		/playlist/view/:id/:musicCategoryId				controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
 
 GET 	/playlists/browse							controllers.PlaylistController.browseCategories()
 GET		/playlists/browse/:musicCategoryId			controllers.PlaylistController.browseCategory( musicCategoryId:java.lang.Integer, page: java.lang.Integer ?= 0)
@@ -24,7 +26,8 @@ GET		/twitter_callback							controllers.ApplicationController.twitterCallback()
 
 POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
 POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
-
+GET			/playlist/favorite/save/:playlistId	controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 
+GET			/playlist/favorite/delete/:playlistId	controllers.PlaylistController.deleteFavoritePlaylist(playlistId:java.lang.Integer )
 
 GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
@@ -51,6 +54,8 @@ GET		/privacy_policy				controllers.PageController.privacyPolicy()
 GET		/terms_of_use				controllers.PageController.termsOfUse()
 
 GET		/profile					controllers.UserController.profile()
+POST	/profile					controllers.UserController.profileUpdate()
+
 GET		/profile/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
 
 # internal

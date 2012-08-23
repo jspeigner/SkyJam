@@ -5,6 +5,9 @@ PlayerControlInterface = {
 	playerControl: null,
 	volume: null,
 	defaultVolume:50,
+	userAvailableButtons: [ 
+        ".player-controls-save-as-favorite" 
+	],
 	
 	setPlaylist : function(playlistId){
 		
@@ -62,7 +65,44 @@ PlayerControlInterface = {
 		{
 			PlayerControlInterface.playerControl.setUser(userData);
 		}
+		
+		
+		for(var i =0; i < PlayerControlInterface.userAvailableButtons.length; i++)
+		{
+			if( userData )
+			{
+				$(PlayerControlInterface.userAvailableButtons[i]).removeClass("disabled").removeClass("hide");
+			}
+			else
+			{
+				$(PlayerControlInterface.userAvailableButtons[i]).addClass("disabled");
+			}
+			
+		}
+
+		
+	},
+	
+	saveUserPlaylist: function(playlistId){
+		
+		var selector = ".player-controls-save-as-favorite[data-playlist-id="+playlistId+"]";
+		var deleteSelector = ".player-controls-delete-from-favorite[data-playlist-id="+playlistId+"]";
+		
+		$(selector).addClass("disabled");
+		
+		$.get( application.config.urls.saveFavoritePlaylist.replace(application.config.urls.idPlaceholder,playlistId ) , { }, function(){
+			
+			$(selector).text("Saved");
+			
+			
+			setTimeout(function(){
+				$(selector).fadeOut("slow");
+				
+				
+			}, 1000);
+		} );
 	}
+	
 	
 	
 };

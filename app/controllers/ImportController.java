@@ -266,9 +266,9 @@ public class ImportController extends Controller {
 							{
 								storageObject = new StorageObject();
 								storageObject.setBucket(bucket);
-								storageObject.createdDate = Calendar.getInstance().getTime();
+								storageObject.setCreatedDate(Calendar.getInstance().getTime());
 								storageObject.setName(name);
-								storageObject.filesize = object.getSize();
+								storageObject.setFilesize(object.getSize());
 								storageObject.save();
 							}
 							

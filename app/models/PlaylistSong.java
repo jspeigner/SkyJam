@@ -1,11 +1,14 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import play.data.format.Formats;
@@ -31,6 +34,10 @@ public class PlaylistSong extends AppModel {
 	private Integer likesCount;
 	
 	private Integer dislikesCount;
+	
+	@OneToMany
+	@OrderBy("created_date DESC")
+	private List<UserPlaylistActivity> userPlaylistActivities;
 	
 	public static Model.Finder<Integer,PlaylistSong> find = new Finder<Integer, PlaylistSong>(Integer.class, PlaylistSong.class);
 
@@ -82,5 +89,14 @@ public class PlaylistSong extends AppModel {
 	public void setDislikesCount(Integer dislikesCount) {
 		this.dislikesCount = dislikesCount;
 	}
+
+	private List<UserPlaylistActivity> getUserPlaylistActivities() {
+		return userPlaylistActivities;
+	}
+
+	private void setUserPlaylistActivities(List<UserPlaylistActivity> userPlaylistActivities) {
+		this.userPlaylistActivities = userPlaylistActivities;
+	}
+
 	
 }

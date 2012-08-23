@@ -21,6 +21,7 @@ import models.PlaylistSong;
 import models.PlaylistSongRating;
 import models.User;
 import models.UserPlaylistActivity;
+import models.UserSavedPlaylist;
 import play.api.libs.json.JerksonJson;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -210,6 +211,70 @@ public class PlaylistController extends AppController
 		  session(CURRENT_PLAYLIST_ID_KEY, id.toString());
 		  return ok("");
 	  }
+	  
+	  public static Result saveFavoritePlaylist(Integer playlistId)
+	  {
+		  User user = UserController.getAuthUser();
+		  Playlist playlist = Playlist.find.byId( playlistId );	  
+		  
+		  
+		  if( user == null )
+		  {
+			  return badRequest("User not found");
+		  } 
+		  else if( playlist == null )
+		  {
+			  return badRequest("Playlist not found");
+		  }
+		  
+		  try
+		  {
+			  
+			  
+			  UserSavedPlaylist u = new UserSavedPlaylist();
+			  u.setUser(user);
+			  u.setPlaylist( playlist );
+			  u.setCreatedDate(new Date());
+			  
+			  u.save();
+		  }
+		  catch(Exception ex)
+		  {
+			  
+		  }
+		  return ok("");
+	  }
+	  
+	  public static Result deleteFavoritePlaylist(Integer playlistId)
+	  {
+		  
+		  User user = UserController.getAuthUser();
+		  Playlist playlist = Playlist.find.byId( playlistId );	  
+		  
+		  
+		  if( user == null )
+		  {
+			  return badRequest("User not found");
+		  } 
+		  else if( playlist == null )
+		  {
+			  return badRequest("Playlist not found");
+		  }		  
+		  
+		  try
+		  {
+			  UserSavedPlaylist u = UserSavedPlaylist.find.where().eq("user", user).eq("playlist", playlist).findUnique();
+			  
+			  u.delete();
+		  }
+		  catch (Exception e) {
+
+		} 
+		  	
+		  
+		  return ok("");
+	  }
+	  
 	  
 	  public static Result getCurrentPlaylistJson(Integer playlistIdPassed)
 	  {

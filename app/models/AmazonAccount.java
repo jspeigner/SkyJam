@@ -34,6 +34,8 @@ public class AmazonAccount extends AppModel implements AWSCredentials {
 		return secretAccessKey;
 	}
 	
+	
+	
 	public static Model.Finder<Integer,AmazonAccount> find = new Finder<Integer, AmazonAccount>(Integer.class, AmazonAccount.class);
 	
 	public static AmazonAccount getDefaultAccount()
@@ -51,6 +53,11 @@ public class AmazonAccount extends AppModel implements AWSCredentials {
 			return null;
 		}
 		
+	}
+	
+	public org.jets3t.service.security.AWSCredentials getJets3tAWSCredentials()
+	{
+		return new org.jets3t.service.security.AWSCredentials(getAWSAccessKeyId(), getAWSSecretKey());
 	}
 
 }

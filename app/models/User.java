@@ -2,6 +2,10 @@ package models;
 
 import global.Global;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,11 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.imageio.ImageIO;
 import javax.persistence.*;
+
+import models.behavior.ImageMetadata;
 
 import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.imgscalr.Scalr;
 
 import be.objectify.deadbolt.models.Permission;
 import be.objectify.deadbolt.models.Role;
@@ -30,8 +38,6 @@ import play.data.format.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
-
-
 
 
 @Entity 
@@ -59,6 +65,19 @@ public class User extends AppModel implements RoleHolder
 	
 	@OneToOne
 	private StorageObject imageStorageObject;
+
+	/*
+	public static class ImageAttributes {
+		public static final int width = 64;
+		public static final int height = 64;
+		public static final String imageType = "png";
+		public static final String contentType = "image/png";
+		public static final String imagePathFormat = "files/user/image/%d.png";
+		
+	}
+	*/
+	
+	public static final ImageMetadata imageMetadata = new ImageMetadata(64, 64, ImageMetadata.IMAGE_TYPE_PNG, "files/user/image/%d.png");
 	
 	@ManyToMany
     public List<UserRole> roles;		
@@ -194,9 +213,9 @@ public class User extends AppModel implements RoleHolder
 	
 	public String getImageUrl()
 	{
-		if(imageStorageObject!=null)
+		if(getImageStorageObject()!=null)
 		{
-			return imageStorageObject.getUrl();
+			return getImageStorageObject().getUrl();
 		}
 		
 		return null;
@@ -314,7 +333,34 @@ public class User extends AppModel implements RoleHolder
 	@Override
 	public List<? extends Role> getRoles() {
 		return roles;
+	}
+
+	public StorageObject getImageStorageObject() {
+		return imageStorageObject;
+	}
+
+	public void setImageStorageObject(StorageObject imageStorageObject) {
+		this.imageStorageObject = imageStorageObject;
+		
+		
+		
 	}	
 	
-
+	protected String getImageObjectName()
+	{
+		return imageMetadata.getFilename(getId());
+	}
+	
+	
+	public boolean updateImage(InputStream sourceImage)
+	{
+		StorageObject s = StorageObject.updateStorageObjectWithImage(getImageObjectName(), sourceImage, this.imageMetadata);
+		setImageStorageObject(s);
+		save();
+		
+		return s != null;
+			
+	}
+	
+	
 }

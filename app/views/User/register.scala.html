@@ -1,10 +1,10 @@
-@(form: Form[User])
-@import helper.twitterBootstrap2._
-@Layout.default("Register") {
-	
+@(form: Form[User])@import helper.twitterBootstrap2._
+@Layout.default("Register"){
 		
 	@helper.form(action = routes.UserController.registerSubmit(), 'class -> "form-horizontal well", 'id -> "homepage-register") {
-	
+		
+		
+		
 		<h1>Sign Up</h1>
 		
         @if(form.hasGlobalErrors) { 
@@ -32,5 +32,5 @@
 		</div>
     
 	}
-
+	
 }

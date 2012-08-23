@@ -24,7 +24,9 @@ public class Bucket extends AppModel {
 	
 	
 	@ManyToOne
-	public AmazonAccount amazonAccount;
+	private AmazonAccount amazonAccount;
+	
+
 	
 	public static Model.Finder<Integer,Bucket> find = new Finder<Integer, Bucket>(Integer.class, Bucket.class);
 	
@@ -47,5 +49,20 @@ public class Bucket extends AppModel {
 		this.name = name;
 	}		
 	
+	public static Bucket getDefault(){
+		return Bucket.find.orderBy("id ASC").setMaxRows(1).findUnique();
+	}
+
+
+
+	public AmazonAccount getAmazonAccount() {
+		return amazonAccount;
+	}
+
+
+
+	public void setAmazonAccount(AmazonAccount amazonAccount) {
+		this.amazonAccount = amazonAccount;
+	}
 	
 }

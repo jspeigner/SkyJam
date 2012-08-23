@@ -1,19 +1,30 @@
 package controllers;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.imageio.ImageIO;
 import javax.persistence.PersistenceException;
 import javax.persistence.Entity;
 
+import org.imgscalr.Scalr;
+
 import be.objectify.deadbolt.actions.Restrict;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.avaje.ebean.Ebean;
 
 import play.*;
 import play.mvc.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Http.Request;
 import play.data.*;
 import play.data.validation.*;
@@ -273,8 +284,72 @@ public class UserController extends AppController {
     @Restrict("user")
     public static Result profile()
     {
-    	return ok("user profile");
+    	User user = getAuthUser();
+    	Form<User> userForm = form(User.class).fill( user  );
+    	
+    	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	
+    	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
     }
+    
+    @Restrict("user")
+    public static Result profileUpdate()
+    {
+    	User user = getAuthUser();
+    	Form<User> userForm = form(User.class).bindFromRequest();
+    	DynamicForm formData = form().bindFromRequest();
+    	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	
+    	
+    	MultipartFormData body = request().body().asMultipartFormData();
+    	FilePart picture = body.getFile("image");
+    	
+    	if (picture != null) 
+    	{
+    	    File imageFile = picture.getFile();
+    	    
+    	    try
+    	    {
+    	        
+    	        boolean savedSuccessfully = user.updateImage( new FileInputStream(imageFile));
+    	        if(savedSuccessfully)
+    	        {
+    	        	flash("image_success", "Image has been updated successfully");
+    	        }
+    	        else
+    	        {
+    	        	flash("image_error", "There was an error changing the image.");
+    	        }
+    	        
+    	    }
+    	    catch (Exception e) 
+    	    {
+    	    	
+    	    }
+    	    
+    	    imageFile.delete();
+    	}
+    	
+    	if( !formData.get("password").isEmpty() || !formData.get("password_reset").isEmpty() )
+    	{
+    		if( formData.get("password").equals( formData.get("password_reset") ) )
+    		{
+    			user.setPassword(formData.get("password"));
+    			user.save();
+    			flash("password_success", "Password has been updated successfully");
+    		}
+    		else
+    		{
+    			userForm.reject(new ValidationError("password_reset", "Passwords should match", null));
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
+    }
+    
     
     public static Result getAuthUserJson()
     {
@@ -288,7 +363,7 @@ public class UserController extends AppController {
     	
     	try
     	{
-    		Http.Cookie cookie = request().cookies().get(AUTH_USER_COOKIE_ID);
+    		Http.Cookie cookie = request().cookies().get( AUTH_USER_COOKIE_ID );
     		
     		user = User.find.byId( Integer.parseInt( cookie.value() ) );
     		
