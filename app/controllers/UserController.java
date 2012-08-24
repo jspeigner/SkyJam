@@ -278,7 +278,19 @@ public class UserController extends AppController {
     
     public static Result publicProfile(Integer id)
     {
-    	return null;
+    	User u = User.find.byId(id);
+    	
+    	if( u == null )
+    	{
+    		return badRequest("User not found");
+    	}
+    	
+    	List<Playlist> userPlaylists = Playlist.find.where().eq("user", u).eq("status", Playlist.Status.Public ).orderBy("createdDate DESC").setMaxRows(10).findList();
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user", u).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	
+    	
+    	
+    	return ok(views.html.User.publicProfile.render(u, userPlaylists, savedPlaylists));
     }
     
     @Restrict("user")

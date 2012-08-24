@@ -3,12 +3,8 @@
 	
 <div id="user-profile">
 	
-	<h1>
-						@if(user.getImageUrl() == null){
-							<img alt="@user.getUsername" src="@routes.Assets.at("files/user/64x64.png")" >
-						} else {
-							<img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" >
-						}	
+	<h1>				
+ 	<img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" >			
 	
 	Hello, @user.getUsername()</h1>
 	<hr>

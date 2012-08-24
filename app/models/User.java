@@ -29,15 +29,23 @@ import be.objectify.deadbolt.models.Permission;
 import be.objectify.deadbolt.models.Role;
 import be.objectify.deadbolt.models.RoleHolder;
 
+import ch.qos.logback.core.Context;
+
 import com.avaje.ebean.annotation.EnumValue;
 import com.avaje.ebean.validation.Length;
+import com.typesafe.config.Config;
 
+import controllers.routes;
+
+import play.Application;
+import play.Play;
 import play.db.ebean.*;
 import play.data.format.*;
 
 import play.data.validation.*;
 import play.data.validation.Constraints.Email;
 import play.data.validation.Constraints.MaxLength;
+import views.html.tags.player;
 
 
 @Entity 
@@ -65,19 +73,8 @@ public class User extends AppModel implements RoleHolder
 	
 	@OneToOne
 	private StorageObject imageStorageObject;
-
-	/*
-	public static class ImageAttributes {
-		public static final int width = 64;
-		public static final int height = 64;
-		public static final String imageType = "png";
-		public static final String contentType = "image/png";
-		public static final String imagePathFormat = "files/user/image/%d.png";
-		
-	}
-	*/
 	
-	public static final ImageMetadata imageMetadata = new ImageMetadata(64, 64, ImageMetadata.IMAGE_TYPE_PNG, "files/user/image/%d.png");
+	public static final ImageMetadata imageMetadata = new ImageMetadata(64, 64, ImageMetadata.IMAGE_TYPE_PNG, "files/user/image/%d.png", "files/user/image/default.png" );
 	
 	@ManyToMany
     public List<UserRole> roles;		
@@ -213,12 +210,23 @@ public class User extends AppModel implements RoleHolder
 	
 	public String getImageUrl()
 	{
-		if(getImageStorageObject()!=null)
+		
+		
+		
+		if( getImageStorageObject() != null )
 		{
 			return getImageStorageObject().getUrl();
 		}
+		else
+		{
+			boolean isAsset = Play.application().configuration().getBoolean("application.default_image.is_stored_in_assets");
+			
+			return  isAsset ?
+						routes.Assets.at(imageMetadata.defaultImageUrl).toString() :
+						StorageObject.getObjectUrl(imageMetadata.defaultImageUrl, Bucket.getDefault());
+		}
 		
-		return null;
+		// return null;
 	}
 
 	public Date getLastLoginDate() {
@@ -254,8 +262,6 @@ public class User extends AppModel implements RoleHolder
 		
 		String payload = null;
 		
-	    int count = 0;
-        
         //Retrieve payload (Note: encoded signature is used for internal verification and it is optional)
         payload = facebookSignedRequest.split("[.]", 2)[1];		
 		
@@ -302,12 +308,12 @@ public class User extends AppModel implements RoleHolder
 		
 	}
 	
-	protected static String padBase64(String b64) {
+	protected static String padBase64(String b64) 
+	{
 	    String padding = "";
-	    // If you are a java developer, *this* is the critical bit.. FB expects
-	    // the base64 decode to do this padding for you (as the PHP one
-	    // apparently
-	    // does...
+	    /* FB expects the base64 decode to do this padding for you 
+	     * ( as the PHP one apparently does... )
+	    */
 	    switch (b64.length() % 4) {
 	    case 0:
 	        break;

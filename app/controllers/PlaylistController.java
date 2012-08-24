@@ -326,5 +326,11 @@ public class PlaylistController extends AppController
 		
 		  
 	  }
+	  
+	  public static Result createPlaylist()
+	  {
+		  return null;
+	  }
+	  
 	
 }

@@ -2,6 +2,7 @@
 
 @if( UserController.getAuthUser() != null ){
 	  <li><a href="@routes.UserController.profile()">Hello, @UserController.getAuthUser().getUsername()</a></li>
+	  <li><a href="@routes.PlaylistController.createPlaylist()">Create a Playlist</a>
 	  <li><a href="@routes.UserController.logout()" class="no-pjax logout">Log Out</a></li>
 } else {
 	  <li>@UserController.getAuthUser()</li> 

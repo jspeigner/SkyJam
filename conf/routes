@@ -46,7 +46,7 @@ GET		/homepage_register			controllers.UserController.homepageRegister()
 POST 	/homepage_register 			controllers.UserController.homepageRegisterSubmit()
 GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
 
-GET		/user/:id					controllers.UserController.publicProfile(id:java.lang.Integer)
+GET		/user/view/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
 
 GET		/contact_us					controllers.PageController.contactUs()
 GET		/about						controllers.PageController.about()

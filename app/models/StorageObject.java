@@ -65,6 +65,25 @@ public class StorageObject extends AppModel {
 		
 		return null;
 	}
+	
+	public static String getObjectUrl(String objectName)
+	{
+		Bucket b = Bucket.getDefault();
+		return getObjectUrl(objectName, b);
+	}
+	
+	public static String getObjectUrl(String objectName, Bucket b)
+	{
+		
+		if( b!= null)
+		{
+			return AMAZON_S3_URL + b.getName() + "/" + objectName;
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	public Bucket getBucket() {
 		return bucket;

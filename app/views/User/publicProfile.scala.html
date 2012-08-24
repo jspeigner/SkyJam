@@ -1,0 +1,83 @@
+@(user:User, userPlaylists:List[Playlist], savedPlaylists: List[UserSavedPlaylist])@Layout.default("Profile") {
+<div id="user-public-profile">
+
+	<h1><img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" > @user.getUsername()</h1>
+	<p><small>Joined on @java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format( user.getRegisteredDate )</small></p>
+	<hr>
+	
+	<div class="row-fluid">
+
+		<div id="recent-playlists" class="span6">
+		<h3>@user.getUsername Playlists</h3>
+		
+		<hr>
+		@if( ( userPlaylists != null ) && ( userPlaylists.size > 0 ) ){
+						<ul>
+						@for(playlist <- userPlaylists ){
+							<li class="clearfix">
+							
+								<div class="row-fluid">
+									<div class="span2">
+										<!-- a first album image -->
+										<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" >
+										<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a> 
+									</div>
+									<div class="span10"> 
+										<h4><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a></h4>
+										<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+									</div>
+								</div>						
+								<hr>
+							</li>
+						}
+					</ul>
+		} else {
+			<p>There are no  playlists loaded.</p>
+		}
+		</div>	
+
+	
+		<div id="saved-playlists" class="span6">
+			<h3>@user.getUsername Saved Playlists</h3>
+			<hr>
+			
+			@if( ( savedPlaylists != null ) && ( savedPlaylists.size > 0 ) ){
+		
+						<ul>
+						@for(savedPlaylist <- savedPlaylists ){
+							<li class="clearfix">
+							
+								<div class="row-fluid">
+									<div class="span2">
+										<!-- a first album image -->
+										<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" >
+										<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@savedPlaylist.getPlaylist.getId"><i class="icon-play"></i> Play</a> 
+									</div>
+									<div class="span10"> 
+										<h4><a href="@routes.PlaylistController.playlist(savedPlaylist.getPlaylist.getId, null)">@savedPlaylist.getPlaylist.getName</a></h4>
+										<p><small>With Artists: @savedPlaylist.getPlaylist().getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+										
+									</div>
+									
+								</div>						
+								<hr>
+							</li>
+						}
+					</ul>
+					
+	
+		} else {
+			<p>There are no playlists created.</p>
+		}
+			
+		</div>
+		
+
+	
+	
+
+	</div>	
+	
+</div>
+
+}

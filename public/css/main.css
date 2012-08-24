@@ -102,3 +102,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 		#user-profile #recent-playlists ul li .span2 a { display: block; margin-top:10px; height: 100%; }
 	#user-profile #saved-playlists ul {list-style: none;}
 		#user-profile #saved-playlists ul li .span2 a { display: block; margin-top:10px; height: 100%; }
+		
+#user-public-profile {}
+	#user-public-profile ul { list-style: none;} 
+	#user-public-profile a.player-controls-play { display: block; margin-top:10px; height: 100%; }
