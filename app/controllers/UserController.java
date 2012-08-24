@@ -1,38 +1,28 @@
 package controllers;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.imageio.ImageIO;
+
 import javax.persistence.PersistenceException;
-import javax.persistence.Entity;
-
-import org.imgscalr.Scalr;
 
 import be.objectify.deadbolt.actions.Restrict;
 
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.avaje.ebean.Ebean;
 
 import play.*;
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-import play.mvc.Http.Request;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
-import sun.org.mozilla.javascript.ObjToIntMap.Iterator;
-
 import models.*;
-import views.html.*;
+
 
 
 public class UserController extends AppController {
@@ -387,6 +377,8 @@ public class UserController extends AppController {
     	
     	return user;
     }
+    
+    
     
     protected static boolean setAuthUser(User user)
     {

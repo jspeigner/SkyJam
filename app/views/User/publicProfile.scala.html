@@ -1,4 +1,4 @@
-@(user:User, userPlaylists:List[Playlist], savedPlaylists: List[UserSavedPlaylist])@Layout.default("Profile") {
+@(user:User, userPlaylists:List[Playlist], savedPlaylists: List[UserSavedPlaylist])@Layout.default("Public Profile of "+user.getUsername ) {
 <div id="user-public-profile">
 
 	<h1><img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" > @user.getUsername()</h1>

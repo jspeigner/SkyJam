@@ -29,6 +29,10 @@ POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSong
 GET			/playlist/favorite/save/:playlistId	controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 
 GET			/playlist/favorite/delete/:playlistId	controllers.PlaylistController.deleteFavoritePlaylist(playlistId:java.lang.Integer )
 
+GET			/playlist/create		controllers.PlaylistController.create()
+POST		/playlist/create		controllers.PlaylistController.createSubmit()
+
+
 GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()

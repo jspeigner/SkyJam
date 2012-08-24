@@ -12,6 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import be.objectify.deadbolt.actions.Restrict;
+
 import com.avaje.ebean.Page;
 
 import models.Album;
@@ -29,6 +31,7 @@ import play.mvc.Result;
 import play.data.DynamicForm;
 
 import views.html.*;
+import play.data.Form;
 
 public class PlaylistController extends AppController 
 {
@@ -304,7 +307,7 @@ public class PlaylistController extends AppController
 			  
 		  }
 		  
-		  return badRequest("{ error: \"Playlist not found\" }");
+		  return badRequest("{ \"error\": \"Playlist not found\" }");
 	  }
 	  
 	  public static Result getUserPlaylistData(Integer playlistId)
@@ -327,7 +330,17 @@ public class PlaylistController extends AppController
 		  
 	  }
 	  
-	  public static Result createPlaylist()
+	  @Restrict("user")
+	  public static Result create()
+	  {
+		  User user = UserController.getAuthUser();
+		  Form<Playlist> form = form(Playlist.class);
+		  
+		  return ok(views.html.Playlist.create.render(user, form));
+	  }
+	  
+	  @Restrict("user")
+	  public static Result createSubmit()
 	  {
 		  return null;
 	  }
