@@ -287,7 +287,7 @@ function Application(config)
 					
 					// window.location = self.config.urls.playlist.replace( application.config.urls.idPlaceholder , ui.item.id);
 					
-					return true;
+					return false;
 				}
 			});
 			

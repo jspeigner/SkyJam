@@ -1,5 +1,7 @@
 package controllers;
 
+import global.utils.Utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.Map;
 
 
 import javax.persistence.PersistenceException;
+
 
 import be.objectify.deadbolt.actions.Restrict;
 
@@ -314,21 +317,28 @@ public class UserController extends AppController {
     	    
     	    try
     	    {
-    	        
-    	        boolean savedSuccessfully = user.updateImage( new FileInputStream(imageFile));
-    	        if(savedSuccessfully)
-    	        {
-    	        	flash("image_success", "Image has been updated successfully");
-    	        }
-    	        else
-    	        {
-    	        	flash("image_error", "There was an error changing the image.");
-    	        }
+    	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
+    	    	
+    	    	System.out.println("Max size - "+filesizeLimit);
+    	    	
+    	    	if(imageFile.length() > filesizeLimit)
+    	    	{
+    	    		flash("image_error", "Image size exceeds the "+ Utils.humanReadableByteCount(filesizeLimit, true)+" limit");
+    	    	}
+    	    	else
+    	    	{
+	    	        boolean savedSuccessfully = user.updateImage( new FileInputStream(imageFile));
+	    	        if(savedSuccessfully){
+	    	        	flash("image_success", "Image has been updated successfully");
+	    	        } else {
+	    	        	flash("image_error", "There was an error changing the image.");
+	    	        }
+    	    	}
     	        
     	    }
     	    catch (Exception e) 
     	    {
-    	    	
+    	    	System.out.print(e);
     	    }
     	    
     	    imageFile.delete();
