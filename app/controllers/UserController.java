@@ -9,21 +9,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.persistence.PersistenceException;
-
-
 import be.objectify.deadbolt.actions.Restrict;
 
 import com.avaje.ebean.Ebean;
 
+import controllers.components.Facebook;
+
 import play.*;
+import play.libs.Akka;
+
+import play.libs.F.Promise;
+import play.libs.F.Function;
+
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
+import java.util.concurrent.Callable;
 import models.*;
 
 
@@ -195,10 +200,13 @@ public class UserController extends AppController {
     	// process the FB signed_request
     	DynamicForm form = form().bindFromRequest();
     	
+    	
+    	
     	if( form.field("signed_request").value() != null )
     	{
     		Map<String,String> signedRequestData = User.getSignedRequestRegisterParams( form.field("signed_request").value() );
-    		userForm = form(User.class).bind(signedRequestData, "username","email","password");
+    		
+    		userForm = form(User.class).bind(signedRequestData, "username","email","password","facebookUserId");
     	}
     	else
     	{
@@ -213,7 +221,7 @@ public class UserController extends AppController {
     	}
     	else
     	{
-    		System.out.println(userForm);    		
+    			
     		
     		User user = userForm.get();
     		
@@ -227,6 +235,12 @@ public class UserController extends AppController {
     		{
 	    		user.save();
 	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		
+	    		if( user.getFacebookUserId() != null )
+	    		{
+	    			// populate the image from FB	    			
+	    			user.updateImageFromURL( Facebook.getUserImageUrl(user.getFacebookUserId(), Facebook.UserImageType.LARGE) );
+	    		}
 	    		
     		}
     		catch(Exception e)
@@ -261,9 +275,6 @@ public class UserController extends AppController {
     public static Result registerWithFacebook()
     {
     	String facebookAppId = Play.application().configuration().getString("application.facebook_app_id");
-    	
-    	
-    	
     	return ok(views.html.User.registerWithFacebook.render(facebookAppId));
     }
     
@@ -281,8 +292,6 @@ public class UserController extends AppController {
     	List<Playlist> userPlaylists = Playlist.find.where().eq("user", u).eq("status", Playlist.Status.Public ).orderBy("createdDate DESC").setMaxRows(10).findList();
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user", u).orderBy("createdDate DESC").setMaxRows(50).findList();
     	
-    	
-    	
     	return ok(views.html.User.publicProfile.render(u, userPlaylists, savedPlaylists));
     }
     
@@ -290,7 +299,7 @@ public class UserController extends AppController {
     public static Result profile()
     {
     	User user = getAuthUser();
-    	Form<User> userForm = form(User.class).fill( user  );
+    	Form<User> userForm = form(User.class).fill( user );
     	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
@@ -308,6 +317,7 @@ public class UserController extends AppController {
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
     	
     	
+    	
     	MultipartFormData body = request().body().asMultipartFormData();
     	FilePart picture = body.getFile("image");
     	
@@ -318,8 +328,6 @@ public class UserController extends AppController {
     	    try
     	    {
     	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
-    	    	
-    	    	System.out.println("Max size - "+filesizeLimit);
     	    	
     	    	if(imageFile.length() > filesizeLimit)
     	    	{
@@ -387,8 +395,6 @@ public class UserController extends AppController {
     	
     	return user;
     }
-    
-    
     
     protected static boolean setAuthUser(User user)
     {

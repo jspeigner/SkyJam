@@ -3,9 +3,12 @@ package models;
 import global.Global;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.persistence.*;
 
@@ -73,6 +77,9 @@ public class User extends AppModel implements RoleHolder
 	
 	@OneToOne
 	private StorageObject imageStorageObject;
+	
+	@Nullable
+	private String facebookUserId;
 	
 	public static final ImageMetadata imageMetadata = new ImageMetadata(64, 64, ImageMetadata.IMAGE_TYPE_PNG, "files/user/image/%d.png", "files/user/image/default.png" );
 	
@@ -290,7 +297,7 @@ public class User extends AppModel implements RoleHolder
             results.put("username", f.registration.name);
             results.put("password", f.registration.password);
             results.put("email", f.registration.email);
-            results.put("facebook_user_id", f.user_id);
+            results.put("facebookUserId", f.user_id);
             
             
             return results;
@@ -357,6 +364,23 @@ public class User extends AppModel implements RoleHolder
 		return imageMetadata.getFilename(getId());
 	}
 	
+	public boolean updateImageFromURL(String url)
+	{
+		try
+		{
+			URL urlStream = new URL(url);
+			InputStream  i = urlStream.openStream();
+	        updateImage( i );
+	        
+	        i.close();
+	        
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return false;
+	}
 	
 	public boolean updateImage(InputStream sourceImage)
 	{
@@ -366,6 +390,14 @@ public class User extends AppModel implements RoleHolder
 		
 		return s != null;
 			
+	}
+
+	public String getFacebookUserId() {
+		return facebookUserId;
+	}
+
+	public void setFacebookUserId(String facebookUserId) {
+		this.facebookUserId = facebookUserId;
 	}
 	
 	
