@@ -27,9 +27,20 @@ PlayerControlInterface = {
 			    		
 			    	}
 			    	
+					var deviceAgent = navigator.userAgent.toLowerCase();
+					var agentID = deviceAgent.match(/(iphone|ipod|ipad)/);
+					var disableVolumeControl = false;
+					if (agentID) {
+						
+				        // disable the volume control. It is not supported on iOS devices
+						disableVolumeControl = true;
+					}		
+			    	
+			    	
 			    	self.playerControl = new PlayerControl( PlayerControlInterface.playerId , { 
 			    		playlist : playlistResponse,
-					volume : self.volume
+			    		volume : self.volume,
+			    		disableVolumeControl : disableVolumeControl
 			    	} );
 			    	
 			    	self.playerControl.setUser(application.user);
@@ -135,6 +146,7 @@ PlayerControl = can.Control({
 		this.playlistData = options.playlist;
 		
 		
+
 		
 		
 		this.currentPlayerState = this.PlayerState.STOP;
@@ -166,6 +178,10 @@ PlayerControl = can.Control({
 		    
 		    this.element.html( can.view( PlayerControlInterface.playerTemplateId, { playlist: this.playlistData, song: null }) );
 	    
+			if( options.disableVolumeControl )
+			{
+				$(".volume", this.element).hide();
+			}		    
 		    
 		    if( defaultSong )
 		    {
