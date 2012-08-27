@@ -5,14 +5,14 @@
 	<hr>
 	<!--  Select active categories -->
 	
-		@helper.form(action = routes.PlaylistController.createSubmit(), 'class -> "form-horizontal well", 'id -> "create-playlist-form") {
+		@helper.form(action = routes.PlaylistController.createSubmit(), 'class -> "form-horizontal well playlist-details", 'id -> "create-playlist-form") {
 		<div class="row-fluid">
 			<div class="span1"></div>
 			<div class="span10">
 				
 				@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Title", 'class -> "span8")	
 		
-				@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8")
+				@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8", 'rows -> 6)
 				
 				<div class="form-actions">
 					<input class="btn btn-success" type="submit" value="Save" /> and <a href="" class="btn">Publish</a>
@@ -23,6 +23,29 @@
 		}
 	
 	
+		<div class="row-fluid playlist-songs-control">
+			<div class="span7">
+				<h3>Songs on this Playlist</h3>
+				<hr>
+				<ul class="playlist-songs">
+				</ul>
+			</div>
+			<div class="span5">
+				<h3>Search songs</h3>
+				<hr>
+				
+				<form action="#" class="song-search-form input-append">
+					
+					<input name="song-search" type="text" placeholder="Search by Song Name, Album or Artist" class="span12">
+					<!-- 
+					<button class="btn" type="button">Search</button>
+					 -->
+				</form>
+				
+				<ul class="songs-search-results">
+				</ul>
+			</div>
+		</div>
 	
 </div>	
 	

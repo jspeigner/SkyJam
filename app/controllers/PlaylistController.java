@@ -2,21 +2,16 @@ package controllers;
 
 import global.Global;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
+import java.util.Date;
+import java.util.List;
+
 
 import be.objectify.deadbolt.actions.Restrict;
 
 import com.avaje.ebean.Page;
 
-import models.Album;
+
 import models.MusicCategory;
 import models.Playlist;
 import models.PlaylistSong;
@@ -24,16 +19,13 @@ import models.PlaylistSongRating;
 import models.User;
 import models.UserPlaylistActivity;
 import models.UserSavedPlaylist;
-import play.api.libs.json.JerksonJson;
-import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.data.DynamicForm;
 
 import views.html.*;
 import play.data.Form;
 
-public class PlaylistController extends AppController 
+public class PlaylistController extends BaseController 
 {
 	public static String CURRENT_PLAYLIST_ID_KEY = "Playlist.id";
 	

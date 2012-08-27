@@ -1,3 +1,12 @@
+/**
+ * 
+ * Global Events:
+ * $(document).on("app:page_load")
+ * 
+ * @param config
+ * @returns Object
+ */
+
 function Application(config)
 {
 	
@@ -196,6 +205,8 @@ function Application(config)
 		
 		self.jCurrentForm = null;
 		
+		$(document).trigger( Application.events.PAGE_LOAD );
+		
 	};
 	
 	this.onPjaxComplete = function(event, xhr, textStatus, options)
@@ -226,7 +237,7 @@ function Application(config)
 			
 		}
 		
-		
+		$(document).trigger( Application.events.PAGE_LOAD );
 	};
 	
 	this.onPjaxError = function(e, xhr, textStatus, errorThrown, options)
@@ -247,6 +258,7 @@ function Application(config)
 	// this is quick and dirty implementation
 	this.onDomReady = function()
 	{
+		
 		
 		var inputHeaderFormSearch = "header form input:text" ;
 		
@@ -383,7 +395,7 @@ function Application(config)
 		}
 		
 
-		
+		$(document).trigger( Application.events.PAGE_LOAD );
 
 	};
 	
@@ -393,6 +405,8 @@ function Application(config)
 	}
 };
 
-
+Application.events = {
+		PAGE_LOAD : "app:page_load"
+}
 
 

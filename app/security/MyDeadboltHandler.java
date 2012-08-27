@@ -1,6 +1,6 @@
 package security;
 
-import controllers.AppController;
+import controllers.BaseController;
 import controllers.UserController;
 import controllers.routes;
 import be.objectify.deadbolt.AbstractDeadboltHandler;
@@ -47,6 +47,6 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
     	 
         // return forbidden("Access forbidden");
     	 
-    	 return AppController.pjaxRedirect(routes.UserController.login());
+    	 return BaseController.pjaxRedirect(routes.UserController.login());
     }
 }

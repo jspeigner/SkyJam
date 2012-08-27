@@ -381,9 +381,6 @@ PlayerControl = can.Control({
 		  
 	  });
 	  
-	  
-	  
-	  
   },
   onListFinished: function()
   {

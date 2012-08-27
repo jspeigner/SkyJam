@@ -33,7 +33,7 @@ import models.*;
 
 
 
-public class UserController extends AppController {
+public class UserController extends BaseController {
 
 	public static final String AUTH_USER_COOKIE_ID = "User.id";	
 	public static final int AUTH_USER_COOKIE_LIFETIME = 7*24*3600;
@@ -221,15 +221,12 @@ public class UserController extends AppController {
     	}
     	else
     	{
-    			
-    		
     		User user = userForm.get();
     		
     		user.setRegisteredDate(new Date());
     		user.setLastLoginDate(null);
     		user.roles = new ArrayList<UserRole>();
     		user.roles.add(UserRole.findByName("user"));
-    		
     		
     		try
     		{

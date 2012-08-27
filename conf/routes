@@ -24,6 +24,8 @@ GET		/playlists/browse/:musicCategoryId			controllers.PlaylistController.browseC
 POST	/twitter_callback							controllers.ApplicationController.twitterCallback()
 GET		/twitter_callback							controllers.ApplicationController.twitterCallback()
 
+GET		/song/search.json							controllers.SongController.searchJson()
+
 POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
 POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
 GET			/playlist/favorite/save/:playlistId	controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 

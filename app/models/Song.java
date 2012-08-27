@@ -2,7 +2,13 @@ package models;
 
 import javax.persistence.*;
 
+import models.Playlist.Status;
+
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
 import com.avaje.ebean.validation.Length;
+
+import java.util.List;
 import java.util.Set;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
@@ -45,6 +51,26 @@ public class Song extends AppModel {
 	public static Song getByNameAndAlbumId(String name, Integer albumId) {
 		 
 		return Song.find.where().eq("name", name).eq("album_id", albumId).findUnique();
+	}	
+	
+	public static List<Song> searchWideByName(String query, int maxResults) 
+	{
+		
+		String likeQueryString =  "%" + query + "%";
+		
+		Expression e2 = Expr.and(
+				Expr.eq("status", Status.visible),
+				Expr.or(
+						Expr.ilike("name", likeQueryString), 
+						Expr.or(
+								Expr.ilike("album.name", likeQueryString), 
+								Expr.ilike("album.artist.name", likeQueryString)									
+						)
+				)	
+		);
+		
+		return Song.find.where(e2).setMaxRows(maxResults).findList();
+		
 	}	
 	
 	public String getName()

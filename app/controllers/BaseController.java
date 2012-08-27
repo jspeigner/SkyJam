@@ -2,7 +2,7 @@ package controllers;
 
 import play.mvc.*;
 
-public class AppController extends Controller {
+public class BaseController extends Controller {
 
 	public static final String PJAX_RESPONSE_HEADER  = "X-PJAX-URL";
 	public static final String PJAX_RESPONSE_REDIRECT_HEADER = "X-PJAX-REDIRECT";

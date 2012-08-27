@@ -106,3 +106,7 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 #user-public-profile {}
 	#user-public-profile ul { list-style: none;} 
 	#user-public-profile a.player-controls-play { display: block; margin-top:10px; height: 100%; }
+	
+#create-playlist {}
+	#create-playlist form.playlist-details .form-actions { padding-bottom: 0; margin-bottom: 0; }	
+	#create-playlist .song-search-form input {  };
