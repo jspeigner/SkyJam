@@ -76,32 +76,34 @@
 		
 		</script>
 		<script src="@routes.Assets.at("js/libs/player.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/create-playlist.js")" type="text/javascript"></script>
         
-	<!-- facebook -->
-	 
-	<script>
-	  window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '@play.Play.application().configuration().getString("application.facebook_app_id")', // App ID
-	      channelUrl : '@routes.Assets.at("channel.html").absoluteURL(request)', // Channel File
-	      status     : true, // check login status
-	      cookie     : true, // enable cookies to allow the server to access the session
-	      xfbml      : true  // parse XFBML
-	    });
-	
-	    // Additional initialization code here
-	  };
-	
-	  // Load the SDK Asynchronously
-	  (function(d){
-	     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-	     if (d.getElementById(id)) {return;}
-	     js = d.createElement('script'); js.id = id; js.async = true;
-	     js.src = "//connect.facebook.net/en_US/all.js";
-	     ref.parentNode.insertBefore(js, ref);
-	   }(document));
-	</script>        
-	<script src="http://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
+		<!-- facebook -->
+		 
+		<script>
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '@play.Play.application().configuration().getString("application.facebook_app_id")', // App ID
+		      channelUrl : '@routes.Assets.at("channel.html").absoluteURL(request)', // Channel File
+		      status     : true, // check login status
+		      cookie     : true, // enable cookies to allow the server to access the session
+		      xfbml      : true  // parse XFBML
+		    });
+		
+		    // Additional initialization code here
+		  };
+		
+		  // Load the SDK Asynchronously
+		  (function(d){
+		     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement('script'); js.id = id; js.async = true;
+		     js.src = "//connect.facebook.net/en_US/all.js";
+		     ref.parentNode.insertBefore(js, ref);
+		   }(document));
+		</script>        
+		<!-- twitter -->
+		<script src="http://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
     
     </head>
     <body class="main">
