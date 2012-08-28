@@ -156,6 +156,7 @@ CREATE TABLE `users` (
   `registered_date` datetime NOT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `image_storage_object_id` int(11) DEFAULT NULL COMMENT 'User image\n',
+  `facebook_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`,`password`),
   KEY `fk_users_storage_object1` (`image_storage_object_id`)
