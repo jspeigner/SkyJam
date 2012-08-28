@@ -3,7 +3,7 @@ package controllers;
 import play.mvc.*;
 import views.html.*;
 
-public class PageController extends Controller {
+public class PageController extends BaseController {
 
 	
 	public static Result termsOfUse()

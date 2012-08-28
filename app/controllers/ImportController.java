@@ -37,7 +37,7 @@ import play.mvc.Result;
 import play.mvc.Controller;
 import views.html.*;
 
-public class ImportController extends Controller {
+public class ImportController extends BaseController {
 	
 	public static Result importMusicFromS3Account()
 	{
