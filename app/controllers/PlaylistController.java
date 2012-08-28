@@ -328,7 +328,7 @@ public class PlaylistController extends BaseController
 		  User user = UserController.getAuthUser();
 		  Form<Playlist> form = form(Playlist.class);
 		  
-		  return ok(views.html.Playlist.create.render(user, form));
+		  return ok(views.html.Playlist.create.render(user, form, null));
 	  }
 	  
 	  @Restrict("user")

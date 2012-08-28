@@ -1,52 +1,119 @@
-@(user:User, form: Form[Playlist])@import helper.twitterBootstrap2._
+@(user:User, form: Form[Playlist], playlistSongs:List[PlaylistSong] )@import helper.twitterBootstrap2._
 @Layout.default("Create a Playlist"){
 <div id="create-playlist">
 	<h1>Making your Playlist</h1>
 	<hr>
 	<!--  Select active categories -->
 	
-		@helper.form(action = routes.PlaylistController.createSubmit(), 'class -> "form-horizontal well playlist-details", 'id -> "create-playlist-form") {
-		<div class="row-fluid">
-			<div class="span1"></div>
-			<div class="span10">
-				
-				@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Title", 'class -> "span8")	
-		
-				@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8", 'rows -> 6)
-				
-				<div class="form-actions">
-					<input class="btn btn-success" type="submit" value="Save" /> and <a href="" class="btn">Publish</a>
-				</div>
+		@helper.form(action = routes.PlaylistController.createSubmit(), 'class -> "form-horizontal playlist-details", 'id -> "create-playlist-form") {
+		<div class="well">
+			<div class="row-fluid">
+				<div class="span1"></div>
+				<div class="span10">
+					
+					@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Title", 'class -> "span8")	
 			
+					@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8", 'rows -> 6)
+					
+					<div class="form-actions">
+						<input class="btn btn-success" type="submit" value="Save" /> and <a href="" class="btn">Publish</a>
+					</div>
+				
+				</div>
 			</div>
 		</div>
-		}
-	
-	
 		<div class="row-fluid playlist-songs-control">
 			<div class="span7">
 				<h3>Songs on this Playlist</h3>
 				<hr>
-				<ul class="playlist-songs">
-				</ul>
+				<div class="playlist-songs-container">
+					<ul>
+					
+					@if( playlistSongs != null ){
+					
+						@for(playlistSong <- playlistSongs ){
+							<li data-song-id="@playlistSong.getSong.getId"  data-playlist-song-id="@playlistSong.getId" >
+									<div class="row-fluid">
+										<div class="span2"><img alt="@playlistSong.getSong.getName by @playlistSong.getSong.getAlbum.getArtist.getName" src="@playlistSong.getSong.getAlbum.getAlbumArtUrl" ></div>
+										<div class="span10">
+										
+											<span class="song-name">@playlistSong.getSong.getName</span>
+											<span class="artist-name">@playlistSong.getSong.getAlbum.getArtist.getName</span> <span class="album-name"> from @playlistSong.getSong.getAlbum.getName</span>
+											
+											<div><a class="btn btn-small remove-song-from-playlist" data-song-id="@playlistSong.getSong.getId"><i class="icon-minus"></i> Remove</a></div>
+											<input type="hidden" name="song[]" value="@playlistSong.getSong.getId" >
+										</div>
+									</div>
+								
+							</li>							
+						}
+					}
+					
+					
+					</ul>
+				</div>
 			</div>
 			<div class="span5">
 				<h3>Search songs</h3>
 				<hr>
 				
-				<form action="#" class="song-search-form input-append">
+				<div class="song-search-form">
 					
-					<input name="song-search" type="text" placeholder="Search by Song Name, Album or Artist" class="span12">
-					<!-- 
-					<button class="btn" type="button">Search</button>
-					 -->
-				</form>
+					<input name="song-search" type="text" placeholder="Search by Song Name, Album or Artist" class="song-search span12">
+					 
+				</div>
+				<div class="songs-search-results-container">
+				</div>
 				
-				<ul class="songs-search-results">
-				</ul>
+				
+			</div>
+		</div>
+		
+		}
+	
+</div>	
+<script type="text/ejs" id="create-playlist-search-song-list">
+<% if( songs && songs.length ){ %>
+	<ul>
+	<% for( var i = 0; i < songs.length; i++ ) { %>
+	<li data-song-id="<%=songs[i].id%>">
+		<div class="row-fluid">
+			<div class="span2"><img alt="<%=songs[i].name %> by <%=songs[i].album.artist.name %>" src="<%=songs[i].album.albumArtUrl %>" ></div>
+			<div class="span10">
+			
+				<span class="song-name"><%=songs[i].name %></span>
+				<span class="artist-name"><%=songs[i].album.artist.name %></span>  <span class="album-name"> from <%=songs[i].album.name %></span>
+				
+				<div><a class="btn btn-small add-song-to-playlist" data-song-id="<%=songs[i].id%>" href="javascript://"><i class="icon-plus"></i> Add</a></div>
+
 			</div>
 		</div>
 	
-</div>	
+	</li>
+	<% } %>
+	</ul>
+<% } else { %>
+	<p>There are no songs found</p>
+<% } %>
+</script>
+<script type="text/ejs" id="create-playlist-selected-song-element">
+<% if( song ){ %>
+
+	<li data-song-id="<%=song.id%>"  data-playlist-song-id="<%=playlistSongId%>" >
+		<div class="row-fluid">
+			<div class="span2"><img alt="<%=song.name %> by <%=song.album.artist.name %>" src="<%=song.album.albumArtUrl %>" ></div>
+			<div class="span10">
+			
+				<span class="song-name"><%=song.name %></span>
+				<span class="artist-name"><%=song.album.artist.name %></span> <span class="album-name"> from <%=song.album.name %></span>
+				
+				<div><a class="btn btn-small remove-song-from-playlist" data-song-id="<%=song.id%>"><i class="icon-minus"></i> Remove</a></div>
+				<input type="hidden" name="song[]" value="<%=song.id%>" >
+			</div>
+		</div>
+	
+	</li>
+<% } %>
+</script>
 	
 }

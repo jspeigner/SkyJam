@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import models.Playlist.Status;
+import models.behavior.ImageMetadata;
 
 import com.avaje.ebean.validation.Length;
 
@@ -46,6 +47,8 @@ public class MusicCategory extends AppModel {
 	@Enumerated(EnumType.STRING)
 	private Type type;	
 	
+	
+	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 180, ImageMetadata.IMAGE_TYPE_PNG, "files/music_category/image/%d.png", "files/music_category/image/default.png" );	
 	/*
 	@ManyToMany
 	@JoinTable(name = "songs_music_categories", joinColumns = { @JoinColumn(name="music_category_id") }, inverseJoinColumns = { @JoinColumn(name="song_id") } )
@@ -69,12 +72,7 @@ public class MusicCategory extends AppModel {
 	
 	public String getImageUrl()
 	{
-		if(imageStorageObject!=null)
-		{
-			return imageStorageObject.getUrl();
-		}
-		
-		return null;
+		return imageMetadata.getImageUrlFromStorageObject( getImageStorageObject() );
 	}
 	
 	public List<MusicCategory> getChildren()

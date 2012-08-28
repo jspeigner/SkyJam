@@ -109,4 +109,14 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	
 #create-playlist {}
 	#create-playlist form.playlist-details .form-actions { padding-bottom: 0; margin-bottom: 0; }	
-	#create-playlist .song-search-form input {  };
+	#create-playlist .song-search-form input {  }
+		#create-playlist .songs-search-results-container ul { list-style: none; margin:10px 0 0 0; padding:0; }
+			#create-playlist .songs-search-results-container ul li { margin-bottom:10px; }
+				#create-playlist .songs-search-results-container ul li span { display: block; }
+				#create-playlist .songs-search-results-container ul li span.album-name { font-size: 0.8em; display: inline; }
+				#create-playlist .songs-search-results-container ul li span.artist-name { font-size: 0.8em; display: inline; }
+		#create-playlist .playlist-songs-container ul { list-style: none; margin:10px 0 0 0; padding:0; }
+			#create-playlist .playlist-songs-container ul li { margin-bottom:10px; }
+				#create-playlist .playlist-songs-container ul li span { display: block; }
+				#create-playlist .playlist-songs-container ul li span.album-name { font-size: 0.8em; display: inline; }
+				#create-playlist .playlist-songs-container ul li span.artist-name { font-size: 0.8em; display: inline; }

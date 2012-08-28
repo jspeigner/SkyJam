@@ -217,23 +217,8 @@ public class User extends AppModel implements RoleHolder
 	
 	public String getImageUrl()
 	{
-		
-		
-		
-		if( getImageStorageObject() != null )
-		{
-			return getImageStorageObject().getUrl();
-		}
-		else
-		{
-			boolean isAsset = Play.application().configuration().getBoolean("application.default_image.is_stored_in_assets");
-			
-			return  isAsset ?
-						routes.Assets.at(imageMetadata.defaultImageUrl).toString() :
-						StorageObject.getObjectUrl(imageMetadata.defaultImageUrl, Bucket.getDefault());
-		}
-		
-		// return null;
+		return imageMetadata.getImageUrlFromStorageObject( getImageStorageObject());
+
 	}
 
 	public Date getLastLoginDate() {

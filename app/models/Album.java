@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 
 import javax.persistence.Table;
 
+import models.behavior.ImageMetadata;
+
 import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
@@ -38,6 +40,8 @@ public class Album extends AppModel {
 	
 	private String description;
 	
+	
+	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 240, ImageMetadata.IMAGE_TYPE_PNG, "files/album/image/%d.png", "files/album/image/default.png" );
 	
 	@ManyToOne
 	private StorageObject albumArtStorageObject;
@@ -71,12 +75,8 @@ public class Album extends AppModel {
 	
 	public String getAlbumArtUrl()
 	{
-		if(albumArtStorageObject!=null)
-		{
-			return albumArtStorageObject.getUrl();
-		}
-		
-		return null;
+		return imageMetadata.getImageUrlFromStorageObject(  getAlbumArtStorageObject());
+
 	}
 
 	public void setName(String name) {

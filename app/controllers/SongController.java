@@ -1,5 +1,7 @@
 package controllers;
 
+import global.Global;
+
 import java.util.ArrayList;
 import java.util.List;
 import views.html.*;
@@ -21,7 +23,7 @@ public class SongController extends BaseController {
 		  {
 			  List<Song> songs = Song.searchWideByName(query, 30);
 			  
-			  return ok(views.html.Song.searchJson.render(songs));
+			  return ok(views.html.Song.searchJson.render(songs)).as( Global.JSON_CONTENT_TYPE );
 
 		  }
 		

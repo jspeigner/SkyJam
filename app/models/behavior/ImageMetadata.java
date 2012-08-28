@@ -1,5 +1,10 @@
 package models.behavior;
 
+import models.Bucket;
+import models.StorageObject;
+import play.Play;
+import controllers.routes;
+
 public class ImageMetadata {
 	
 	public static final String IMAGE_TYPE_PNG = "png";
@@ -41,6 +46,22 @@ public class ImageMetadata {
 	public String getFilename(Object... params)
 	{
 		return String.format(filenameFormat, params);
+	}
+	
+	public String getImageUrlFromStorageObject(StorageObject s)
+	{
+		if( s != null )
+		{
+			return s.getUrl();
+		}
+		else
+		{
+			boolean isAsset = Play.application().configuration().getBoolean("application.default_image.is_stored_in_assets");
+			
+			return  isAsset ?
+						routes.Assets.at( this.defaultImageUrl).toString() :
+						StorageObject.getObjectUrl( this.defaultImageUrl, Bucket.getDefault());
+		}		
 	}
 
 	
