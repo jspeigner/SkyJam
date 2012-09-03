@@ -120,3 +120,6 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 				#create-playlist .playlist-songs-container ul li span { display: block; }
 				#create-playlist .playlist-songs-container ul li span.album-name { font-size: 0.8em; display: inline; }
 				#create-playlist .playlist-songs-container ul li span.artist-name { font-size: 0.8em; display: inline; }
+
+	#create-playlist .songs-search-results-container ul li { margin-bottom: 15px; }
+		#create-playlist .songs-search-results-container ul li a.add-song-to-playlist  { margin-top: 5px; width: 47px; }

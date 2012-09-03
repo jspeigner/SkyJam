@@ -137,8 +137,6 @@ public class UserController extends BaseController {
     
     public static Result homepageRegisterSubmit()
     {
-    	DynamicForm form = form().bindFromRequest();
-    	
     	Form<User> userForm = form(User.class).bindFromRequest("email");
     	
     	

@@ -1,8 +1,13 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
@@ -29,6 +35,8 @@ import com.avaje.ebean.validation.Length;
 import controllers.UserController;
 
 import play.data.format.Formats;
+import play.data.validation.ValidationError;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 
@@ -38,6 +46,7 @@ public class Playlist extends AppModel {
 
 	
 	@Length(max=200)
+	@Required
 	private String name;
 	
 	public enum Status
@@ -51,6 +60,7 @@ public class Playlist extends AppModel {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
+	@Required
 	private String description;
 	
 	@ManyToOne
@@ -65,12 +75,17 @@ public class Playlist extends AppModel {
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date createdDate;	
 	
-	@OneToMany(targetEntity=PlaylistSong.class)
+	@OneToMany
 	@OrderBy("position ASC")
 	private List<PlaylistSong> playlistSongs;
 
 
 	private Integer loadedTimes;
+	
+	@Transient
+	private int minSongsInList = 4;
+	
+	private static final Pattern songIdFormFieldPattern = Pattern.compile("data\\[songs(\\d+)_song_id\\]");
 	
 	public static Model.Finder<Integer,Playlist> find = new Finder<Integer, Playlist>(Integer.class, Playlist.class);
 	
@@ -248,5 +263,80 @@ public class Playlist extends AppModel {
 	public boolean isSavedByUser(User user)
 	{
 		return (user==null) || ( UserSavedPlaylist.find.where().eq("user", user).eq("playlist", this ).findRowCount() > 0 ); 
+	}
+
+	/*
+	public Map<String,List<ValidationError>> validate()
+	{
+		Map<String,List<ValidationError>> validationErrors = new HashMap<String,List<ValidationError>>(); 
+		
+		List<ValidationError> globalErrors = new ArrayList<ValidationError>();
+		
+		if( playlistSongs.size() < minSongsInList )
+		{
+			globalErrors.add( new ValidationError("", "Please add more songs. At least " + minSongsInList + " songs are required", new ArrayList()) );
+						
+		}
+
+		if(globalErrors.size()>0){
+			validationErrors.put("", globalErrors);
+		}
+		
+		System.out.println("Songs - " + playlistSongs.size());
+		
+		return validationErrors.size() > 0 ? validationErrors : null;
+	}
+	*/	
+	
+	
+	
+	public static List<PlaylistSong> getSongsFromForm(Map<String, String> data) {
+		
+		
+		 
+		
+		List<PlaylistSong> result = new ArrayList<PlaylistSong>();
+		
+		for(Map.Entry<String, String> formEntry : data.entrySet()  ){
+			Matcher matcher = songIdFormFieldPattern.matcher(formEntry.getKey());
+			
+			if( matcher.matches() ){
+				
+				String songId = matcher.group(1);
+				
+				PlaylistSong p = new PlaylistSong();
+				
+				
+				
+				try {
+					Song s = Song.find.byId( Integer.valueOf( formEntry.getValue() ) );
+					
+					if( s != null){
+						
+						
+						p.setSong( s );
+						
+						String positionField = "data[playlistSongs"+songId+"_position]";
+						int positionFieldValue = data.containsKey(positionField) ? Integer.valueOf(data.get(positionField)) : 0;
+						
+						p.setPosition( positionFieldValue );
+						result.add( p );
+						
+					}
+					
+					// System.out.println(formEntry.getKey() +" = " + formEntry.getValue());
+					
+				}
+				catch(Exception e) {
+  
+				}
+				
+				
+				
+			}
+			
+		}
+		
+		return result.size() > 0 ? result : null;
 	}
 }

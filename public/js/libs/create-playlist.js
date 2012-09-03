@@ -51,9 +51,14 @@ CreatePlaylistControl = can.Control({
 		
 		this.selectedSongList.push( song );
 		
-		var elem = can.view("#create-playlist-selected-song-element", { song: song, playlistSongId : playlistSongId });
+		
+		var list = $(".playlist-songs-container ul", this.element);
+		
+		var position = $("li", list).length;
+		
+		var elem = can.view("#create-playlist-selected-song-element", { song: song, playlistSongId : playlistSongId, position: position });
 		 
-		$(".playlist-songs-container ul", this.element).append( elem );
+		list.append( elem );
 		
 		
 	},

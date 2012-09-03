@@ -3,8 +3,10 @@ package controllers;
 import global.Global;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 import be.objectify.deadbolt.actions.Restrict;
@@ -171,6 +173,7 @@ public class PlaylistController extends BaseController
 					  p.setCreatedDate(new Date());
 					  p.setPlaylistSong( PlaylistSong.find.byId( playlistSongIdInt ) );
 					  p.setType(t);
+					  
 					  p.setUser(user);
 					  
 					  p.save();
@@ -334,7 +337,100 @@ public class PlaylistController extends BaseController
 	  @Restrict("user")
 	  public static Result createSubmit()
 	  {
-		  return null;
+		  User user = UserController.getAuthUser();
+		  Form<Playlist> form = form(Playlist.class).bindFromRequest("name", "description");
+		  
+		  List<PlaylistSong> playlistSongs = Playlist.getSongsFromForm( form().bindFromRequest().data() );
+		  
+		  if( form.hasErrors()){
+			  
+			  return ok(views.html.Playlist.create.render(user, form, playlistSongs));
+			  
+		  } else {
+			
+			  Playlist p = form.get();
+			  p.setUser(user);
+			  p.setStatus(Playlist.Status.Draft);
+			  p.setCreatedDate(new Date());
+			  p.setLoadedTimes(0);
+			 
+			  try{
+				  p.save();
+				  
+				  for(PlaylistSong playlistSong : playlistSongs){
+					  playlistSong.setPlaylist(p);
+					  playlistSong.setCreatedDate(new Date());
+					  playlistSong.setLikesCount(0);
+					  playlistSong.setDislikesCount(0);
+					  
+					  playlistSong.save();
+				  }
+				  
+				  flash("success", "Playlist was created successfully");
+				  
+				  return pjaxRedirect( routes.PlaylistController.edit( p.getId() ) );
+				  
+			  } catch( Exception e){
+				  
+				  System.out.println(e);
+				  
+				  return badRequest("Playlist save failed");
+			  }
+			  
+			  
+			  
+			  
+		  }
+		  
+		  
+	  }
+	  
+	  @Restrict("user")
+	  public static Result edit(Integer playlistId)
+	  {
+		  User user = UserController.getAuthUser();
+		  Playlist p = Playlist.find.where().eq("id", playlistId).eq("user", user ).findUnique();
+		  if( p == null ){
+			  return notFound("Playlist not found");
+		  }
+		  List<PlaylistSong> playlistSongs = p.getPlaylistSongs();
+		  
+		  Form<Playlist> form = form(Playlist.class);
+		  
+		  
+		  
+		  if( ( request().method() == "POST" ) || ( request().method() == "POST" ) ){
+			  
+			  form = form.bindFromRequest("name", "description");
+			  
+			  playlistSongs = Playlist.getSongsFromForm( form().bindFromRequest().data() );
+			  
+			  if( form.hasErrors()){
+				  
+			  } else {		  
+				  
+				  form.get().update(playlistId);
+				  
+				  
+				  // p.updatePlaylistSongs( playlistSongs );
+				  
+				  flash("success", "Playlist was saved successfully");
+				  
+				  // redirect
+				  return pjaxRedirect( routes.PlaylistController.edit( p.getId() ) );
+			  }
+		  } else {
+			 form = form.fill(p);
+		  }
+		  
+		  return ok(views.html.Playlist.create.render(user, form, playlistSongs));		  
+		  
+	  }
+	  
+	  @Restrict("user")
+	  public static Result editSubmit(Integer playlistId)
+	  {
+		  return edit(playlistId);
 	  }
 	  
 	
