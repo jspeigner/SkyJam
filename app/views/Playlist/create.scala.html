@@ -5,14 +5,12 @@
 		<div class="row-fluid">
 			<div class="span2"><img alt="@Html(songName) by @Html(artistName)" src="@Html(albumArtUrl)" ></div>
 			<div class="span10">
-			
 				<span class="song-name">@Html(songName)</span>
 				<span class="artist-name">@Html(artistName)</span> <span class="album-name"> from @Html(albumName)</span>
-				
 				<div><a class="btn btn-small remove-song-from-playlist" data-song-id="@Html(songId)"><i class="icon-minus"></i> Remove</a></div>
 				<input type="hidden" name="songs@Html(songId)_song_id" value="@Html(songId)" >
 				<input type="hidden" name="playlistSongs@Html(songId)_id" value="@Html(playlistSongId)" >
-				<input type="hidden" name="playlistSongs@Html(songId)_position" value="@Html(position)" >
+				<input type="hidden" name="playlistSongs@Html(songId)_position" class="position" value="@Html(position)" >
 			</div>
 		</div>
 	</li>
@@ -21,13 +19,15 @@
 <div id="create-playlist">
 	<h1>Making your Playlist</h1>
 	<hr>
-	<!--  Select active categories -->
-	
 		@helper.form(action = if( form("id").value == null ) routes.PlaylistController.createSubmit() else routes.PlaylistController.editSubmit( Integer.valueOf( form("id").value ) ) , 'class -> "form-horizontal playlist-details", 'id -> "create-playlist-form") {
 		<div class="well">
 			<div class="row-fluid">
-				<div class="span1"></div>
-				<div class="span10">
+				<div class="span3 albumPreview">
+					<table><tr><td class="album1"></td><td class="album2"></td></tr><tr><td class="album3"></td><td class="album4"></td></tr></table>
+					
+					
+				</div>
+				<div class="span9">
 					
 					
 				@if(flash.contains("success")) {
@@ -47,8 +47,13 @@
 			
 					@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8", 'rows -> 6)
 					
+					@helper.select(form("activity"), Seq("hello" -> "World", "2" -> "3"), '_label -> "Activity")
+					
 					<div class="form-actions">
-						<input class="btn btn-success" type="submit" value="Save" /> <!--  and <a href="" class="btn">Publish</a>  -->
+						<input class="btn btn-success" type="submit" value="Save" /> 
+						@if( ( form("id").value != null ) && ( form("status").value == "Draft" ) ){
+							OR <a href="" class="btn">Publish</a>
+						}
 					</div>
 				
 				</div>
@@ -82,11 +87,8 @@
 			<div class="span5">
 				<h3>Search songs</h3>
 				<hr>
-				
 				<div class="song-search-form">
-					
 					<input name="song-search" type="text" placeholder="Search by Song Name, Album or Artist" class="song-search span12">
-					 
 				</div>
 				<div class="songs-search-results-container">
 				</div>

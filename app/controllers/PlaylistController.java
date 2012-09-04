@@ -357,14 +357,7 @@ public class PlaylistController extends BaseController
 			  try{
 				  p.save();
 				  
-				  for(PlaylistSong playlistSong : playlistSongs){
-					  playlistSong.setPlaylist(p);
-					  playlistSong.setCreatedDate(new Date());
-					  playlistSong.setLikesCount(0);
-					  playlistSong.setDislikesCount(0);
-					  
-					  playlistSong.save();
-				  }
+				  p.updatePlaylistSongs(playlistSongs);
 				  
 				  flash("success", "Playlist was created successfully");
 				  
@@ -376,13 +369,7 @@ public class PlaylistController extends BaseController
 				  
 				  return badRequest("Playlist save failed");
 			  }
-			  
-			  
-			  
-			  
 		  }
-		  
-		  
 	  }
 	  
 	  @Restrict("user")
@@ -411,8 +398,7 @@ public class PlaylistController extends BaseController
 				  
 				  form.get().update(playlistId);
 				  
-				  
-				  // p.updatePlaylistSongs( playlistSongs );
+				  p.updatePlaylistSongs( playlistSongs );
 				  
 				  flash("success", "Playlist was saved successfully");
 				  

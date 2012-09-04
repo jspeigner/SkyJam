@@ -8,6 +8,7 @@ CreatePlaylistControl = can.Control({
 	selectedSongList: [],
 	
 	init: function( element, options ){
+		
 		if(options.songs && options.songs.length )
 		{
 			for(var i=0; i< options.songs.length; i++)
@@ -23,6 +24,20 @@ CreatePlaylistControl = can.Control({
 				this.addPlaylistSongToSelected( options.playlistSongs[i] );
 			}
 		}
+		
+		$( ".playlist-songs-container ul", this.element)
+			.sortable()
+			.bind( "sortstop", this.onSortOrderChange);
+		
+	},
+	
+	onSortOrderChange: function(event, ui) {
+		
+		var i = 0;
+		
+		$(".playlist-songs-container ul li", this.element).each(function(){
+			$("input.position", this ).val( i++ );
+		});
 		
 	},
 	
@@ -135,7 +150,6 @@ CreatePlaylistControl = can.Control({
 
 
 $(document).on( Application.events.PAGE_LOAD, function(){
-//		alert("page load");
 	
 	var createPlaylistId = "#create-playlist"; 
 	

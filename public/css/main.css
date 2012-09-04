@@ -116,10 +116,20 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 				#create-playlist .songs-search-results-container ul li span.album-name { font-size: 0.8em; display: inline; }
 				#create-playlist .songs-search-results-container ul li span.artist-name { font-size: 0.8em; display: inline; }
 		#create-playlist .playlist-songs-container ul { list-style: none; margin:10px 0 0 0; padding:0; }
-			#create-playlist .playlist-songs-container ul li { margin-bottom:10px; }
+			#create-playlist .playlist-songs-container ul li { margin-bottom:10px; background-color: #fff; }
 				#create-playlist .playlist-songs-container ul li span { display: block; }
 				#create-playlist .playlist-songs-container ul li span.album-name { font-size: 0.8em; display: inline; }
 				#create-playlist .playlist-songs-container ul li span.artist-name { font-size: 0.8em; display: inline; }
+				#create-playlist .playlist-songs-container ul li img {cursor: move; }
 
 	#create-playlist .songs-search-results-container ul li { margin-bottom: 15px; }
+		#create-playlist .songs-search-results-container ul li {  }
 		#create-playlist .songs-search-results-container ul li a.add-song-to-playlist  { margin-top: 5px; width: 47px; }
+
+		#create-playlist .albumPreview { }
+			#create-playlist .albumPreview table { margin: 0; padding:0; border-collapse: collapse;border: none;}
+			#create-playlist .albumPreview td { width:125px; height:125px;  }
+			#create-playlist .albumPreview .album1 { background-color: #aaa; }
+			#create-playlist .albumPreview .album2 { background-color: #bbb; }
+			#create-playlist .albumPreview .album3 { background-color: #ccc; }
+			#create-playlist .albumPreview .album4 { background-color: #ddd;}

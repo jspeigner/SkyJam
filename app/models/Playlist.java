@@ -73,7 +73,7 @@ public class Playlist extends AppModel {
 	public List<MusicCategory> musicCategories;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
-	private Date createdDate;	
+	private Date createdDate;
 	
 	@OneToMany
 	@OrderBy("position ASC")
@@ -319,6 +319,11 @@ public class Playlist extends AppModel {
 						String positionField = "data[playlistSongs"+songId+"_position]";
 						int positionFieldValue = data.containsKey(positionField) ? Integer.valueOf(data.get(positionField)) : 0;
 						
+						String playlistSongIdField = "data[playlistSongs"+songId+"_id]";
+						if ( data.containsKey(playlistSongIdField) && ( data.get(playlistSongIdField) != "" ) ){
+							p.setId( Integer.valueOf( data.get(playlistSongIdField) ) );
+						}
+						
 						p.setPosition( positionFieldValue );
 						result.add( p );
 						
@@ -338,5 +343,28 @@ public class Playlist extends AppModel {
 		}
 		
 		return result.size() > 0 ? result : null;
+	}
+
+	public void updatePlaylistSongs(List<PlaylistSong> newPlaylistSongs) {
+		
+		for( PlaylistSong playlistSong: newPlaylistSongs){
+			
+			if( playlistSong.getId() != null){
+				// existing playlist song - update the position
+				playlistSong.update( playlistSong.getId() );
+			} else {
+				
+			  playlistSong.setPlaylist(this);
+			  playlistSong.setCreatedDate(new Date());
+			  playlistSong.setLikesCount(0);
+			  playlistSong.setDislikesCount(0);
+			  
+			  playlistSong.save();				
+				
+				// new playlist song
+			}
+			
+		}
+		
 	}
 }
