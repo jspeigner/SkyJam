@@ -128,8 +128,9 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 
 		#create-playlist .albumPreview { }
 			#create-playlist .albumPreview table { margin: 0; padding:0; border-collapse: collapse;border: none;}
-			#create-playlist .albumPreview td { width:125px; height:125px;  }
-			#create-playlist .albumPreview .album1 { background-color: #aaa; }
-			#create-playlist .albumPreview .album2 { background-color: #bbb; }
-			#create-playlist .albumPreview .album3 { background-color: #ccc; }
-			#create-playlist .albumPreview .album4 { background-color: #ddd;}
+			#create-playlist .albumPreview td { width:125px; height:125px; margin:0; padding:0; }
+			#create-playlist .albumPreview td img { margin:0; padding:0; width:100%; height:100%; }
+			#create-playlist .albumPreview .album0 { background-color: #e0e0e0; }
+			#create-playlist .albumPreview .album1 { background-color: #e5e5e5; }
+			#create-playlist .albumPreview .album2 { background-color: #eaeaea; }
+			#create-playlist .albumPreview .album3 { background-color: #f2f2f2;}

@@ -1,7 +1,7 @@
 @(user:User, form: Form[Playlist], playlistSongs : List[PlaylistSong] = null )
 @import helper.twitterBootstrap2._
-@playlistSongTemplate(songId:String, playlistSongId:String, songName:String, artistName:String, albumName:String, albumArtUrl:String, position:String = "0" ) = {
-	<li data-song-id="@Html(songId)"  data-playlist-song-id="@Html(playlistSongId)" >
+@playlistSongTemplate(songId:String, playlistSongId:String, songName:String, artistName:String, albumName:String, albumArtUrl:String, position:String = "0", playlistSong:PlaylistSong = null ) = {
+	<li data-song-id="@Html(songId)" @if(playlistSong!=null){ data-playlist-song="@tags.playlistSongJson(playlistSong)" } >
 		<div class="row-fluid">
 			<div class="span2"><img alt="@Html(songName) by @Html(artistName)" src="@Html(albumArtUrl)" ></div>
 			<div class="span10">
@@ -23,25 +23,22 @@
 		<div class="well">
 			<div class="row-fluid">
 				<div class="span3 albumPreview">
-					<table><tr><td class="album1"></td><td class="album2"></td></tr><tr><td class="album3"></td><td class="album4"></td></tr></table>
-					
-					
+					<table><tr><td class="album0"></td><td class="album1"></td></tr><tr><td class="album2"></td><td class="album3"></td></tr></table>
 				</div>
 				<div class="span9">
 					
 					
-				@if(flash.contains("success")) {
-                <div  class="alert alert-success">
-                    @flash.get("success")
-                </div>
-            	}					
-					
-				@if(form.hasGlobalErrors) { 
-                <div  class="alert alert-error">
-                    @form.globalError.message
-                </div>
-            	}				
-					
+					@if(flash.contains("success")) {
+	                <div class="alert alert-success">
+	                    @flash.get("success")
+	                </div>
+	            	}					
+						
+					@if(form.hasGlobalErrors) {
+	                <div class="alert alert-error">
+	                    @form.globalError.message
+	                </div>
+	            	}					
 					
 					@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Title", 'class -> "span8")	
 			
@@ -50,9 +47,9 @@
 					@helper.select(form("activity"), Seq("hello" -> "World", "2" -> "3"), '_label -> "Activity")
 					
 					<div class="form-actions">
-						<input class="btn btn-success" type="submit" value="Save" /> 
+						<input class="btn btn-success" type="submit" value="Save" />
 						@if( ( form("id").value != null ) && ( form("status").value == "Draft" ) ){
-							OR <a href="" class="btn">Publish</a>
+							OR <a href="#" class="btn">Publish</a>
 						}
 					</div>
 				
@@ -75,9 +72,11 @@
 	                    		playlistSong.getSong.getAlbum.getArtist.getName, 
 	                    		playlistSong.getSong.getAlbum.getName, 
 	                    		playlistSong.getSong.getAlbum.getAlbumArtUrl, 
-	                    		if( playlistSong.getPosition != null ) playlistSong.getPosition.toString else "0" 
+	                    		if( playlistSong.getPosition != null ) playlistSong.getPosition.toString else "0",
+	                    		playlistSong
 	                    	 )
 	                
+	                		
 	                	}
 					}
 					

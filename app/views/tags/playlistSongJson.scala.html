@@ -1,0 +1,28 @@
+@(playlistSong:PlaylistSong)@{
+
+	import com.codahale.jerkson.Json._
+	
+	val jsonSong = scala.collection.immutable.Map(
+
+		"id" 			-> playlistSong.getId,
+		"position"		-> playlistSong.getPosition,
+		"likes_count"	-> playlistSong.getLikesCount,
+		"dislikes_count"-> playlistSong.getDislikesCount,
+		
+		"song" 		-> scala.collection.immutable.Map(
+				"name" 	-> playlistSong.getSong.getName, 
+				"id" 	-> playlistSong.getSong.getId.toString,
+				"album" -> scala.collection.immutable.Map(
+					"name" 			-> playlistSong.getSong.getAlbum.getName,
+					"id"			-> playlistSong.getSong.getAlbum.getId,
+					"albumArtUrl"	-> playlistSong.getSong.getAlbum.getAlbumArtUrl,
+					"artist"	-> scala.collection.immutable.Map(
+						"id"			-> playlistSong.getSong.getAlbum.getArtist.getId,
+						"name"			-> playlistSong.getSong.getAlbum.getArtist.getName
+					)
+				)
+		)
+	);
+	
+	(generate(jsonSong))	
+}

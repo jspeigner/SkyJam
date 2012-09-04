@@ -347,11 +347,23 @@ public class Playlist extends AppModel {
 
 	public void updatePlaylistSongs(List<PlaylistSong> newPlaylistSongs) {
 		
+		Map<Integer, Integer> initialPlaylistSongIds = new HashMap<Integer, Integer>();
+		
+		for(PlaylistSong p : getPlaylistSongs()){
+			initialPlaylistSongIds.put( p.getId(), p.getId());
+		}
+			
+		
+		
+		
 		for( PlaylistSong playlistSong: newPlaylistSongs){
 			
 			if( playlistSong.getId() != null){
 				// existing playlist song - update the position
 				playlistSong.update( playlistSong.getId() );
+				
+				initialPlaylistSongIds.remove(  playlistSong.getId() );
+				
 			} else {
 				
 			  playlistSong.setPlaylist(this);
@@ -364,6 +376,16 @@ public class Playlist extends AppModel {
 				// new playlist song
 			}
 			
+		}
+		
+		// remove old playlist songs
+		if( initialPlaylistSongIds.size() > 0 ){
+			for( Integer key : initialPlaylistSongIds.keySet() ){
+				PlaylistSong p = PlaylistSong.find.byId(key);
+				if( p!= null){
+					p.delete();
+				}
+			}
 		}
 		
 	}

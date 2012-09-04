@@ -9,6 +9,8 @@ CreatePlaylistControl = can.Control({
 	
 	init: function( element, options ){
 		
+		var self = this;
+		
 		if(options.songs && options.songs.length )
 		{
 			for(var i=0; i< options.songs.length; i++)
@@ -27,7 +29,9 @@ CreatePlaylistControl = can.Control({
 		
 		$( ".playlist-songs-container ul", this.element)
 			.sortable()
-			.bind( "sortstop", this.onSortOrderChange);
+			.bind( "sortstop", function(event,ui){  self.onSortOrderChange(event, ui); } );
+		
+		this.onPlaylistSongsChange();
 		
 	},
 	
@@ -39,6 +43,47 @@ CreatePlaylistControl = can.Control({
 			$("input.position", this ).val( i++ );
 		});
 		
+		this.onPlaylistSongsChange();
+	},
+	
+	onPlaylistSongsChange: function(){
+		var self = this;
+		
+		var albumArtUrls = {};
+		
+		$(".playlist-songs-container ul li", this.element).each( function(){
+			
+			var data = $(this).data("playlistSong");
+			
+			if( data.song && data.song.album ){
+				albumArtUrls[ data.song.album.id ] = data.song.album;
+			}
+			
+		});
+		
+		var currentIndex = 0;
+		var maxIndex = 4;
+		var albums = _.values(albumArtUrls);
+		
+		$(".albumPreview td", this.element).html("");
+		
+		for( albumId in albums){
+			if( currentIndex < maxIndex){
+				
+				var albumArtImage = $("<img>").attr( { alt : albums[albumId].name , src: albums[albumId].albumArtUrl  });
+				
+				$(".albumPreview .album"+currentIndex, this.element).html("").append(albumArtImage);
+				
+				currentIndex++;
+			} else {
+				break;
+			}
+			
+		}
+		
+
+			
+
 	},
 	
 	addPlaylistSongToSelected: function(playlistSong)
@@ -74,6 +119,10 @@ CreatePlaylistControl = can.Control({
 		var elem = can.view("#create-playlist-selected-song-element", { song: song, playlistSongId : playlistSongId, position: position });
 		 
 		list.append( elem );
+
+		$( "li[data-song-id="+ song.id +"]", list).data( "playlistSong", { id:null, song: song });
+		
+		this.onPlaylistSongsChange();
 		
 		
 	},
@@ -140,7 +189,9 @@ CreatePlaylistControl = can.Control({
 		
 		this.selectedSongList = _.filter( this.selectedSongList, function(song){ return !( song.id == songId ) } );
 		
-		$(".songs-search-results-container ul li[data-song-id="+songId+"]").show();
+		$(".songs-search-results-container ul li[data-song-id="+songId+"]", this.element).show();
+		
+		this.onPlaylistSongsChange();
 		
 	}
 
