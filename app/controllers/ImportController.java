@@ -327,7 +327,7 @@ public class ImportController extends BaseController {
 					p.setDescription("");
 					p.setUser(user);
 					p.setGenre(genre);
-					p.musicCategories.add(category);
+					p.getMusicCategories().add(category);
 					
 					p.save();
 					

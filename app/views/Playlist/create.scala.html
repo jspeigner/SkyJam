@@ -1,4 +1,4 @@
-@(user:User, form: Form[Playlist], playlistSongs : List[PlaylistSong] = null )
+@(user:User, form: Form[Playlist], activities:List[(String,String)], playlistSongs : List[PlaylistSong] = null )
 @import helper.twitterBootstrap2._
 @playlistSongTemplate(songId:String, playlistSongId:String, songName:String, artistName:String, albumName:String, albumArtUrl:String, position:String = "0", playlistSong:PlaylistSong = null ) = {
 	<li data-song-id="@Html(songId)" @if(playlistSong!=null){ data-playlist-song="@tags.playlistSongJson(playlistSong)" } >
@@ -44,7 +44,7 @@
 			
 					@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span8", 'rows -> 6)
 					
-					@helper.select(form("activity"), Seq("hello" -> "World", "2" -> "3"), '_label -> "Activity")
+					@helper.select(form("activity"), activities, '_label -> "Activity or Category", 'class -> "span8")
 					
 					<div class="form-actions">
 						<input class="btn btn-success" type="submit" value="Save" />

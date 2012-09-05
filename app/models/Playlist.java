@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -69,8 +70,8 @@ public class Playlist extends AppModel {
 	@ManyToOne
 	private Genre genre;
 	
-	@ManyToMany
-	public List<MusicCategory> musicCategories;
+	@ManyToMany(cascade=CascadeType.ALL)
+	private List<MusicCategory> musicCategories;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date createdDate;
@@ -233,11 +234,11 @@ public class Playlist extends AppModel {
 		this.name = name;
 	}
 
-	private List<MusicCategory> getMusicCategories() {
+	public List<MusicCategory> getMusicCategories() {
 		return musicCategories;
 	}
 
-	private void setMusicCategories(List<MusicCategory> musicCategories) {
+	public void setMusicCategories(List<MusicCategory> musicCategories) {
 		this.musicCategories = musicCategories;
 	}
 
@@ -389,4 +390,62 @@ public class Playlist extends AppModel {
 		}
 		
 	}
+	
+	public boolean setActivity(MusicCategory activity){
+		
+		List<Integer> itemsToRemove = new ArrayList<Integer>();
+		
+		List<MusicCategory> list = getMusicCategories();
+		
+		for(int i=0; i < list.size(); i++  ){
+			if( list.get(i).getType() == MusicCategory.Type.activity ){
+				itemsToRemove.add(i);
+			}
+			
+		}
+		
+		for(int j=0; j<itemsToRemove.size(); j++){
+			list.remove( itemsToRemove.get( j ).intValue() );
+		}
+		
+		
+		
+		list.add(activity);
+		
+		saveManyToManyAssociations("musicCategories" );
+		
+		return true;
+	}
+	
+	public boolean setActivity(String activityId){
+		if( activityId != null){
+			try{
+				Integer activityIdInt = Integer.valueOf(activityId);
+				
+				MusicCategory activity = MusicCategory.find.byId(activityIdInt);
+				if( activity != null){
+					return setActivity(activity);
+				}
+				
+			} catch(Exception e) {
+  
+			}
+		}
+		
+		return false;
+	}
+	
+	public MusicCategory getActivity(){
+		
+		List<MusicCategory> list = getMusicCategories();
+		
+		for(int i=0; i < list.size(); i++  ){
+			if( list.get(i).getType() == MusicCategory.Type.activity ){
+				return list.get(i);
+			}
+		}
+		
+		return null;
+	}
+	
 }

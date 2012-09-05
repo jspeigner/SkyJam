@@ -1,6 +1,8 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -21,6 +23,7 @@ import com.avaje.ebean.validation.Length;
 
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import scala.Tuple2;
 
 @Entity
 @Table(name="music_categories")
@@ -123,5 +126,55 @@ public class MusicCategory extends AppModel {
 
 	public void setParent(MusicCategory parent) {
 		this.parent = parent;
+	}
+
+	public static List<Tuple2<String, String>> getActivitiesList( Map<Integer, MusicCategory> activities, String activityNameSeparator  ) {
+		
+		
+		List<Tuple2<String, String>> results = new ArrayList<Tuple2<String,String>>();
+		
+		for( Object id : activities.keySet() ){
+
+			MusicCategory activity = activities.get(id);
+			
+			Map<Integer, MusicCategory> subActivities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent", activity).setMapKey("id").findMap();
+			if( subActivities.size() > 0 ){
+				List<Tuple2<String, String>> subResults = getActivitiesList(subActivities, activityNameSeparator);
+				if( (subResults != null) && ( subResults.size() > 0 )){
+					for( Tuple2<String,String> tuple : subResults ){
+						
+						results.add( new Tuple2<String, String>( tuple._1, activity.getName()+ activityNameSeparator + tuple._2 ) );
+						
+					}
+					
+				}
+			} else {
+				
+				results.add(new Tuple2<String, String>( id.toString(), activity.getName() ));
+				
+			}
+			
+		}
+		
+		return results; 
+	}
+	
+	public static List<Tuple2<String, String>> getActivitiesList(String activityNameSeparator) {
+		
+		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent_id", 0).setMapKey("id").findMap();
+		
+		return getActivitiesList(activities, activityNameSeparator);
+	}
+	
+	public static List<Tuple2<String, String>> getActivitiesList() {
+		return getActivitiesList(" - ");
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 }

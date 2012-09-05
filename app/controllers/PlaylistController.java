@@ -5,12 +5,14 @@ import global.Global;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 import be.objectify.deadbolt.actions.Restrict;
 
+import com.amazonaws.services.autoscaling.model.Activity;
 import com.avaje.ebean.Page;
 
 
@@ -331,20 +333,22 @@ public class PlaylistController extends BaseController
 		  User user = UserController.getAuthUser();
 		  Form<Playlist> form = form(Playlist.class);
 		  
-		  return ok(views.html.Playlist.create.render(user, form, null));
+		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), null));
 	  }
 	  
 	  @Restrict("user")
 	  public static Result createSubmit()
 	  {
+		  
 		  User user = UserController.getAuthUser();
 		  Form<Playlist> form = form(Playlist.class).bindFromRequest("name", "description");
 		  
 		  List<PlaylistSong> playlistSongs = Playlist.getSongsFromForm( form().bindFromRequest().data() );
 		  
+		  
 		  if( form.hasErrors()){
 			  
-			  return ok(views.html.Playlist.create.render(user, form, playlistSongs));
+			  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), playlistSongs));
 			  
 		  } else {
 			
@@ -354,9 +358,10 @@ public class PlaylistController extends BaseController
 			  p.setCreatedDate(new Date());
 			  p.setLoadedTimes(0);
 			 
-			  try{
-				  p.save();
+			  try {
 				  
+				  p.save();
+				  p.setActivity( form().bindFromRequest().field("activity").value() );
 				  p.updatePlaylistSongs(playlistSongs);
 				  
 				  flash("success", "Playlist was created successfully");
@@ -384,9 +389,7 @@ public class PlaylistController extends BaseController
 		  
 		  Form<Playlist> form = form(Playlist.class);
 		  
-		  
-		  
-		  if( ( request().method() == "POST" ) || ( request().method() == "POST" ) ){
+		  if( ( request().method() == "POST" ) || ( request().method() == "PUT" ) ){
 			  
 			  form = form.bindFromRequest("name", "description");
 			  
@@ -394,10 +397,12 @@ public class PlaylistController extends BaseController
 			  
 			  if( form.hasErrors()){
 				  
-			  } else {		  
+			  } else {
 				  
-				  form.get().update(playlistId);
+				  Playlist formPlaylist = form.get();
+				  formPlaylist.update(playlistId);
 				  
+				  p.setActivity( form().bindFromRequest().field("activity").value() );
 				  p.updatePlaylistSongs( playlistSongs );
 				  
 				  flash("success", "Playlist was saved successfully");
@@ -406,10 +411,19 @@ public class PlaylistController extends BaseController
 				  return pjaxRedirect( routes.PlaylistController.edit( p.getId() ) );
 			  }
 		  } else {
+			 
 			 form = form.fill(p);
+
+			 MusicCategory c = p.getActivity();
+			 if( c != null ){
+				form.data().put("activity", c.getId().toString()); 
+			 }
+
+			 
+			 
 		  }
 		  
-		  return ok(views.html.Playlist.create.render(user, form, playlistSongs));		  
+		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList() ,  playlistSongs));		  
 		  
 	  }
 	  
@@ -417,6 +431,14 @@ public class PlaylistController extends BaseController
 	  public static Result editSubmit(Integer playlistId)
 	  {
 		  return edit(playlistId);
+	  }
+	  
+	  @Restrict("user")
+	  public static Result publish(Integer playlistId){
+		  
+		  
+		  
+		  return null;
 	  }
 	  
 	
