@@ -134,3 +134,8 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 			#create-playlist .albumPreview .album1 { background-color: #e5e5e5; }
 			#create-playlist .albumPreview .album2 { background-color: #eaeaea; }
 			#create-playlist .albumPreview .album3 { background-color: #f2f2f2;}
+			
+#user-playlists {}
+	#user-playlists ul { list-style: none; }
+		#user-playlists ul li { padding:0; margin: 0 0 20px 0; }
+			#user-playlists ul li h3 { margin:0; padding:0; }

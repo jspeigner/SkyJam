@@ -14,6 +14,7 @@ import be.objectify.deadbolt.actions.Restrict;
 
 import com.amazonaws.services.autoscaling.model.Activity;
 import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
 
 
 import models.MusicCategory;
@@ -454,9 +455,17 @@ public class PlaylistController extends BaseController
 			  
 			  return pjaxRedirect( routes.PlaylistController.edit(playlistId) );
 		  }
+	  }
+	  
+	  @Restrict("user")
+	  public static Result userPlaylists(Integer page){
 		  
+		  User user = UserController.getAuthUser();
+		  int pageSize = 5;
 		  
+		  Page<Playlist> playlists = Playlist.find.where().eq("user", user).orderBy("createdDate DESC").findPagingList(pageSize).getPage(page);
 		  
+		  return ok(views.html.Playlist.userPlaylists.render(playlists));
 	  }
 	  
 	
