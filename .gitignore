@@ -12,3 +12,4 @@ eclipse-bin
 /.classpath
 .target
 /lib
+.DS_Store
