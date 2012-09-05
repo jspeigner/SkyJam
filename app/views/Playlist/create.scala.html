@@ -1,4 +1,4 @@
-@(user:User, form: Form[Playlist], activities:List[(String,String)], playlistSongs : List[PlaylistSong] = null )
+@(user:User, form: Form[Playlist], activities:List[(String,String)], playlistSongs : List[PlaylistSong] = null, publishAllowed: Boolean = false )
 @import helper.twitterBootstrap2._
 @playlistSongTemplate(songId:String, playlistSongId:String, songName:String, artistName:String, albumName:String, albumArtUrl:String, position:String = "0", playlistSong:PlaylistSong = null ) = {
 	<li data-song-id="@Html(songId)" @if(playlistSong!=null){ data-playlist-song="@tags.playlistSongJson(playlistSong)" } >
@@ -17,7 +17,11 @@
 }
 @Layout.default("Create a Playlist"){
 <div id="create-playlist">
+	@if( form("id").value == null ){
 	<h1>Making your Playlist</h1>
+	} else {
+	<h1>Edit your Playlist</h1>
+	}
 	<hr>
 		@helper.form(action = if( form("id").value == null ) routes.PlaylistController.createSubmit() else routes.PlaylistController.editSubmit( Integer.valueOf( form("id").value ) ) , 'class -> "form-horizontal playlist-details", 'id -> "create-playlist-form") {
 		<div class="well">
@@ -32,7 +36,13 @@
 	                <div class="alert alert-success">
 	                    @flash.get("success")
 	                </div>
-	            	}					
+	            	}	
+	            	
+					@if(flash.contains("error")) {
+	                <div class="alert alert-error">
+	                    @flash.get("error")
+	                </div>
+	            	}	            					
 						
 					@if(form.hasGlobalErrors) {
 	                <div class="alert alert-error">
@@ -49,7 +59,12 @@
 					<div class="form-actions">
 						<input class="btn btn-success" type="submit" value="Save" />
 						@if( ( form("id").value != null ) && ( form("status").value == "Draft" ) ){
-							OR <a href="#" class="btn">Publish</a>
+						
+							@if( publishAllowed ){
+							AND <a href="@routes.PlaylistController.publish(Integer.valueOf(form("id").value))" class="btn">Publish</a>
+							} else {
+							AND <a href=javascript://" class="btn disabled">Publish</a> <span> ( @models.Playlist.minSongsInList songs required to publish )</span>
+							}
 						}
 					</div>
 				

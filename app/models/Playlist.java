@@ -84,7 +84,7 @@ public class Playlist extends AppModel {
 	private Integer loadedTimes;
 	
 	@Transient
-	private int minSongsInList = 4;
+	public static final int minSongsInList = 5;
 	
 	private static final Pattern songIdFormFieldPattern = Pattern.compile("data\\[songs(\\d+)_song_id\\]");
 	
@@ -446,6 +446,18 @@ public class Playlist extends AppModel {
 		}
 		
 		return null;
+	}
+	
+	public boolean isAllowedToPublish(){
+		
+		int playlistSongsTotal = getPlaylistSongs().size();
+		
+		if( playlistSongsTotal < minSongsInList ){
+			
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

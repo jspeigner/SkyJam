@@ -333,7 +333,7 @@ public class PlaylistController extends BaseController
 		  User user = UserController.getAuthUser();
 		  Form<Playlist> form = form(Playlist.class);
 		  
-		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), null));
+		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), null, false ));
 	  }
 	  
 	  @Restrict("user")
@@ -348,7 +348,7 @@ public class PlaylistController extends BaseController
 		  
 		  if( form.hasErrors()){
 			  
-			  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), playlistSongs));
+			  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(), playlistSongs, false ));
 			  
 		  } else {
 			
@@ -382,9 +382,8 @@ public class PlaylistController extends BaseController
 	  {
 		  User user = UserController.getAuthUser();
 		  Playlist p = Playlist.find.where().eq("id", playlistId).eq("user", user ).findUnique();
-		  if( p == null ){
-			  return notFound("Playlist not found");
-		  }
+		  if( p == null ) return notFound("Playlist not found");
+		  
 		  List<PlaylistSong> playlistSongs = p.getPlaylistSongs();
 		  
 		  Form<Playlist> form = form(Playlist.class);
@@ -423,7 +422,7 @@ public class PlaylistController extends BaseController
 			 
 		  }
 		  
-		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList() ,  playlistSongs));		  
+		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(),  playlistSongs, p.isAllowedToPublish()));		  
 		  
 	  }
 	  
@@ -436,9 +435,28 @@ public class PlaylistController extends BaseController
 	  @Restrict("user")
 	  public static Result publish(Integer playlistId){
 		  
+		  User user = UserController.getAuthUser();
+		  Playlist p = Playlist.find.where().eq("id", playlistId).eq("user", user ).findUnique();
+		  if( p == null ) return notFound("Playlist not found");
+		  
+		  if( p.isAllowedToPublish() ){
+			  
+			  p.setStatus(Playlist.Status.Public);
+			  p.save();
+			  
+			  flash("success", "Playlist was published successfully");
+			  
+			  return pjaxRedirect( routes.PlaylistController.edit(playlistId) );
+			  
+		  } else {
+			  
+			  flash("error", "It's not possible to publish the playlist");
+			  
+			  return pjaxRedirect( routes.PlaylistController.edit(playlistId) );
+		  }
 		  
 		  
-		  return null;
+		  
 	  }
 	  
 	

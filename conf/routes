@@ -35,6 +35,7 @@ GET			/playlist/create		controllers.PlaylistController.create()
 POST		/playlist/create		controllers.PlaylistController.createSubmit()
 GET			/playlist/edit/:id		controllers.PlaylistController.edit(id:java.lang.Integer)
 POST		/playlist/edit/:id		controllers.PlaylistController.editSubmit(id:java.lang.Integer)
+GET			/playlist/publish/:id	controllers.PlaylistController.publish(id:java.lang.Integer)
 
 
 GET     /login                      controllers.UserController.login()
