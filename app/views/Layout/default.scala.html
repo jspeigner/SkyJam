@@ -38,7 +38,8 @@
 		 
 		<script type="text/javascript">
 		var application = new Application({
-			pjax : false,
+			pjax : true,
+			
 			urls: {
 				
 				idPlaceholder : "999",
@@ -110,7 +111,7 @@
     </head>
     <body class="main">
     	<header>
-			<div class="navbar navbar-fixed-top navbar-inverse">
+			<div class="navbar navbar-fixed-top">
 		      <div class="navbar-inner">
 		        <div class="container">
 		          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -118,7 +119,7 @@
 		            <span class="icon-bar"></span>
 		            <span class="icon-bar"></span>
 		          </a>
-		          <a class="brand" href="@routes.ApplicationController.index()">Skyjam</a>
+		          <a class="brand" href="@routes.ApplicationController.index()"><img src="@routes.Assets.at("img/top-menu-logo.png")" width="73" height="32" alt="Skyjam" ></a>
 		          
 		          <div class="nav-collapse">
           			

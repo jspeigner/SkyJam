@@ -7,6 +7,8 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 	#body-container #body-content { padding: 0 20px 0 20px; }
 	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
 	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+	header .navbar .brand { margin:4px 0 0 0; padding:0; }
+		header .navbar .brand img { width: auto; height:32px;}
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar-inner {

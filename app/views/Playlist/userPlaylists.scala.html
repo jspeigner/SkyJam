@@ -14,6 +14,21 @@
 						
 		</ul>
 		
+		@if(playlists.hasNext || playlists.hasPrev){
+		<ul class="pager pull-left">
+			@if(playlists.hasPrev){
+				<li><a href="@routes.PlaylistController.userPlaylists(playlists.getPageIndex - 1)">Previous</a></li>
+				} else {
+				<li class="disabled"><a href="javascript://">Previous</a></li>
+				}
+				@if(playlists.hasNext){
+				<li><a href="@routes.PlaylistController.userPlaylists(playlists.getPageIndex + 1)">Next</a></li>
+				} else {
+				<li class="disabled"><a href="javascript://">Next</a></li>
+				}
+		</ul>
+		}		
+		
 	} else {
 	<p>There are no playlists created.</p>
 	}
