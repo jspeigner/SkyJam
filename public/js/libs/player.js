@@ -353,7 +353,7 @@ PlayerControl = can.Control({
 		  
 	  }
 	  
-	  $(".name .song").text( this.currentSong.Song.name );
+	  $(".name .song", this.element).text( this.currentSong.Song.name );
 	  
 	  this.refreshUserButtons();
 	  
@@ -367,7 +367,9 @@ PlayerControl = can.Control({
   {
 	  value = ( value > 1 ) ? 1 : ( value < 0 ? 0 : value ); 
 	  
-	  $("li.name .song-progress").css("width",  ( value*100 ) +"%");
+	  
+	  
+	  $("li.name .song-progress", this.element).css("width",  ( value*100 ) +"%");
   },
   
   _createCurrentSMSong: function(id, url)
@@ -446,7 +448,6 @@ PlayerControl = can.Control({
 	  
 	  onSMSongWhilePlaying: function(control,smSong)
 	  {
-		  // console.log( 'sound '+smSong.id+' playing, '+smSong.position+' of '+smSong.duration );
 		  if( smSong.duration && ( smSong.duration > 0 ))
 		  {
 			  control.setProgressIndicator( smSong.position / smSong.duration );
