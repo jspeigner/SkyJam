@@ -1,13 +1,23 @@
 @(playlists:Page[Playlist])@Layout.default(title = "My Playlists " ) {
 <div id="user-playlists">
-	<h1>My Playlists | <a href="@routes.PlaylistController.create()">Create a Playlist</a></h1>
+	<h1>My Playlists <a class="btn btn-large" href="@routes.PlaylistController.create()"><i class="icon-plus-sign"></i> Create a Playlist</a></h1>
 	<hr>
 	@if( ( playlists != null ) && ( playlists.getList.size > 0 )){
 		<ul>
 			@for(playlist <- playlists.getList ){
 			<li class="clearfix">
-				<h3>@playlist.getName | <a href="@routes.PlaylistController.edit( playlist.getId )">Edit</a></h3>
-				<p><small>@{ new java.text.SimpleDateFormat("d MMM, yy").format(playlist.getCreatedDate) }</small></p>
+				<h3>@playlist.getName 
+				<a href="javascript://" class="btn btn-small play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a> 
+				<a class="btn btn-small" href="@routes.PlaylistController.edit( playlist.getId )"><i class="icon-edit"></i> Edit</a>
+				</h3>
+				
+				<p><small>Created on @{ new java.text.SimpleDateFormat("d MMM, yy").format(playlist.getCreatedDate) }</small>
+				
+				@if( playlist.getStatus == models.Playlist.Status.Public ){
+				<span class="label label-success">Public</span>
+				} 				
+				
+				</p>
 				<p>@playlist.getDescription</p>
 			</li>
 			}
