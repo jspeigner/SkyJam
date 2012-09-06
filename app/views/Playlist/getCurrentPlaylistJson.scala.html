@@ -1,62 +1,57 @@
-@(playlist: Playlist)@{
+@(playlist: Playlist = null)@{
+
+
 	import com.codahale.jerkson.Json._
 	import scala.collection.mutable.ListBuffer
-	
-	var playlistData = new HashMap[String,Any];
-	
-	playlistData.put("name", playlist.getName())
-	playlistData.put("id", playlist.getId().toString())
-	
-	var playlistSongsData = new ListBuffer[Map[String,Any]]
-	
-	
-	for( playlistSong <- playlist.getPlaylistSongs())
-	{
-		var playlistSongData = new HashMap[String,Any]
 		
-		playlistSongData.put("id", playlistSong.getId().toString())
-		playlistSongData.put("likes_count", playlistSong.getLikesCount().toString())
-		playlistSongData.put("dislikes_count", playlistSong.getDislikesCount().toString())
+	var playlistData:Map[String,Any] = null;	
 		
+	if( playlist != null ){
+	
+		playlistData = new HashMap[String,Any];
+		
+		playlistData.put("name", playlist.getName())
+		playlistData.put("id", playlist.getId().toString())
+		
+		var playlistSongsData = new ListBuffer[Map[String,Any]]
+		
+		
+		for( playlistSong <- playlist.getPlaylistSongs())
 		{
 			val song = playlistSong.getSong()
-			var songData = new HashMap[String,Any]
+			val album = song.getAlbum()
+			val artist = album.getArtist()
 		
-			songData.put("name", song.getName())
-			songData.put("id", song.getId().toString())
-			songData.put("song_url", song.getSongUrl())
-			
-			{
-				val album = song.getAlbum()
-				var albumData = new HashMap[String,Any]
-				albumData.put("id", album.getId().toString())
-				albumData.put("album_art_url", album.getAlbumArtUrl())
-				albumData.put("description", album.getDescription())
+			val playlistSongData = scala.collection.immutable.Map(
+				"id" 				-> playlistSong.getId,
+				"likes_count"		-> playlistSong.getLikesCount,
+				"dislikes_count"	-> playlistSong.getDislikesCount,
 				
-				{
-					val artist = album.getArtist() 
-					var artistData = new HashMap[String,Any]
-					artistData.put("id", artist.getId().toString)
-					artistData.put("name", artist.getName())
-					artistData.put("description", artist.getDescription())
+				"Song"				-> scala.collection.immutable.Map(
+					"name"				-> song.getName,
+					"id"				-> song.getId,
+					"song_url"			-> song.getSongUrl,
 					
-					albumData.put("Artist", artistData)
-				}
-				
-				
-				songData.put("Album", albumData)
-			}
+					"Album"			->  scala.collection.immutable.Map(
+						"id"			-> album.getId,
+						"album_art_url"	-> album.getAlbumArtUrl,
+						"description"	-> album.getDescription,
+						
+						"Artist"			->  scala.collection.immutable.Map(
+							"id"				-> artist.getId,
+							"name"				-> artist.getName,
+							"description"		-> artist.getDescription
+						)
+						
+					)  		
+				)
+			);
 			
-		
-			playlistSongData.put("Song", songData)
+			playlistSongsData.append(playlistSongData)
 		}
 		
-		
-		
-		playlistSongsData.append(playlistSongData)
+		playlistData.put("PlaylistSong", playlistSongsData)
 	}
-	
-	playlistData.put("PlaylistSong", playlistSongsData)
 	
 	
 	Html(generate(playlistData))

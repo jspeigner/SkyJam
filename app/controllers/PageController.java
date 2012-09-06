@@ -26,4 +26,7 @@ public class PageController extends BaseController {
 		return ok(views.html.Page.contactUs.render());
 	}
 	
+	public static Result copyrightInfringment(){
+		return ok(views.html.Page.copyrightInfringment.render());
+	}
 }

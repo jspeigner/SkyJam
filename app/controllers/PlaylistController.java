@@ -305,7 +305,7 @@ public class PlaylistController extends BaseController
 			  
 		  }
 		  
-		  return badRequest("{ \"error\": \"Playlist not found\" }");
+		  return ok( views.html.Playlist.getCurrentPlaylistJson.render(null) ).as( Global.JSON_CONTENT_TYPE );
 	  }
 	  
 	  public static Result getUserPlaylistData(Integer playlistId)

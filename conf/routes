@@ -61,6 +61,7 @@ GET		/contact_us					controllers.PageController.contactUs()
 GET		/about						controllers.PageController.about()
 GET		/privacy_policy				controllers.PageController.privacyPolicy()
 GET		/terms_of_use				controllers.PageController.termsOfUse()
+GET		/copyright_infringment		controllers.PageController.copyrightInfringment()
 
 GET		/profile					controllers.UserController.profile()
 POST	/profile					controllers.UserController.profileUpdate()
