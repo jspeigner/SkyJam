@@ -448,9 +448,11 @@ PlayerControl = can.Control({
 	  
 	  onSMSongWhilePlaying: function(control,smSong)
 	  {
-		  if( smSong.duration && ( smSong.duration > 0 ))
+		  var duration = smSong.durationEstimate ? smSong.durationEstimate : smSong.duration;
+		  
+		  if( duration && ( duration > 0 ))
 		  {
-			  control.setProgressIndicator( smSong.position / smSong.duration );
+			  control.setProgressIndicator( smSong.position / duration );
 		  }
 	  },
 	  
