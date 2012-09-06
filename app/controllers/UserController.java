@@ -297,6 +297,7 @@ public class UserController extends BaseController {
     	Form<User> userForm = form(User.class).fill( user );
     	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
+    	
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
     	
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));

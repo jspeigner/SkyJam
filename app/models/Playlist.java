@@ -141,16 +141,14 @@ public class Playlist extends AppModel {
 	
 	public static List<Playlist> getRecentPlaylists(User user, int limit)
 	{
-		String sql   
-	    // = " select t0.id, t0.name AS c1, t0.status  AS  c2, t0.description  AS  c3, t0.created_date  AS  c4, t0.loaded_times  AS  c5, t0.user_id, t0.genre_id  AS  c7 " +
-		// = "SELECT t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times, t0.user_id, t0.genre_id " +
-		= "SELECT t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
-	    		"from playlists t0 " +
-	    		"join playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
-	    		"join user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
-	    		"WHERE u2.user_id = "+( user.getId() ) + " " +
-	    		"GROUP BY t0.id " +
-	    		"ORDER BY u2.created_date DESC ";  
+		String sql = " SELECT " +
+					"t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
+	    		" FROM playlists t0 " +
+	    			" JOIN playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
+	    			" JOIN user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
+	    		" WHERE u2.user_id = "+( user.getId() ) + 
+	    		" GROUP BY t0.id " +
+	    		" ORDER BY u2.created_date DESC ";
 	  
 		RawSql rawSql =   
 	    RawSqlBuilder  
@@ -173,8 +171,6 @@ public class Playlist extends AppModel {
 	  
 		Query<Playlist> query = Ebean.find(Playlist.class);  
 	    query.setRawSql(rawSql)          
-	    // add expressions to the WHERE and HAVING clauses  
-	      
 	    .setMaxRows(limit);
 	  
 	    return query.findList();  

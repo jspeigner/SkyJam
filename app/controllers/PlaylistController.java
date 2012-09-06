@@ -132,7 +132,7 @@ public class PlaylistController extends BaseController
 			  
 			  UserPlaylistActivity.Type t = UserPlaylistActivity.Type.forName(type);
 			  
-			  User user = session("User.id") != null ? User.find.byId( Integer.parseInt( session("User.id") ) ) : null;
+			  User user = UserController.getAuthUser();
 		  
 			  UserPlaylistActivity p = new UserPlaylistActivity();
 			  p.setCreatedDate(new Date());
