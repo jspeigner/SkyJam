@@ -136,12 +136,13 @@ PlayerControl = can.Control({
 	user:null,
 	userPlaylistData:null,
 	volume:50,
+	previousVolume:50,
 	
 	init: function( element, options ){
 	  
 		var self = this;
 		
-		this.volume = options.volume === undefined ? this.volume : options.volume;
+		this.volume = this.previousVolume = options.volume === undefined ? this.volume : options.volume;
 		
 		this.playlistData = options.playlist;
 		
@@ -212,6 +213,14 @@ PlayerControl = can.Control({
   
   onVolumeChange: function(volume){
 	  
+
+	  this.setVolume( volume );
+  },
+  
+  setVolume: function(volume, updateSlider){
+	  
+	  updateSlider = !!updateSlider;
+	  
 	  volume = Math.max( 0, Math.min(100, volume) );
    	  this.volume = volume;
 	  
@@ -221,8 +230,20 @@ PlayerControl = can.Control({
 		this.currentSongSMSound.setVolume( volume );
 
 	  }
-	$(document).trigger(PlayerControl.event.VOLUME_CHANGED, [ volume ]);
 	  
+	  
+	$(document).trigger(PlayerControl.event.VOLUME_CHANGED, [ volume ]);
+	
+	if( volume == 0){
+		$( ".volume a i", this.element).removeClass("icon-volume-up").addClass("icon-volume-off");
+	} else {
+		$( ".volume a i", this.element).addClass("icon-volume-up").removeClass("icon-volume-off");
+	}
+	
+	if( updateSlider ){
+		$( ".volume .volume-slider-vertical", this.element ).slider("value", volume );
+	}
+	  	  
 	  
   },
   
@@ -654,12 +675,6 @@ PlayerControl = can.Control({
 	  if( this.currentSongSMSound )
 	  {
 		  $(".volume-control", this.element).show();
-		  
-		  /*
-		  this.currentSongSMSound.mute();
-		  $(".volume", this.element).hide();
-		  $(".volume-off", this.element).show();
-		  */
 	  }
 	  
 	  return false;
@@ -667,6 +682,17 @@ PlayerControl = can.Control({
   
   ".volume mouseout" : function(el, event){
 	  $(".volume-control", this.element).hide();
+  },
+  ".volume a click" : function(el,event){
+	  if( this.currentSongSMSound )
+	  {
+		  if( this.volume == 0){
+			  this.setVolume( this.previousVolume, true );
+		  } else {
+			  this.previousVolume = this.volume;
+			  this.setVolume( 0, true );
+		  }
+	  }
   },
   
   ".volume-off a click" : function(el , event){
@@ -779,11 +805,7 @@ PlayerControl = can.Control({
 	  });	  
 	  
 	  twittBox.modal("show");
-	  
-	  /*
-	  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://xxx/" data-text="yyy" data-size="large">Tweet</a>
-	  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	  */
+
   }   
   
 });
