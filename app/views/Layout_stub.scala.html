@@ -1,5 +1,4 @@
-@(title: String, metaKeywords: String = "", metaDescription: String = "")(content: Html)
-<!DOCTYPE html>
+@(title: String, metaKeywords: String = "", metaDescription: String = "")(content: Html)<!DOCTYPE html>
 <html>
     <head>
     	<meta charset="utf-8">
@@ -11,7 +10,13 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap-responsive.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/ui-lightness/jquery-ui-1.8.22.custom.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
+        <!-- <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">  -->
+        
+        
+    	<link href="@routes.Assets.at("css/social-buttons.css")" rel="stylesheet" >
+    	<link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" >
+    	<link href="@routes.Assets.at("css/style.css")" rel="stylesheet" >
+    	<link href="@routes.Assets.at("css/custom.css")" rel="stylesheet" >
         
         
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
@@ -25,32 +30,52 @@
 	    <!--[if lt IE 9]>
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    <![endif]-->        
+	    
+	    <script type="text/javascript" src="@routes.Assets.at("js/custom.js")"></script>
+	    
+	    <!-- Color picker -->
+	    <link href="@routes.Assets.at("colorpicker/css/colorpicker.css")" rel="stylesheet" />
+	    <script src="@routes.Assets.at("colorpicker/js/bootstrap-colorpicker.js")"></script>
+	    <script type="text/javascript">
+	        $(function(){
+	        window.prettyPrint && prettyPrint()
+	            var logoStyle = $('#logo')[0].style;
+	            var headingStyle = $('h1')[0].style;
+	            $('#cp').colorpicker().on('changeColor', function(ev){
+	                logoStyle.backgroundColor = ev.color.toHex();
+	                headingStyle.color = ev.color.toHex();
+	            });
+	        });
+	    </script>	    
+	    
         
     </head>
     <body class="stub">
-    	<header>
-			<div class="navbar navbar-fixed-top">
-		      <div class="navbar-inner">
-		        <div class="container">
-		          <a class="brand" href="javascript://">Skyjam</a>
-		          <div class="nav-collapse">
-		            
-		            
-		          </div>
-		        </div>
-		      </div>
-		    </div>
-		  </header>
-		  
-		  <div class="container" id="body-container">    
-		     
+		<div class="container" id="body-container">    
 		     	
-		     	<div id="body-content">
-        		@content
-        		</div>
-        		
-        		
-        </div>
-
+	        <div class="gradient">
+	            <div class="row">
+	                <div id="logo">
+	                    SkyJam
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="span12">
+	                    <div class="content clearfix">@content</div>
+	                    
+	                    <footer>
+	                        <p>
+	                            <a href="http://twitter.com/" class="sb circle twitter mytooltip" title="Twitter">Twitter</a>
+	                            <a href="http://facebook.com/" class="sb circle facebook mytooltip" title="Facebook">Facebook</a>
+	                            <a href="http://plus.google.com/" class="sb circle gplus mytooltip" title="Google Plus">Google Plus</a>
+	                            <a href="http://pinterest.com/" class="sb circle pinterest mytooltip" title="Pinterest">Pinterest</a>
+	                            <a href="#" class="sb circle rss mytooltip" title="RSS">RSS</a>
+	                        </p>
+	                        <a href="#" class="btn" id="cp" data-color-format="hex" data-color="rgb(255, 255, 255)">Change color</a>
+	                    </footer>
+	                </div>
+	            </div>
+	        </div>
+        </div>		
     </body>
 </html>

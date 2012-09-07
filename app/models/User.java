@@ -28,8 +28,8 @@ public class User extends AppModel {
 	private String username;
 	
 	@Length(max=40)
-	@Constraints.Required
-	@Email
+	@Constraints.Required(message="Valid email is required")
+	@Email(message="Valid email is required")
 	private String email;
 	
 	private String password;
