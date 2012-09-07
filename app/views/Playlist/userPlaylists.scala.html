@@ -7,7 +7,9 @@
 			@for(playlist <- playlists.getList ){
 			<li class="clearfix">
 				<h3>@playlist.getName 
-				<a href="javascript://" class="btn btn-small play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a> 
+				@if( playlist.getPlaylistSongs.size > 0 ){
+				<a href="javascript://" class="btn btn-small play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
+				} 
 				<a class="btn btn-small" href="@routes.PlaylistController.edit( playlist.getId )"><i class="icon-edit"></i> Edit</a>
 				</h3>
 				

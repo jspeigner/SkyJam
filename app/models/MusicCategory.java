@@ -128,6 +128,7 @@ public class MusicCategory extends AppModel {
 		this.parent = parent;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Tuple2<String, String>> getActivitiesList( Map<Integer, MusicCategory> activities, String activityNameSeparator  ) {
 		
 		
@@ -159,6 +160,7 @@ public class MusicCategory extends AppModel {
 		return results; 
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Tuple2<String, String>> getActivitiesList(String activityNameSeparator) {
 		
 		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent_id", 0).setMapKey("id").findMap();

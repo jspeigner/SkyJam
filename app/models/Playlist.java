@@ -342,7 +342,11 @@ public class Playlist extends AppModel {
 		return result.size() > 0 ? result : null;
 	}
 
-	public void updatePlaylistSongs(List<PlaylistSong> newPlaylistSongs) {
+	public boolean updatePlaylistSongs(List<PlaylistSong> newPlaylistSongs) {
+		
+		if( newPlaylistSongs == null ){
+			return false;
+		}
 		
 		Map<Integer, Integer> initialPlaylistSongIds = new HashMap<Integer, Integer>();
 		
@@ -384,6 +388,8 @@ public class Playlist extends AppModel {
 				}
 			}
 		}
+		
+		return true;
 		
 	}
 	
