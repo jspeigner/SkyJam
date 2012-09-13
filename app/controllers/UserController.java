@@ -25,6 +25,7 @@ import play.libs.F.Function;
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
+import play.api.libs.Crypto;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
@@ -379,9 +380,22 @@ public class UserController extends BaseController {
     	
     	try
     	{
-    		Http.Cookie cookie = request().cookies().get( AUTH_USER_COOKIE_ID );
     		
-    		user = User.find.byId( Integer.parseInt( cookie.value() ) );
+    		
+    		Http.Cookie cookie = request().cookies().get( AUTH_USER_COOKIE_ID );
+    		String value = cookie.value();
+    		String[] valueParts = value.split("-");
+    		
+    		if( valueParts.length == 2) {
+    			
+    			String userId = valueParts[1];
+    			
+    			if( Crypto.sign(userId).equals( valueParts[0] ) ){
+    			
+    				user = User.find.byId( Integer.parseInt( userId ) );
+    			}
+    		}
+    		
     		
     	}
     	catch( Exception e)
@@ -399,7 +413,11 @@ public class UserController extends BaseController {
     		try
     		{
     			
-    			response().setCookie(AUTH_USER_COOKIE_ID, user.getId().toString(), AUTH_USER_COOKIE_LIFETIME);
+    			String userUID = user.getId().toString();
+    			
+    			String cookieValue = Crypto.sign( userUID )+"-"+userUID;
+    			
+    			response().setCookie(AUTH_USER_COOKIE_ID, cookieValue, AUTH_USER_COOKIE_LIFETIME);
     			
     			return true;
     		}
