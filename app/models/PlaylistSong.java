@@ -95,6 +95,11 @@ public class PlaylistSong extends AppModel {
 		return PlaylistSongRating.find.where().eq("playlistSong", this).eq("user", user).eq("type", PlaylistSongRating.Type.dislike).findRowCount() > 0;
 	}
 
+	public boolean islikedByUser(User user){
+		// TODO optimize / cache this call
+		return PlaylistSongRating.find.where().eq("playlistSong", this).eq("user", user).eq("type", PlaylistSongRating.Type.like).findRowCount() > 0;
+	}	
+	
 	private List<UserPlaylistActivity> getUserPlaylistActivities() {
 		return userPlaylistActivities;
 	}
