@@ -181,8 +181,6 @@ public class PlaylistController extends BaseController
 					  
 					  p.save();
 					  
-			  
-					  // return getUserPlaylistData(playlistSongIdInt);
 					  return ok("");
 					  
 				  }
@@ -279,6 +277,8 @@ public class PlaylistController extends BaseController
 	  
 	  public static Result getCurrentPlaylistJson(Integer playlistIdPassed)
 	  {
+		  User user = UserController.getAuthUser();
+		  
 		  String playlistIdString = session( CURRENT_PLAYLIST_ID_KEY );
 		  
 		  try
@@ -294,9 +294,7 @@ public class PlaylistController extends BaseController
 				  playlist.setLoadedTimes( playlist.getLoadedTimes()+1 );
 				  playlist.save();
 				  
-				  // System.out.println(playlist.getLoadedTimes());
-				  
-				  return ok( views.html.Playlist.getCurrentPlaylistJson.render(playlist) ).as( Global.JSON_CONTENT_TYPE );
+				  return ok( views.html.Playlist.getCurrentPlaylistJson.render( user, playlist) ).as( Global.JSON_CONTENT_TYPE );
 				  
 			  }
 		  }
@@ -305,7 +303,7 @@ public class PlaylistController extends BaseController
 			  
 		  }
 		  
-		  return ok( views.html.Playlist.getCurrentPlaylistJson.render(null) ).as( Global.JSON_CONTENT_TYPE );
+		  return ok( views.html.Playlist.getCurrentPlaylistJson.render( user, null) ).as( Global.JSON_CONTENT_TYPE );
 	  }
 	  
 	  public static Result getUserPlaylistData(Integer playlistId)

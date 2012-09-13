@@ -1,6 +1,5 @@
 @(form: Form[User], user:User, recentPlaylists:List[Playlist], savedPlaylists: List[UserSavedPlaylist])@import helper.twitterBootstrap2._
 @Layout.default("Profile") {
-	
 <div id="user-profile">
 	
 	<h1>				
@@ -21,34 +20,31 @@
                 <div class="alert alert-success">@flash.get("password_success")</div>
             }            
 			
-				<div class="row-fluid">
+			<div class="row-fluid">
 
-					<div class="span8">					
+				<div class="span8">					
+					
+					@helper.form(action = routes.UserController.profileUpdate(), 'class -> "form-horizontal well", 'id -> "profile-edit", 'enctype ->"multipart/form-data") {
+					
+					@helper.inputFile(form("image"), '_label -> "Image")
+					
+					@helper.inputPassword(form("password" ), '_showConstraints -> false, '_label -> "Reset Password")
+					
+					@helper.inputPassword(form("password_reset" ), '_showConstraints -> false, '_label -> "Repeat Password")
 						
-						@helper.form(action = routes.UserController.profileUpdate(), 'class -> "form-horizontal well", 'id -> "profile-edit", 'enctype ->"multipart/form-data") {
-						
-						@helper.inputFile(form("image"), '_label -> "Image")
-						
-						@helper.inputPassword(form("password" ), '_showConstraints -> false, '_label -> "Reset Password")
-						
-						@helper.inputPassword(form("password_reset" ), '_showConstraints -> false, '_label -> "Repeat Password")
-							
-						<div class="form-actions">
-							<input class="btn btn-success" type="submit" value="Update" />
-						</div>
-						}	
-							
+					<div class="form-actions">
+						<input class="btn btn-success" type="submit" value="Update" />
 					</div>
-					<div class="span4">
-						<h4>Help</h4>
-						<hr />
-						<p>Some help there . Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>
-					</div>
-					
-
-					
-					
+					}	
+						
 				</div>
+				<div class="span4">
+					<h4>Help</h4>
+					<hr>
+					<p>Some help there . Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>
+				</div>
+					
+			</div>
 				
 				
 	<div class="row-fluid">
@@ -58,7 +54,6 @@
 		<hr>
 		
 		@if( ( savedPlaylists != null ) && ( savedPlaylists.size > 0 ) ){
-	
 					<ul>
 					@for(savedPlaylist <- savedPlaylists ){
 						<li class="clearfix">

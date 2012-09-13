@@ -19,7 +19,12 @@
 								<div class="row-fluid">
 									<div class="span2">
 										<!-- a first album image -->
-										<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" >
+										
+										@if( playlist.getPlaylistSongs.size() > 0 ){
+											<img src="@playlist.getPlaylistSongs.get(0).getSong.getAlbum.getAlbumArtUrl" alt="@playlist.getPlaylistSongs.get(0).getSong.getAlbum.getName" >
+										}
+										
+										
 										<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a> 
 									</div>
 									<div class="span10"> 
@@ -50,7 +55,10 @@
 								<div class="row-fluid">
 									<div class="span2">
 										<!-- a first album image -->
-										<img src="@routes.Assets.at("files/album/240x240.gif")" alt="album" >
+										@if( savedPlaylist.getPlaylist.getPlaylistSongs.size() > 0 ){
+											<img src="@savedPlaylist.getPlaylist.getPlaylistSongs.get(0).getSong.getAlbum.getAlbumArtUrl" alt="@savedPlaylist.getPlaylist.getPlaylistSongs.get(0).getSong.getAlbum.getName" >
+										}									
+										
 										<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@savedPlaylist.getPlaylist.getId"><i class="icon-play"></i> Play</a> 
 									</div>
 									<div class="span10"> 

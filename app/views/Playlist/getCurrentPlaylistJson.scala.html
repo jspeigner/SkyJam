@@ -1,4 +1,4 @@
-@(playlist: Playlist = null)@{
+@(user:User = null, playlist: Playlist = null)@{
 
 
 	import com.codahale.jerkson.Json._
@@ -14,9 +14,11 @@
 		playlistData.put("id", playlist.getId().toString())
 		
 		var playlistSongsData = new ListBuffer[Map[String,Any]]
+		val playlistSongs:List[PlaylistSong] = if( user != null ){ playlist.getPlaylistSongs().filter( !_.isDislikedByUser(user) ) } else { playlist.getPlaylistSongs() } 
 		
+		java.util.Collections.shuffle( playlistSongs )
 		
-		for( playlistSong <- playlist.getPlaylistSongs())
+		for( playlistSong <- playlistSongs )
 		{
 			val song = playlistSong.getSong()
 			val album = song.getAlbum()
