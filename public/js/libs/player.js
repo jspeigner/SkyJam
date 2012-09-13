@@ -146,10 +146,6 @@ PlayerControl = can.Control({
 		
 		this.playlistData = options.playlist;
 		
-		
-
-		
-		
 		this.currentPlayerState = this.PlayerState.STOP;
 		
 		var defaultSong = null;
@@ -653,6 +649,24 @@ PlayerControl = can.Control({
 	  return null;
   },
   
+  removeSongFromList: function(playlistSongs, playlistSongId){
+	  
+	  var count = playlistSongs.length;
+	  
+	  for( i = 0; i < count ; i++)
+	  {
+		  if( playlistSongs[i].id == playlistSongId )
+		  {
+			  playlistSongs.splice( i, 1 );
+			  return playlistSongs;
+			  
+			  return; 
+		  }
+			  
+	  }	  
+	  return playlist;
+  },
+  
   ".play a click" : function(el , event){
 	  	  
 	  		
@@ -727,6 +741,7 @@ PlayerControl = can.Control({
 		  this.disableRatingButtons();
 		  
 		  
+		  
 	  }
 		 
 	  return false;
@@ -736,7 +751,7 @@ PlayerControl = can.Control({
 	  
 	  if(!el.is(".disabled")){
 		  var a = new PlaylistSongRatingModel({ playlist_song_id:  this.currentSong.id , type : PlaylistSongRatingModel.TYPE.DISLIKE });
-		  a.save(); 
+		  
 		  
 		  var self = this;
 		  $.when( a.save()).then( function(){ 
@@ -745,6 +760,19 @@ PlayerControl = can.Control({
 		  
 		  this.disableRatingButtons();
 		  
+		  
+		 // skip to next song
+		  var currentSongId = null;
+		  if( this.currentSong ){
+			  currentSongId = this.currentSong.id;
+		  }
+		  
+		  this.goToNextSong();
+		  
+		  
+		  if(currentSongId){
+			  this.options.playlist.PlaylistSong = this.removeSongFromList( this.options.playlist.PlaylistSong, currentSongId );
+		  }
 	  }
 	  
 	  return false;
