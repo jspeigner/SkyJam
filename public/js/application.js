@@ -54,7 +54,7 @@ function Application(config)
 		var artistsText = "With Artists: "+(  artists.length > artistsMaxChars ? ( artists.substring(0, artistsMaxChars)+"..." ) : artists );
 		
 		return $( "<li></li>" )
-			.addClass('playlistSearchDropdown')
+			.addClass("playlistSearchDropdown")
 			.data( "item.autocomplete", item )
 			.append( 
 					$("<a>").attr("href", self.config.urls.playlist.replace( application.config.urls.idPlaceholder , item.id) )
@@ -70,7 +70,7 @@ function Application(config)
 	this.disableForm = function($form)
 	{
 		$form = $($form);
-		$("input, select, textarea").each( function(){
+		$("input, select, textarea", $form).each( function(){
 			var $this = $(this);
 
 			$this.data("previous-disabled-state", $this.prop("disabled") );
@@ -94,7 +94,7 @@ function Application(config)
 	this.enableForm = function($form)
 	{
 		$form = $($form);
-		$("input, select, textarea").each(function(){
+		$("input, select, textarea", $form).each(function(){
 			var $this = $(this);
 			
 			if( !$this.data("previous-disabled-state") )
@@ -108,9 +108,9 @@ function Application(config)
 	
 	this.stripPjaxParam = function (url) {
 		  return url
-		    .replace(/\?_pjax=[^&]+&?/, '?')
-		    .replace(/_pjax=[^&]+&?/, '')
-		    .replace(/[\?&]$/, '')
+		    .replace(/\?_pjax=[^&]+&?/, "?")
+		    .replace(/_pjax=[^&]+&?/, "")
+		    .replace(/[\?&]$/, "")
 	}
 	
 	
@@ -125,7 +125,7 @@ function Application(config)
 	
 	this.processPjaxRedirect = function(xhr)
 	{
-		var redirectUrl = xhr.getResponseHeader('X-PJAX-REDIRECT');
+		var redirectUrl = xhr.getResponseHeader("X-PJAX-REDIRECT");
 		
 		
 		if( redirectUrl && ( !xhr.pjaxRedirected  ) )
@@ -184,7 +184,7 @@ function Application(config)
 			
 			var formActionUrl = $form.attr("action");
 			
-			var pageUrl = self.stripPjaxParam(xhr.getResponseHeader('X-PJAX-URL') || formActionUrl );
+			var pageUrl = self.stripPjaxParam(xhr.getResponseHeader("X-PJAX-URL") || formActionUrl );
 			
 			var strResponseTitle = "";
 			
@@ -307,7 +307,7 @@ function Application(config)
 		}
 		
 		
-		$(document).on('click', '.player-controls-save-as-favorite', function(){
+		$(document).on("click", ".player-controls-save-as-favorite", function(){
 			
 			if( !$(this).is(".disabled") )
 			{
@@ -316,7 +316,7 @@ function Application(config)
 			
 		});
 		
-		$(document).on('click', '.player-controls-save', function(){
+		$(document).on("click", ".player-controls-save", function(){
 			
 			if( !$(this).is(".disabled") )
 			{
@@ -330,11 +330,11 @@ function Application(config)
 		{
 			
 			var pjaxContainer = $(self.bodyContentSelector);
-			pjaxContainer.on('pjax:complete', self.onPjaxComplete);		
-			pjaxContainer.on('pjax:error', self.onPjaxError);
+			pjaxContainer.on("pjax:complete", self.onPjaxComplete);		
+			pjaxContainer.on("pjax:error", self.onPjaxError);
 			
 			// ajax navigation
-			$(document).on('click', 'a:not(.no-pjax):not(#player-container > *)', function(event) {
+			$(document).on("click", "a:not(.no-pjax):not(#player-container > *)", function(event) {
 				
 				$.pjax.click(event, pjaxContainer, {
 					fragment : self.bodyContentSelector,	
@@ -357,16 +357,6 @@ function Application(config)
 					
 				});
 				
-				/*
-				var container = $(self.bodyContentSelector);
-				container.on('pjax:complete', function(){
-					// on logout done
-					self.setUser(null);
-				});
-				$.pjax.click(event, container, {
-					fragment : self.bodyContentSelector
-				});
-				*/
 				return false;
 			});
 			
