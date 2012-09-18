@@ -416,9 +416,6 @@ public class PlaylistController extends BaseController
 			 if( c != null ){
 				form.data().put("activity", c.getId().toString()); 
 			 }
-
-			 
-			 
 		  }
 		  
 		  return ok(views.html.Playlist.create.render(user, form, MusicCategory.getActivitiesList(),  playlistSongs, p.isAllowedToPublish()));		  
