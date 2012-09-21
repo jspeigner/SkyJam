@@ -1,9 +1,12 @@
-html { background-image: url(../img/bg-1.png),url(../img/bg-2.png), url(../img/bg-3.png); background-attachment:fixed; }
+html { background-image: url(../img/bg.png); background-repeat: repeat; }
 body {  padding-bottom: 40px; background: transparent !important; }
 	body.stub #body-container { padding-top:120px; padding-bottom:120px;}
 footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #E5E5E5; }
 
-#body-container { background-color:white; padding-top: 43px; }
+#body-container { background-color:white; padding-top: 43px; border: 1px solid #DAD7D7;
+-webkit-box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15);
+-moz-box-shadow: 1px 5px 10px rgba(0,0,0,0.15);
+box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	#body-container #body-content { padding: 0 20px 0 20px; }
 	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
 	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }

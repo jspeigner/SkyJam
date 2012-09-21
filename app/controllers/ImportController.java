@@ -57,75 +57,7 @@ public class ImportController extends BaseController {
 			
 	        AmazonS3 s3 = new AmazonS3Client( defaultS3Account );
 	
-	        /*
-	        String bucketName = "my-first-s3-bucket-" + UUID.randomUUID();
-	        String key = "MyObjectKey";
-	
-	        System.out.println("===========================================");
-	        System.out.println("Getting Started with Amazon S3");
-	        System.out.println("===========================================\n");
-	        */
-	
 	        try {
-	            /*
-	             * Create a new S3 bucket - Amazon S3 bucket names are globally unique,
-	             * so once a bucket name has been taken by any user, you can't create
-	             * another bucket with that same name.
-	             *
-	             * You can optionally specify a location for your bucket if you want to
-	             * keep your data closer to your applications or users.
-	             */
-	            // System.out.println("Creating bucket " + bucketName + "\n");
-	            // s3.createBucket(bucketName);
-	
-	            /*
-	             * List the buckets in your account
-	             */
-	        	/*
-	            System.out.println("Listing buckets");
-	            for (Bucket bucket : s3.listBuckets()) {
-	                System.out.println(" - " + bucket.getName());
-	            }
-	            System.out.println();
-				*/
-	            /*
-	             * Upload an object to your bucket - You can easily upload a file to
-	             * S3, or upload directly an InputStream if you know the length of
-	             * the data in the stream. You can also specify your own metadata
-	             * when uploading to S3, which allows you set a variety of options
-	             * like content-type and content-encoding, plus additional metadata
-	             * specific to your applications.
-	             */
-	            // System.out.println("Uploading a new object to S3 from a file\n");
-	            // s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile()));
-	
-	            /*
-	             * Download an object - When you download an object, you get all of
-	             * the object's metadata and a stream from which to read the contents.
-	             * It's important to read the contents of the stream as quickly as
-	             * possibly since the data is streamed directly from Amazon S3 and your
-	             * network connection will remain open until you read all the data or
-	             * close the input stream.
-	             *
-	             * GetObjectRequest also supports several other options, including
-	             * conditional downloading of objects based on modification times,
-	             * ETags, and selectively downloading a range of an object.
-	             */
-	            // System.out.println("Downloading an object");
-	            // S3Object object = s3.getObject(new GetObjectRequest(bucketName, key));
-	            // System.out.println("Content-Type: "  + object.getObjectMetadata().getContentType());
-	            // displayTextInputStream(object.getObjectContent());
-	
-	            /*
-	             * List objects in your bucket by prefix - There are many options for
-	             * listing the objects in your bucket.  Keep in mind that buckets with
-	             * many objects might truncate their results when listing their objects,
-	             * so be sure to check if the returned object listing is truncated, and
-	             * use the AmazonS3.listNextBatchOfObjects(...) operation to retrieve
-	             * additional results.
-	             */
-	        	
-	        	
 	        	
 	            System.out.println("Listing objects");
 	            
@@ -205,7 +137,7 @@ public class ImportController extends BaseController {
 	
 	protected static boolean importS3Object(models.Bucket bucket, S3ObjectSummary object)
 	{
-		if( object != null )
+		if( ( object != null ) && ( object.getSize() > 0 ) )
 		{
 			try
 			{
@@ -216,11 +148,17 @@ public class ImportController extends BaseController {
 				String[] nameParts = name.split("/");
 				
 				
-				if( ( nameParts.length == 4 ) && ( nameParts[0].equals("music") ) )
+				if( ( nameParts.length >= 4 ) && ( nameParts[0].toLowerCase().equals("music") ) )
 				{
 					String artistName = nameParts[1];
 					String albumName = nameParts[2];
-					String songName = nameParts[3];
+					String songName = nameParts[ nameParts.length - 1 ];
+					
+					// trying to cleanup the song name
+					String[] songNameParts = songName.split(" - ");
+					if( songNameParts.length > 1 ){
+						songName = songNameParts[ songNameParts.length - 1 ];
+					}
 					
 					// remove the extension
 					String cleanSongName; 
@@ -233,10 +171,7 @@ public class ImportController extends BaseController {
 			        	cleanSongName = songName.substring(0, p);
 			        }
 					
-					
-					
-					
-					System.out.println( artistName + " - " + albumName + " - " + cleanSongName );
+					System.out.println( artistName + " -> " + albumName + " -> " + cleanSongName );
 					
 					Artist artist = Artist.getByName(artistName, true);
 					
