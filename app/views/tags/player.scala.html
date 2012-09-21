@@ -23,7 +23,7 @@
 	  <div class="navbar-inner">
 	    <div class="container">
 		    	<ul class="nav pull-right player-controls">
-				  <li class="name"><div class="song-progress"></div><span class="playlist"><%= playlist.name %></span> <span class="song"><% if(song){ %><%= song.Song.name %><% } %></span></li>
+				  <li class="name"><div class="song-progress"></div><span class="playlist"><%= playlist.name %></span> <span class="song"><% if(song){ %><% song.Album.Artist.name %> - <% song.Album.name %> - <%= song.Song.name %><% } %></span></li>
 				  <li class="play"><a class="btn" href="javascript://" ><i class="icon-play"></i> Play</a></li>
 				  <li class="pause"><a class="btn" href="javascript://" ><i class="icon-pause"></i> Pause</a></li>
 				  <li class="next-song"><a class="btn" href="javascript://"><i class="icon-forward"></i> Next Song</a></li>
