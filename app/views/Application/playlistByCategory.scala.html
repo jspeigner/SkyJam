@@ -1,4 +1,10 @@
-@(category:MusicCategory, playlists:Set[Playlist])@Layout.default(title = "Playlists for " + category.getName ) {
+@(category:MusicCategory, playlists:Set[Playlist])@Layout.default(
+	title = "Playlists for " + category.getName,
+	metaKeywords =  ( if( playlists.size > 0 ){ "Playlists, " +playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "" } ) ,
+	metaDescription = ( if( playlists.size > 0 ){ "Playlists : "+playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "There are no playlists found" } ) 
+	
+	
+) {
 <h2>Select a playlist</h2>
 <div id="playlistsRow" class="row-fluid">
 @if( playlists.size() > 0 ){

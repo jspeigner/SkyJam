@@ -50,6 +50,11 @@ GET		/register_with_fb			controllers.UserController.registerWithFacebook()
 
 GET		/user/get_current.json		controllers.UserController.getAuthUserJson()
 
+GET		/artists/browse/:id			controllers.ArtistController.browse(id:java.lang.Integer)
+GET		/artists/browse				controllers.ArtistController.browse(id:java.lang.Integer = 0)
+GET		/album/:id					controllers.AlbumController.view(id:java.lang.Integer)
+
+GET 	/albums/browse/:artistId	controllers.AlbumController.browseByArtist(artistId:java.lang.Integer)
 
 GET		/homepage_register			controllers.UserController.homepageRegister()
 POST 	/homepage_register 			controllers.UserController.homepageRegisterSubmit()

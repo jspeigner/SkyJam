@@ -19,7 +19,6 @@ import play.db.ebean.Model;
 @Table(name="albums")
 public class Album extends AppModel {
 
-
 	@Length(max=200)
 	private String name;
 	
@@ -36,17 +35,12 @@ public class Album extends AppModel {
 	
 	private String keywords;
 	
-	// public Integer genreId;
-	
 	private String description;
-	
 	
 	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 240, ImageMetadata.IMAGE_TYPE_PNG, "files/album/image/%d.png", "files/album/image/default.png" );
 	
 	@ManyToOne
 	private StorageObject albumArtStorageObject;
-	
-	// public Integer albumArtStorageObjectId;
 	
 	public static Model.Finder<Integer,Album> find = new Finder<Integer, Album>(Integer.class, Album.class);
 	

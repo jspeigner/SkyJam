@@ -1,0 +1,28 @@
+@(artists:Page[Artist], artistsPerPage: java.lang.Integer)@Layout.default(
+	title = "Browse artists",
+	metaKeywords = "Music Artists, " + artists.getList.map( a => a.getName ).mkString(", ") ,
+	metaDescription = ""
+	 
+) {
+<h1>Artists</h1>
+<ul>
+@for(artist <- artists.getList){
+	<li><a href="@routes.AlbumController.browseByArtist(artist.getId)">@artist.getName</a></li>
+}
+</ul>
+
+@if(artists.hasNext || artists.hasPrev){
+	<ul class="pager pull-left">
+		@if(artists.hasPrev){
+				<li><a href="@routes.ArtistController.browse(artists.getPageIndex - 1)">Previous @artistsPerPage</a></li>
+				} else {
+				<li class="disabled"><a href="javascript://">Previous @artistsPerPage</a></li>
+				}
+				@if(artists.hasNext){
+				<li><a href="@routes.ArtistController.browse(artists.getPageIndex + 1)">Next  @artistsPerPage</a></li>
+				} else {
+				<li class="disabled"><a href="javascript://">Next @artistsPerPage</a></li>
+				}
+	</ul>
+}
+}

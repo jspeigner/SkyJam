@@ -1,4 +1,9 @@
-@(playlist:Playlist, recentActivityUsers: List[User], category:MusicCategory)@Layout.default(title = "Playlist " + playlist.getName ) {
+@(playlist:Playlist, recentActivityUsers: List[User], category:MusicCategory)@Layout.default(
+	title = "Playlist " + playlist.getName,
+	metaKeywords = "Playlist, " + playlist.getName+ ", " + playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", "),
+	metaDescription = "Playlist with " + playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ") + " : " + 
+		  playlist.getPlaylistSongs().map( pSong => pSong.getSong().getName() ).distinct.mkString(", ")
+) {
 	<div id="playlist-page">
 	 
 		<div class="row-fluid">

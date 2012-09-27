@@ -1,0 +1,16 @@
+@(artist:Artist, albums:List[Album])@Layout.default(
+	title = "Browse Albums of " + artist.getName,
+	metaKeywords = artist.getName + ", " + albums.map( a => a.getName ).mkString(", ") ,
+	metaDescription = "Alubms of " + artist.getName + " : " + albums.map( a => a.getName ).mkString(", ") 
+	 
+) {
+
+<h1>@artist.getName</h1>
+<h2>Albums</h2>
+<ul>
+@for( album <- albums){
+	<li><a href="@routes.AlbumController.view(album.getId)">@album.getName</a></li>
+}
+</ul>
+
+}

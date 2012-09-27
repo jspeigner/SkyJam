@@ -1,4 +1,10 @@
-@(topLevelCategories: List[MusicCategory], siblingCategories : List[MusicCategory], currentCategory: MusicCategory, playlists: Page[Playlist] )@Layout.default(title = "Browse playlists" ) {
+@(topLevelCategories: List[MusicCategory], siblingCategories : List[MusicCategory], currentCategory: MusicCategory, playlists: Page[Playlist] )@Layout.default(
+	title = "Browse playlists",
+	metaKeywords = "Playlists" + ( if( ( playlists != null ) && ( playlists.getList.size > 0 )){ ", "+playlists.getList.map( playlist => playlist.getName() ).mkString(", ") } else { "" } ) ,
+	metaDescription = ( if( ( playlists != null ) && ( playlists.getList.size > 0 )){ "Playlists : "+playlists.getList.map( playlist => playlist.getName() ).mkString(", ") } else { "There are no playlists found" } )
+	
+	 
+) {
 <div id="playlists-browse-all">
 	<h1>Browse playlists</h1>
 	<hr />
