@@ -1,0 +1,42 @@
+@( currentCategory:String, playlists:List[Playlist], categories: Map[String,String] )@Layout.default(
+	title = "Popular playlists",
+	metaKeywords = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
+	metaDescription = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  
+	 
+) {
+	<h1>Popular Playlists</h1>
+	
+	@if( playlists.size > 0){
+		<ul  class="nav nav-pills">
+			@for((key, name) <- categories){
+				<li class="@(if(currentCategory == key)"active")"><a href="@routes.PlaylistController.popular(key)">@name</a></li>
+			}
+		</ul>
+		
+		<hr>
+		<div class="playlists span9 clearfix">
+			<ul>
+				@for(playlist <- playlists){
+					<li class="clearfix">
+						<div class="row-fluid">
+							<div class="span2">
+								<!-- a first album image -->
+								<img src="@playlist.getPlaylistSongs.head.getSong.getAlbum.getAlbumArtUrl" alt="album" > 
+							</div>
+							<div class="span10"> 
+								<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a><a href="javascript://" class="btn play player-controls-play pull-right" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a></h2>
+								<p>@playlist.getDescription</p>
+								<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+								
+							</div>
+							
+						</div>						
+						<hr>
+					</li>			
+				}
+			</ul>
+		</div>
+	} else {
+		<p>There are no playlists rated</p>
+	}
+}

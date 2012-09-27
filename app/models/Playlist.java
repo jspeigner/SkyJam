@@ -115,7 +115,7 @@ public class Playlist extends AppModel {
 		return limit <= 0 ? playlistSongs : playlistSongs.subList(0, limit);
 	}
 
-	public static List<Playlist> searchWideByName(String query, int maxResults) 
+	public static List<Playlist> searchDeepByName(String query, int maxResults) 
 	{
 		
 		String likeQueryString =  "%" + query + "%";
@@ -141,12 +141,15 @@ public class Playlist extends AppModel {
 	
 	public static List<Playlist> getRecentPlaylists(User user, int limit)
 	{
-		String sql = " SELECT " +
+		String sql = "SELECT " +
 					"t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
-	    		" FROM playlists t0 " +
+	    		" FROM " +
+	    			" playlists t0 " +
 	    			" JOIN playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
 	    			" JOIN user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
-	    		" WHERE u2.user_id = "+( user.getId() ) + 
+	    		" WHERE " +
+	    			"( u2.user_id = "+( user.getId() ) +" ) AND " +
+	    			"( t0.statis = \"" +Playlist.Status.Public+ "\" ) " +
 	    		" GROUP BY t0.id " +
 	    		" ORDER BY u2.created_date DESC ";
 	  
@@ -174,8 +177,48 @@ public class Playlist extends AppModel {
 	    .setMaxRows(limit);
 	  
 	    return query.findList();  
+ 
+	}
+	
+	public static List<Playlist> getPopularPlaylists(Date startDate, Date endDate, String order, int limit){
 		
-		// return Playlist.find.where().eq("playlistSongs.userPlaylistActivities.user", user).setMaxRows(limit).findSet(); 
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String sql = "SELECT " +
+				"t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
+    		" FROM playlists t0 " +
+    			" JOIN playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
+    			" JOIN user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
+    		" WHERE ( u2.type = \"play\" ) AND " +
+    				" ( t0.statis = \"" +Playlist.Status.Public+ "\" ) " +
+    				" ( u2.created_date <= \"" + sdf.format(startDate) +  "\" ) " +
+    				" ( u2.created_date >= \"" + sdf.format(endDate)  +  "\" ) " +
+    		" GROUP BY t0.id " +
+    		( ( ( order != "" ) && ( order != null ) ) ? ( " ORDER BY u2." + order ) : ""  );
+  
+		RawSql rawSql =   
+	    RawSqlBuilder  
+	        // let ebean parse the SQL so that it can  
+	        // add expressions to the WHERE and HAVING   
+	        // clauses  
+	        .parse(sql)  
+	        // map resultSet columns to bean properties  
+	        .columnMapping("t0.id",  "id")  
+	//        .columnMapping("t0.user_id",  "user")  
+	        .columnMapping("t0.name",  "name")	        
+	        .columnMapping("t0.status",  "status")
+	        .columnMapping("t0.description",  "description")
+	        .columnMapping("t0.created_date",  "createdDate")	        
+	        .columnMapping("t0.loaded_times",  "loadedTimes")	        
+	//        .columnMapping("t0.genre_id",  "genre_id")
+	        .create();  
+	  
+	  
+		Query<Playlist> query = Ebean.find(Playlist.class);  
+	    query.setRawSql(rawSql).setMaxRows(limit);
+	  
+	    return query.findList();  		
+		
 	}
 
 	public Status getStatus() {

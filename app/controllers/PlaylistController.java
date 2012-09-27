@@ -13,6 +13,7 @@ import java.util.Map;
 import be.objectify.deadbolt.actions.Restrict;
 
 import com.amazonaws.services.autoscaling.model.Activity;
+import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.PagingList;
 
@@ -61,7 +62,7 @@ public class PlaylistController extends BaseController
 		  }
 		  else
 		  {
-			  List<Playlist> playlists = Playlist.searchWideByName(query, 10);
+			  List<Playlist> playlists = Playlist.searchDeepByName(query, 10);
 			  
 			  return ok(views.html.Playlist.searchJson.render(playlists));
 
@@ -461,6 +462,36 @@ public class PlaylistController extends BaseController
 		  Page<Playlist> playlists = Playlist.find.where().eq("user", user).orderBy("createdDate DESC").findPagingList(pageSize).getPage(page);
 		  
 		  return ok(views.html.Playlist.userPlaylists.render(playlists));
+	  }
+	  
+	  public static Result popular(String type){
+		  
+		  int limitTopPlaylists = 10;
+		  
+		  List<Playlist> playlists = Playlist.find.where().setMaxRows(limitTopPlaylists).findList();
+		  
+		  
+		  
+		  if ( type.equals("week")){
+			  
+		  } else if ( type.equals("month")){
+			  
+		  } else if ( type.equals("all_time")){
+			  
+		  } else {
+			  // type.equals("trending")
+		  }
+		  
+		  
+		  
+		  HashMap<String,String> categories= new HashMap<String, String>();
+		  categories.put("trending", "Trending");
+		  categories.put("week", "This Week");
+		  categories.put("month", "This Month");
+		  categories.put("all_time", "All time");
+		  
+		  
+		  return ok(views.html.Playlist.popular.render(type,playlists,categories));
 	  }
 	  
 	

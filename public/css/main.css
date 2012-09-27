@@ -95,11 +95,10 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 #playlists-browse-all .categories  .active > a { position: relative;z-index: 2;padding: 9px 15px;border: 0;text-shadow: 0 1px 0 rgba(0, 0, 0, .15);-webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, .1), inset -1px 0 0 rgba(0, 0, 0, .1);-moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);box-shadow: inset 1px 0 0 rgba(0, 0, 0, .1), inset -1px 0 0 rgba(0, 0, 0, .1);}
 #playlists-browse-all .categories  .nav-list > .active > a, #playlists-browse-all .categories  .nav-list > .active > a:hover {color: white;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2); background-color: #08C; }
 #playlists-browse-all .categories ul { margin:0; padding:0; }
-	#playlists-browse-all .playlists ul { margin:0; padding:0; list-style: none; }
-		
-	#playlists-browse-all .playlists ul li {  margin-bottom:1em;}
-	
-	#playlists-browse-all .playlists .pager { margin-top:2em; }
+
+	.playlists ul { margin:0; padding:0; list-style: none; }
+		.playlists ul li {  margin-bottom:1em;}
+		.playlists .pager { margin-top:2em; }
 	
 #user-profile {}
 	#user-profile .user-image a {margin: 10px 0 0 0; max-width: auto; display: block;}

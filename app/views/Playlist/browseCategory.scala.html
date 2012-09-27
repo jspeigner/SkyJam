@@ -2,7 +2,6 @@
 	title = "Browse playlists",
 	metaKeywords = "Playlists" + ( if( ( playlists != null ) && ( playlists.getList.size > 0 )){ ", "+playlists.getList.map( playlist => playlist.getName() ).mkString(", ") } else { "" } ) ,
 	metaDescription = ( if( ( playlists != null ) && ( playlists.getList.size > 0 )){ "Playlists : "+playlists.getList.map( playlist => playlist.getName() ).mkString(", ") } else { "There are no playlists found" } )
-	
 	 
 ) {
 <div id="playlists-browse-all">

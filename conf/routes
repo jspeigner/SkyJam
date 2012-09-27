@@ -19,7 +19,7 @@ GET		/playlist/view/:id/:musicCategoryId				controllers.PlaylistController.playl
 
 GET 	/playlists/browse							controllers.PlaylistController.browseCategories()
 GET		/playlists/browse/:musicCategoryId			controllers.PlaylistController.browseCategory( musicCategoryId:java.lang.Integer, page: java.lang.Integer ?= 0)
-
+GET		/playlists/popular/:category				controllers.PlaylistController.popular(category:String)
 
 POST	/twitter_callback							controllers.ApplicationController.twitterCallback()
 GET		/twitter_callback							controllers.ApplicationController.twitterCallback()
