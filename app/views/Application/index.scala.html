@@ -14,7 +14,7 @@
 	<ul>
 	@for( category <- categories ){
 		<li class="span3">
-		<img src="@category.getImageUrl()" alt="@category.getName()"  width="@MusicCategory.imageMetadata.width" height="@MusicCategory.imageMetadata.height">
+		<a href="@routes.ApplicationController.category(category.getId())"><img src="@category.getImageUrl()" alt="@category.getName()"  width="@MusicCategory.imageMetadata.width" height="@MusicCategory.imageMetadata.height"></a>
 		<a href="@routes.ApplicationController.category(category.getId())">@category.getName()</a></li>
 	}
 	</ul>
