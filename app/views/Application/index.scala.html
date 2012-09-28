@@ -1,9 +1,13 @@
-@(parentCategory:MusicCategory, categories:Set[MusicCategory])@Layout.default("Home", metaKeywords = "Skyjam Music Mp3 playlists", metaDescription = "Online Music") {
+@(parentCategory:MusicCategory, categories:Set[MusicCategory])@Layout.default(
+	title = "Home", 
+	metaKeywords = "Skyjam Music Mp3 playlists", 
+	metaDescription = "Online Music"
+){
     
 @if( parentCategory != null ){
-	<h2>Select your activity from <i>@parentCategory.getName()</i></h2>
+	<h3>Select your activity from <i>@parentCategory.getName()</i></h3>
 } else { 
-	<h2>Select your activity or <a href="@routes.PlaylistController.browseCategories()">browse popular Playlists</a></h2>
+	<h3>Select your activity, browse <a href="@routes.PlaylistController.popular("trending")">popular Playlists</a> or <a href="@routes.PlaylistController.browseCategories()">Categories</a></h2>
 }
 
 <div id="activityBar" class="row-fluid">
