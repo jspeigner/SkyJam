@@ -184,17 +184,20 @@ public class Playlist extends AppModel {
 		
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		String sql = "SELECT " +
+		String sql = 
+			"SELECT " +
 				"t0.id, t0.name, t0.status, t0.description, t0.created_date, t0.loaded_times " +
-    		" FROM playlists t0 " +
-    			" JOIN playlist_songs u1 on ( u1.playlist_id = t0.id ) " +
-    			" JOIN user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
-    		" WHERE ( u2.type = \"play\" ) AND " +
-    				" ( t0.statis = \"" +Playlist.Status.Public+ "\" ) " +
-    				" ( u2.created_date <= \"" + sdf.format(startDate) +  "\" ) " +
+    		" FROM " +
+    			" playlists t0 " +
+    			" JOIN playlist_songs u1 ON ( u1.playlist_id = t0.id ) " +
+    			" JOIN user_playlist_activities u2 ON ( u2.playlist_song_id = u1.id ) " +
+    		" WHERE " +
+    				" ( u2.type = \"play\" ) AND " +
+    				" ( t0.status = \"" +Playlist.Status.Public+ "\" ) AND " +
+    				" ( u2.created_date <= \"" + sdf.format(startDate) +  "\" ) AND " +
     				" ( u2.created_date >= \"" + sdf.format(endDate)  +  "\" ) " +
     		" GROUP BY t0.id " +
-    		( ( ( order != "" ) && ( order != null ) ) ? ( " ORDER BY u2." + order ) : ""  );
+    		( ( ( order != "" ) && ( order != null ) ) ? ( " ORDER BY t0." + order ) : ""  );
   
 		RawSql rawSql =   
 	    RawSqlBuilder  

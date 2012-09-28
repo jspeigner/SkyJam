@@ -8,6 +8,8 @@ public class BaseController extends Controller {
 	public static final String PJAX_RESPONSE_REDIRECT_HEADER = "X-PJAX-REDIRECT";
 	public static final String PJAX_REQUEST_HEADER = "X-PJAX";
 	
+	public static long DAY_IN_MS = 1000 * 60 * 60 * 24;
+	
 	public static boolean setPjaxUrl(String url)
 	{
 		response().setHeader( PJAX_RESPONSE_HEADER, url );

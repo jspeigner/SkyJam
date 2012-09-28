@@ -1,4 +1,4 @@
-@( currentCategory:String, playlists:List[Playlist], categories: Map[String,String] )@Layout.default(
+@( currentCategory:String, playlists:List[Playlist], categories: List[Tuple2[String,String]] )@Layout.default(
 	title = "Popular playlists",
 	metaKeywords = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
 	metaDescription = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  
@@ -8,8 +8,8 @@
 	
 	@if( playlists.size > 0){
 		<ul  class="nav nav-pills">
-			@for((key, name) <- categories){
-				<li class="@(if(currentCategory == key)"active")"><a href="@routes.PlaylistController.popular(key)">@name</a></li>
+			@for( category  <- categories){
+				<li class="@(if(currentCategory == category._1)"active")"><a href="@routes.PlaylistController.popular(category._1)">@category._2</a></li>
 			}
 		</ul>
 		

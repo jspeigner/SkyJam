@@ -4,9 +4,12 @@ import global.Global;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -30,9 +33,14 @@ import play.data.DynamicForm;
 
 import views.html.*;
 import play.data.Form;
+import scala.Tuple2;
+
 
 public class PlaylistController extends BaseController 
 {
+	
+	
+	
 	public static String CURRENT_PLAYLIST_ID_KEY = "Playlist.id";
 	
 	
@@ -473,22 +481,23 @@ public class PlaylistController extends BaseController
 		  
 		  
 		  if ( type.equals("week")){
-			  
+			  playlists = Playlist.getPopularPlaylists( new Date() , new Date(System.currentTimeMillis() - ( 7 * DAY_IN_MS) ), "loaded_times DESC", limitTopPlaylists);
 		  } else if ( type.equals("month")){
-			  
+			  playlists = Playlist.getPopularPlaylists( new Date() , new Date(System.currentTimeMillis() - ( 30 * DAY_IN_MS) ), "loaded_times DESC", limitTopPlaylists);
 		  } else if ( type.equals("all_time")){
-			  
+			  playlists = Playlist.getPopularPlaylists( new Date() , new Date(System.currentTimeMillis() - ( 10 * 365 * DAY_IN_MS) ), "loaded_times DESC", limitTopPlaylists);
 		  } else {
-			  // type.equals("trending")
+			  playlists = Playlist.getPopularPlaylists( new Date() , new Date(System.currentTimeMillis() - ( 1 * DAY_IN_MS) ), "loaded_times DESC", limitTopPlaylists);
 		  }
 		  
 		  
 		  
-		  HashMap<String,String> categories= new HashMap<String, String>();
-		  categories.put("trending", "Trending");
-		  categories.put("week", "This Week");
-		  categories.put("month", "This Month");
-		  categories.put("all_time", "All time");
+		  List<Tuple2<String,String>> categories= new ArrayList<Tuple2<String,String>>();
+		  
+		  categories.add( new Tuple2<String, String>("trending", "Trending"));
+		  categories.add( new Tuple2<String, String>("week", "This Week"));
+		  categories.add( new Tuple2<String, String>("month", "This Month"));
+		  categories.add( new Tuple2<String, String>("all_time", "All time"));
 		  
 		  
 		  return ok(views.html.Playlist.popular.render(type,playlists,categories));
