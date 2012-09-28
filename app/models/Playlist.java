@@ -149,7 +149,7 @@ public class Playlist extends AppModel {
 	    			" JOIN user_playlist_activities u2 on ( u2.playlist_song_id = u1.id ) " +
 	    		" WHERE " +
 	    			"( u2.user_id = "+( user.getId() ) +" ) AND " +
-	    			"( t0.statis = \"" +Playlist.Status.Public+ "\" ) " +
+	    			"( t0.status = \"" +Playlist.Status.Public+ "\" ) " +
 	    		" GROUP BY t0.id " +
 	    		" ORDER BY u2.created_date DESC ";
 	  

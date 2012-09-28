@@ -1,5 +1,5 @@
 @(user:User, userPlaylists:List[Playlist], savedPlaylists: List[UserSavedPlaylist])@Layout.default(
-	title = "Public Profile of "+user.getUsername,
+	title = user.getUsername + " Public Profile",
 	metaDescription = "Public Profile of "+user.getUsername,
 	metaKeywords = user.getUsername  
 ) {
