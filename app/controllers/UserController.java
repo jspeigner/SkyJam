@@ -15,6 +15,7 @@ import be.objectify.deadbolt.actions.Restrict;
 import com.avaje.ebean.Ebean;
 
 import controllers.components.Facebook;
+import controllers.components.ForceHttps;
 
 import play.*;
 import play.libs.Akka;
@@ -33,7 +34,7 @@ import java.util.concurrent.Callable;
 import models.*;
 
 
-
+@With(ForceHttps.class)
 public class UserController extends BaseController {
 
 	public static final String AUTH_USER_COOKIE_ID = "User.id";	
