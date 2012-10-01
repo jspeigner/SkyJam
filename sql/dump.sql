@@ -12,7 +12,7 @@ CREATE TABLE `albums` (
   UNIQUE KEY `artist_id` (`artist_id`,`name`),
   KEY `fk_albums_genres1` (`genre_id`),
   KEY `fk_albums_storage_object1` (`album_art_storage_object_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `amazon_accounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -156,7 +156,7 @@ CREATE TABLE `users` (
   `registered_date` datetime NOT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `image_storage_object_id` int(11) DEFAULT NULL COMMENT 'User image\n',
-  `facebook_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `facebook_user_id` varchar(35) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`,`password`),
   KEY `fk_users_storage_object1` (`image_storage_object_id`)
@@ -168,6 +168,14 @@ CREATE TABLE `users_user_roles` (
   PRIMARY KEY (`users_id`,`user_roles_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `user_invitation_codes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `user_playlist_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -176,7 +184,7 @@ CREATE TABLE `user_playlist_activities` (
   `playlist_song_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_playlist_activity_users1` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -193,4 +201,3 @@ CREATE TABLE `user_saved_playlists` (
   UNIQUE KEY `playlist_id` (`playlist_id`,`user_id`),
   KEY `created_date` (`created_date`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
