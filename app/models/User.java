@@ -8,6 +8,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -61,12 +63,12 @@ public class User extends AppModel implements RoleHolder
 	@Constraints.Required
 	private String username;
 	
-	@Length(max=40)
+	@Constraints.MaxLength(value=40)
 	@Constraints.Required
 	@Email
 	private String email;
-	
-	@Length(max=40, min=1)
+
+	@Constraints.MinLength(value=6)
 	private String password;
 
 	@Formats.DateTime(pattern="yyyy-MM-dd")
@@ -88,12 +90,8 @@ public class User extends AppModel implements RoleHolder
 	
 	public static Model.Finder<Integer,User> find = new Finder<Integer, User>(Integer.class, User.class);
 	
-	public static User authenticate(String email, String password) 
-	{
-		// System.out.println("Auth "+email+" - "+password);
-		
+	public static User authenticate(String email, String password){
         return ( ( email != null ) && ( password != null ) ) ?
-        	
         	 find.where()
             .eq("email", email)
             .eq("password" ,  User.passwordHash( password ) )
@@ -122,6 +120,18 @@ public class User extends AppModel implements RoleHolder
 			
 			validationErrors.put( "username", usernameErrors );
 		}
+		
+		long minPasswordLength = User.getMinPasswordLength();
+		if( password.length() < minPasswordLength ){
+			
+			List<ValidationError> passwordErrors = new ArrayList<ValidationError>();
+			
+			passwordErrors.add(new ValidationError("password", "Minimum length is " + minPasswordLength , null));
+			
+			validationErrors.put("password", passwordErrors );
+		}		
+		
+
 		
 		return validationErrors.size() > 0 ? validationErrors : null;
 	}
@@ -187,7 +197,9 @@ public class User extends AppModel implements RoleHolder
 	 */
 	public void setPassword(String password) {
 		
-		this.password = User.passwordHash( password );
+		// this.password = User.passwordHash( password );
+		
+		this.password = password;
 	}
 
 
@@ -376,6 +388,15 @@ public class User extends AppModel implements RoleHolder
 		return s != null;
 			
 	}
+	
+	public void save(){
+		
+		if( password != null){
+			password = User.passwordHash(password);
+		}
+		
+		super.save();
+	}
 
 	public String getFacebookUserId() {
 		return facebookUserId;
@@ -383,6 +404,28 @@ public class User extends AppModel implements RoleHolder
 
 	public void setFacebookUserId(String facebookUserId) {
 		this.facebookUserId = facebookUserId;
+	}
+
+	public static long getMinPasswordLength() {
+
+		try {
+			
+			
+			// Field field = User.class.getField("password");
+			Field field = User.class.getDeclaredField("password");
+			Constraints.MinLength passwordAnnotation = field.getAnnotation(Constraints.MinLength.class);
+			
+			
+			if( passwordAnnotation != null){
+				return passwordAnnotation.value();
+			}
+			
+		} catch (Exception e) {
+
+			
+		}		
+		
+		return 0;
 	}
 	
 	

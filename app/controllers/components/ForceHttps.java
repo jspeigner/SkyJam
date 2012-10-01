@@ -31,7 +31,7 @@ public class ForceHttps extends Action.Simple {
 	private boolean isHttpsRequest(Request request) {
 
 		if (Play.isDev()) {
-			return false;
+			return true;
 		}
 
 		if ( ( request.getHeader(SSL_PROTO_REQUEST_HEADER) != null ) && StringUtils.contains( request.getHeader(SSL_PROTO_REQUEST_HEADER), "https")) {

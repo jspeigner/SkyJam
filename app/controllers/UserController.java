@@ -200,19 +200,28 @@ public class UserController extends BaseController {
     	// process the FB signed_request
     	DynamicForm form = form().bindFromRequest();
     	
+    	UserInvitationCode invitation = null;
     	
-    	
-    	if( form.field("signed_request").value() != null )
-    	{
+    	if( form.field("signed_request").value() != null ){
     		Map<String,String> signedRequestData = User.getSignedRequestRegisterParams( form.field("signed_request").value() );
     		
     		userForm = form(User.class).bind(signedRequestData, "username","email","password","facebookUserId");
-    	}
-    	else
-    	{
+    	} else {
     		userForm = form(User.class).bindFromRequest("username","email","password");
     	}
+
     	
+    	if( ( form.field("invitation_code").value() != null ) ){
+    		
+    		invitation = UserInvitationCode.isAvailable( form.field("invitation_code").value() );
+    		if( invitation == null ){
+    			// invitation code is invalid
+    			userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
+    		}
+    	} else {
+    		// invitation code field is missing
+    		userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
+    	}
     	
     	if(userForm.hasErrors())
     	{
@@ -228,10 +237,14 @@ public class UserController extends BaseController {
     		user.roles = new ArrayList<UserRole>();
     		user.roles.add(UserRole.findByName("user"));
     		
+    		
+    		
     		try
     		{
 	    		user.save();
 	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		
+	    		invitation.markUsedByUser(user);
 	    		
 	    		if( user.getFacebookUserId() != null )
 	    		{
@@ -309,8 +322,10 @@ public class UserController extends BaseController {
     public static Result profileUpdate()
     {
     	User user = getAuthUser();
+    	
     	Form<User> userForm = form(User.class).bindFromRequest();
     	DynamicForm formData = form().bindFromRequest();
+    	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
     	
@@ -328,6 +343,7 @@ public class UserController extends BaseController {
     	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
     	    	
     	    	if(imageFile.length() > filesizeLimit)
+    	    		
     	    	{
     	    		flash("image_error", "Image size exceeds the "+ Utils.humanReadableByteCount(filesizeLimit, true)+" limit");
     	    	}
@@ -350,20 +366,22 @@ public class UserController extends BaseController {
     	    imageFile.delete();
     	}
     	
-    	if( !formData.get("password").isEmpty() || !formData.get("password_reset").isEmpty() )
-    	{
-    		if( formData.get("password").equals( formData.get("password_reset") ) )
-    		{
-    			user.setPassword(formData.get("password"));
+    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
+    		
+    		userForm.reject(new ValidationError("password_reset", "Minimum length is " + User.getMinPasswordLength(), null));
+   			
+    	}
+    	else if( !formData.get("password_repeat").equals( formData.get("password_reset") ) ){ 
+    			
+    		userForm.reject(new ValidationError("password_repeat", "Passwords should match", null));
+    			
+    	} else {
+    			
+    			user.setPassword(formData.get("password_reset"));
     			user.save();
     			flash("password_success", "Password has been updated successfully");
-    		}
-    		else
-    		{
-    			userForm.reject(new ValidationError("password_reset", "Passwords should match", null));
-    		}
-    		
     	}
+
     	
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
     }
@@ -413,7 +431,6 @@ public class UserController extends BaseController {
     	{
     		try
     		{
-    			
     			String userUID = user.getId().toString();
     			
     			String cookieValue = Crypto.sign( userUID )+"-"+userUID;
