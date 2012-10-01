@@ -1,4 +1,10 @@
-@(title: String, metaKeywords: String = "", metaDescription: String = "", context:play.mvc.Http.Context = play.mvc.Http.Context.current())(content: Html)@import be.objectify.deadbolt.views.html._
+@(
+	title: String, 
+	metaKeywords: String = "", 
+	metaDescription: String = "", 
+	context:play.mvc.Http.Context = play.mvc.Http.Context.current(),
+	isSecureConnection:Boolean = global.Global.isSecure()
+)(content: Html)@import be.objectify.deadbolt.views.html._
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,29 +53,29 @@
 				
 				idPlaceholder : "999",
 				
-				headerFormSearch : "@routes.PlaylistController.searchJson.absoluteURL(context.request())",
-				playlist : "@routes.PlaylistController.playlist(999, null).absoluteURL(context.request())",
-				getAuthUser : "@routes.UserController.getAuthUserJson().absoluteURL(context.request())",
+				headerFormSearch : "@routes.PlaylistController.searchJson.absoluteURL(context.request(), isSecureConnection)",
+				playlist : "@routes.PlaylistController.playlist(999, null).absoluteURL(context.request(), isSecureConnection)",
+				getAuthUser : "@routes.UserController.getAuthUserJson().absoluteURL(context.request(), isSecureConnection)",
 				
-				saveFavoritePlaylist : "@routes.PlaylistController.saveFavoritePlaylist(999).absoluteURL(context.request())",
-				deleteFavoritePlaylist: "@routes.PlaylistController.deleteFavoritePlaylist(999).absoluteURL(context.request())",
+				saveFavoritePlaylist : "@routes.PlaylistController.saveFavoritePlaylist(999).absoluteURL(context.request(), isSecureConnection)",
+				deleteFavoritePlaylist: "@routes.PlaylistController.deleteFavoritePlaylist(999).absoluteURL(context.request(), isSecureConnection)",
 				
 				searchSongs: "@routes.SongController.searchJson().absoluteURL(context.request())"
 
 			},
 			player: {
 				urls: {
-					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(999).absoluteURL(context.request())",
-					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(999).absoluteURL(context.request())",
+					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(999).absoluteURL(context.request(), isSecureConnection)",
+					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(999).absoluteURL(context.request(), isSecureConnection)",
 					
-					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity().absoluteURL(context.request())",
-					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating().absoluteURL(context.request())",
+					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity().absoluteURL(context.request(), isSecureConnection)",
+					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating().absoluteURL(context.request(), isSecureConnection)",
 					
-					get_user_playlist_data: "@routes.PlaylistController.getUserPlaylistData(999).absoluteURL(context.request())"
+					get_user_playlist_data: "@routes.PlaylistController.getUserPlaylistData(999).absoluteURL(context.request(), isSecureConnection)"
 					
 				},
 				soundmanager : {
-					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf").absoluteURL(context.request())"
+					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf").absoluteURL(context.request(), isSecureConnection)"
 				}
 			},
 			user : @views.html.User.getUserJson()
@@ -109,7 +115,7 @@
 		   }(document));
 		</script>        
 		<!-- twitter -->
-		<script src="http://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
+		<script src="https://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
     
     </head>
     <body class="main">
@@ -152,7 +158,7 @@
 	        			<a href="@routes.ApplicationController.index()">Homepage</a> | 
 	        			<a href="@routes.PageController.termsOfUse()">Terms of Service</a> | 
 	        			<a href="@routes.PageController.privacyPolicy()">Privacy Policy</a> |
-	        			<a href="@routes.PageController.copyrightInfringment()">Copyright Infringement Claims</a> |
+	        			<a href="@routes.PageController.copyrightInfringment()">Copyright</a> |
 	        			<a href="@routes.PageController.about()">About</a> | 
 	        			<a href="@routes.PageController.contactUs()">Contact Us</a> |
 	        			<a href="@routes.ArtistController.browse(0)">Artists</a></p>

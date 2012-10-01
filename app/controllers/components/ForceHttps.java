@@ -28,10 +28,10 @@ public class ForceHttps extends Action.Simple {
 		return delegate.call(ctx);
 	}
 
-	private boolean isHttpsRequest(Request request) {
+	public static boolean isHttpsRequest(Request request) {
 
 		if (Play.isDev()) {
-			return true;
+			return false;
 		}
 
 		if ( ( request.getHeader(SSL_PROTO_REQUEST_HEADER) != null ) && StringUtils.contains( request.getHeader(SSL_PROTO_REQUEST_HEADER), "https")) {

@@ -34,7 +34,8 @@ import java.util.concurrent.Callable;
 import models.*;
 
 
-@With(ForceHttps.class)
+// TODO : implement correct CORS and AJAX calls to enable the secure browsing
+// @With(ForceHttps.class)
 public class UserController extends BaseController {
 
 	public static final String AUTH_USER_COOKIE_ID = "User.id";	

@@ -1,5 +1,7 @@
 package controllers.components;
 
+import global.Global;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,12 @@ public class ControllerFilter extends Action.Simple {
 	@Override
 	public Result call(Context ctx) throws Throwable {
 		
-		// allow http and https origins
+		Global.setSecure( ForceHttps.isHttpsRequest(ctx.request()) );
+
 		String serviceUrl = ctx.request().host() + "/"; 
 		
-		ctx.response().setHeader("Access-Control-Allow-Origin", "http://"+serviceUrl+" https://"+serviceUrl );
+		// allow http and https origins - http://tools.ietf.org/html/rfc6454#section-7.1		
+		ctx.response().setHeader("Access-Control-Allow-Origin", ( Global.isSecure() ? "http://" : "https://" ) + serviceUrl );
 
 		return delegate.call(ctx);
 	}
