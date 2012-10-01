@@ -1,7 +1,13 @@
 package controllers;
 
-import play.mvc.*;
 
+
+import controllers.components.ControllerFilter;
+
+import play.mvc.*;
+import play.mvc.Http.Context;
+
+@With(ControllerFilter.class)
 public class BaseController extends Controller {
 
 	public static final String PJAX_RESPONSE_HEADER  = "X-PJAX-URL";
@@ -43,4 +49,6 @@ public class BaseController extends Controller {
 
 	}
 	
+	
+
 }

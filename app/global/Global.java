@@ -22,4 +22,6 @@ public class Global extends GlobalSettings {
 	    return hex.toString();
 	 }	
 	
+
+	
 }
