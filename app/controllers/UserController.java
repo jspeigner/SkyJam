@@ -15,13 +15,8 @@ import be.objectify.deadbolt.actions.Restrict;
 import com.avaje.ebean.Ebean;
 
 import controllers.components.Facebook;
-import controllers.components.ForceHttps;
 
 import play.*;
-import play.libs.Akka;
-
-import play.libs.F.Promise;
-import play.libs.F.Function;
 
 import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
@@ -30,7 +25,6 @@ import play.api.libs.Crypto;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
-import java.util.concurrent.Callable;
 import models.*;
 
 
@@ -174,8 +168,6 @@ public class UserController extends BaseController {
     		
     		setAuthUser(user);
     		
-    		// return redirect( routes.UserController.homepageRegisterSuccess() );
-    		
     		return pjaxRedirect( routes.UserController.homepageRegisterSuccess() );
     	}
     }
@@ -188,9 +180,10 @@ public class UserController extends BaseController {
     	
     }
     
-    public static Result register()
+    public static Result register(String invitationCode)
     {
     	Form<User> userForm = form(User.class);
+    	userForm.data().put("invitation_code", invitationCode);
     	
     	return ok(views.html.User.register.render(userForm));
     }
@@ -283,10 +276,10 @@ public class UserController extends BaseController {
     	
     }
     
-    public static Result registerWithFacebook()
+    public static Result registerWithFacebook(String invitationCode)
     {
     	String facebookAppId = Play.application().configuration().getString("application.facebook_app_id");
-    	return ok(views.html.User.registerWithFacebook.render(facebookAppId));
+    	return ok(views.html.User.registerWithFacebook.render(facebookAppId, invitationCode));
     }
     
 

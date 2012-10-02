@@ -42,10 +42,10 @@ GET     /login                      controllers.UserController.login()
 POST    /login                      controllers.UserController.authenticate()
 GET     /logout                     controllers.UserController.logout()
 
-GET		/register					controllers.UserController.register()
+GET		/register					controllers.UserController.register(invitationCode:String ?= "")
 POST	/register					controllers.UserController.registerSubmit()
 GET		/register_success			controllers.UserController.registerSuccess()
-GET		/register_with_fb			controllers.UserController.registerWithFacebook()
+GET		/register_with_fb			controllers.UserController.registerWithFacebook(invitationCode:String ?= "")
 
 
 GET		/user/get_current.json		controllers.UserController.getAuthUserJson()
