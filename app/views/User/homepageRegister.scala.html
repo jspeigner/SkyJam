@@ -1,5 +1,6 @@
-@(form: Form[User])@Layout.stub("Register"){
-		
+@(form: Form[UserController.InvitationUser])@Layout.stub(
+	title = "Register"
+){
         <h1>Hey. We love you!</h1>
         <p>Our website is launching very soon.<br />Leave us your email below, and we’ll notify the minute we open the doors.</p>
         
@@ -15,13 +16,8 @@
     		</div>
     		}
             
-			<input type="email" name="email" value="@form("email").value" placeholder="Enter your email" class="input-large" />            
-            
+			<input type="email" required name="email" value="@form("email").value" placeholder="Enter your email" class="input-large" />            
             <input type="submit" value="Notify me!" class="btn btn-large" />
-            
-            
-            
-
         }
 
 }

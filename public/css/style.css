@@ -1,17 +1,10 @@
-﻿body {
-    background: #ddd url(../img/bg.png);
-    padding-top: 120px;
-}
+﻿body { background: #ddd url(../img/bg.png); padding-top: 120px; }
 
-h1 {
-    color: #f73b3b;
-}
+body.stub { padding-top: 40px; }
 
-p {
-    font-size: 16px;
-    line-height: 25px;
-    margin-top: 1.5em;
-}
+h1 { color: #f73b3b; }
+
+p { font-size: 16px; line-height: 25px; margin-top: 1.5em; }
 
 #logo {
     background-color: #f73b3b;
@@ -28,24 +21,13 @@ p {
     width: 130px;
 }
 
-input.input-large {
-    padding: 9px 14px;
-}
+input.input-large { padding: 9px 14px; }
 
-div.gradient {
-    background: url(../img/gradient.png) no-repeat top center;
-    min-height: 770px;
-}
+div.gradient { background: url(../img/gradient.png) no-repeat top center; min-height: 770px; }
 
-div.content {
-    text-align: center;
-    margin-top: 1.5em;
-}
+div.content { text-align: center; margin-top: 1.5em; }
 
-a.sb.gplus,
-.sb a.gplus {
-	background-image: url(../img/social-buttons/gplus.png);
-}
+a.sb.gplus, .sb a.gplus { background-image: url(../img/social-buttons/gplus.png); }
 
 footer { text-align: center; }
 

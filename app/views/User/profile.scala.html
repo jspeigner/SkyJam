@@ -2,10 +2,7 @@
 @Layout.default("Profile") {
 <div id="user-profile">
 	
-	<h1>				
- 	<img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" >			
-	
-	Hello, @user.getUsername()</h1>
+	<h1><img alt="@user.getUsername" src="@user.getImageUrl()?_=@System.currentTimeMillis()" > Hello, @user.getUsername()</h1>
 	<hr>
 			
             @if(flash.contains("image_error")) {
@@ -26,7 +23,7 @@
 					
 					@helper.form(action = routes.UserController.profileUpdate(), 'class -> "form-horizontal well", 'id -> "profile-edit", 'enctype ->"multipart/form-data") {
 					
-					@helper.inputFile(form("image"), '_label -> "Image")
+					@helper.inputFile(form("image"), '_label -> "Profile Photo")
 					
 					@helper.inputPassword(form("password_reset" ), '_showConstraints -> false, '_label -> "Reset Password")
 					
@@ -41,7 +38,7 @@
 				<div class="span4">
 					<h4>Help</h4>
 					<hr>
-					<p>Some help there . Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>
+					<p>Some help there. Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum </p>
 				</div>
 					
 			</div>
