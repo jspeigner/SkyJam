@@ -3,7 +3,8 @@
 # ~~~~
 
 # Home page
-GET     /                          					controllers.ApplicationController.index()
+
+GET     /activities                          					controllers.ApplicationController.index()
 GET     /category/:id								controllers.ApplicationController.category(id:java.lang.Integer)
 GET		/category_playlists/:id						controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
 
@@ -30,6 +31,7 @@ POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSong
 POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
 GET			/playlist/favorite/save/:playlistId	controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 
 GET			/playlist/favorite/delete/:playlistId	controllers.PlaylistController.deleteFavoritePlaylist(playlistId:java.lang.Integer )
+
 
 GET			/playlist/create		controllers.PlaylistController.create()
 POST		/playlist/create		controllers.PlaylistController.createSubmit()
@@ -73,10 +75,12 @@ POST	/profile					controllers.UserController.profileUpdate()
 
 GET		/profile/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
 
-# internal
-GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
-GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)
+
+GET		/			controllers.UserController.homepageRegister()
+POST 	/ 			controllers.UserController.homepageRegisterSubmit()
+GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-

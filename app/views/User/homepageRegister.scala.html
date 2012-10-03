@@ -1,29 +1,27 @@
-@(form: Form[User])
-@import helper.twitterBootstrap2._
-@Layout.stub("Register") {
-	
-	
-	@helper.form(action = routes.UserController.homepageRegisterSubmit(), 'class -> "form-horizontal well", 'id -> "homepage-register") {
-	
-		<h1>Welcome, we're glad you're here!</h1>
+@(form: Form[User])@Layout.stub("Register"){
 		
-		<p>You already know us for streaming the best radio on the internet, and now we've
-		expanded our site with a community of real people - just like you - to
-		help you get even better music playlists .
-		
-		Just leave us your e-mail address to request an invitation to try out the
-		new site. Once you receive an invite, you'll be able to test drive our new community
-		features before anyone else and can lend a hand by helping other SkyJam.fm
-		users by creating awesome playlists.
-		We're counting on your feedback and participation to make SkyJam.fm even
-		more musical for you and the millions of SkyJam users who listen to us every day!</p>		
-		
-		@helper.inputText(form("email" ), '_showConstraints -> false)	
-				
-		<div class="form-actions">
-			<input class="btn" type="submit" value="Register" />
-		</div>
-    
-	}
+        <h1>Hey. We love you!</h1>
+        <p>Our website is launching very soon.<br />Leave us your email below, and we’ll notify the minute we open the doors.</p>
+        
+        @helper.form(action = routes.UserController.homepageRegisterSubmit(), 'class -> "form-horizontal", 'id -> "homepage-register") {
+
+
+			@if( form("email").hasErrors){
+			<div class="row errors">
+	            @form("email").errors.map { error =>
+     		      		<div class="alert alert-error span5 clearfix"><button type="button" class="close" data-dismiss="alert">×</button>@error.message</div>
+     		      		
+    			}
+    		</div>
+    		}
+            
+			<input type="email" name="email" value="@form("email").value" placeholder="Enter your email" class="input-large" />            
+            
+            <input type="submit" value="Notify me!" class="btn btn-large" />
+            
+            
+            
+
+        }
 
 }

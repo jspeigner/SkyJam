@@ -9,7 +9,7 @@ dist
 .project
 .cache
 eclipse-bin
-/.classpath
+.classpath
 .target
 /lib
 .DS_Store
