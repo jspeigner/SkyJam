@@ -26,50 +26,23 @@
         <script src="@routes.Assets.at("js/libs/jquery-1.7.2.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/bootstrap.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/underscore.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("js/libs/can.jquery.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("js/libs/can.jquery.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery-ui.custom.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.pjax.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.cookie.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.form.js")" type="text/javascript"></script>
         
-        <script src="@routes.Assets.at("soundmanager2/script/soundmanager2-nodebug-jsmin.js")" type="text/javascript"></script>
         
         
-        <script src="@routes.Assets.at("js/application.js")" type="text/javascript"></script> 
+        
+         
         
 	    <!--[if lt IE 9]>
 	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    <![endif]-->        
 
-		<script type="text/javascript">
-		var application = new Application({
-			urls: {
-				headerFormSearch : "@routes.PlaylistController.searchJson",
-				playlist : "@routes.PlaylistController.playlist(0, null)"
 
-			},
-			player: {
-				urls: {
-					get_current_playlist : "@routes.PlaylistController.getCurrentPlaylistJson(0)",
-					set_current_playlist : "@routes.PlaylistController.setCurrentPlaylistJson(0)",
-					
-					save_playlist_song_activity : "@routes.PlaylistController.trackPlaylistSongActivity()",
-					save_playlist_song_rating : "@routes.PlaylistController.savePlaylistSongRating()",
-					
-				},
-				soundmanager : {
-					swf_path : "@routes.Assets.at("soundmanager2/swf/soundmanager2_flash9.swf")"
-				}
-			}
-				
-		});
-		
-		$( function(){ 
-			application.onDomReady(); 
-		});
-		
-		</script>
-		<script src="@routes.Assets.at("js/libs/player.js")" type="text/javascript"></script>
+
         
     </head>
     <body class="stub">
