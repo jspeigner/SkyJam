@@ -48,7 +48,8 @@ public class Playlist extends AppModel {
 		
 		Public,
 		Private,
-		Draft
+		Draft,
+		Deleted
 	}
 	
 	@Enumerated(EnumType.STRING)
@@ -93,6 +94,7 @@ public class Playlist extends AppModel {
         return 
             find.where()
                 .eq("musicCategories", m)
+                .eq("status", Playlist.Status.Public)
                 .orderBy(sortBy + " " + order)
                 .findPagingList(pageSize)
                 .getPage(page);
@@ -111,7 +113,7 @@ public class Playlist extends AppModel {
 	public static List<Playlist> searchDeepByName(String query, int maxResults) 
 	{
 		
-		String likeQueryString =  "%" + query + "%";
+		String likeQueryString =  "%" + query.trim() + "%";
 		
 		Expression e2 = Expr.and(
 				 Expr.eq("status", Status.Public),
@@ -476,6 +478,16 @@ public class Playlist extends AppModel {
 		return false;
 	}
 	
+	/**
+	 * Read the User owned playlist
+	 * @param playlistId
+	 * @param user
+	 * @return
+	 */
+	public static Playlist getUserPlaylist(Integer playlistId, User user) {
+		return Playlist.find.where().eq("id", playlistId).eq("user", user ).ne("status", Playlist.Status.Deleted).findUnique();
+	}	
+	
 	public MusicCategory getActivity(){
 		
 		List<MusicCategory> list = getMusicCategories();
@@ -499,6 +511,11 @@ public class Playlist extends AppModel {
 		}
 		
 		return true;
+	}
+
+	public static Page<Playlist> getUserPlaylistsPage(User user, Integer page, Integer pageSize) {
+		
+		return Playlist.find.where().eq("user", user).ne("status", Playlist.Status.Deleted ).orderBy("createdDate DESC").findPagingList(pageSize).getPage(page);
 	}
 	
 }

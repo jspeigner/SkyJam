@@ -20,10 +20,13 @@
 	@if( form("id").value == null ){
 	<h1>Making your Playlist</h1>
 	} else {
-	<h1>Edit your Playlist <a href="javascript://" class="btn btn-large play player-controls-play" data-playlist-id="@form("id").value"><i class="icon-play"></i> Play</a></h1>
+	<h1>Edit your Playlist 
+		<a href="javascript://" class="btn btn-large play player-controls-play" data-playlist-id="@form("id").value"><i class="icon-play"></i> Play</a>
+		<a href="@routes.PlaylistController.delete( form("id").value.toInt )" class="btn btn-large pull-right playlist-controls-remove" data-playlist-id="@form("id").value"><i class="icon-remove"></i> Delete</a>
+	</h1>
 	}
 	<hr>
-		@helper.form(action = if( form("id").value == null ) routes.PlaylistController.createSubmit() else routes.PlaylistController.editSubmit( Integer.valueOf( form("id").value ) ) , 'class -> "form-horizontal playlist-details", 'id -> "create-playlist-form") {
+		@helper.form(action = if( form("id").value == null ) routes.PlaylistController.createSubmit() else routes.PlaylistController.editSubmit( form("id").value.toInt ) , 'class -> "form-horizontal playlist-details", 'id -> "create-playlist-form") {
 		<div class="well">
 			<div class="row-fluid">
 				<div class="span3 albumPreview">

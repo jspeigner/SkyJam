@@ -183,8 +183,6 @@ public class UserController extends BaseController {
     		catch(Exception p)
     		{
     			
-    			System.out.println(p);
-    			
     			// email is not unique
     			userForm.reject( new ValidationError( "email", "Email is already used", null) );
     			
@@ -385,6 +383,7 @@ public class UserController extends BaseController {
     	}
     	
     	
+
     	if( ( formData.get("password_reset").length() > 0 ) || ( formData.get("password_repeat").length() > 0 ) ){
     	
 	    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
@@ -400,9 +399,11 @@ public class UserController extends BaseController {
 	    			
 	    			user.setPassword(formData.get("password_reset"));
 	    			user.save();
+
 	    			flash("password_success", "Your password has been successfully updated");
 	    	}
 	    		
+
     	}
     	
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
