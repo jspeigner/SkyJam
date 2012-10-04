@@ -3,7 +3,8 @@
 # ~~~~
 
 # Home page
-GET     /                          					controllers.ApplicationController.index()
+
+GET     /activities                          		controllers.ApplicationController.index()
 GET     /category/:id								controllers.ApplicationController.category(id:java.lang.Integer)
 GET		/category_playlists/:id						controllers.ApplicationController.playlistByCategory(id:java.lang.Integer)
 
@@ -14,8 +15,8 @@ GET		/playlist/set_current_playlist/:id			controllers.PlaylistController.setCurr
 GET		/playlist/get_user_data/:playlistId.json	controllers.PlaylistController.getUserPlaylistData(playlistId:java.lang.Integer)
 
 
-GET		/playlist/view/:id								controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
-GET		/playlist/view/:id/:musicCategoryId				controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
+GET		/playlist/view/:id							controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer = null)
+GET		/playlist/view/:id/:musicCategoryId			controllers.PlaylistController.playlist(id:java.lang.Integer, musicCategoryId:java.lang.Integer)
 
 GET 	/playlists/browse							controllers.PlaylistController.browseCategories()
 GET		/playlists/browse/:musicCategoryId			controllers.PlaylistController.browseCategory( musicCategoryId:java.lang.Integer, page: java.lang.Integer ?= 0)
@@ -26,9 +27,9 @@ GET		/twitter_callback							controllers.ApplicationController.twitterCallback()
 
 GET		/song/search.json							controllers.SongController.searchJson()
 
-POST		/playlist/activity/track		controllers.PlaylistController.trackPlaylistSongActivity()
-POST		/playlist/activity/rating		controllers.PlaylistController.savePlaylistSongRating()
-GET			/playlist/favorite/save/:playlistId	controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 
+POST		/playlist/activity/track				controllers.PlaylistController.trackPlaylistSongActivity()
+POST		/playlist/activity/rating				controllers.PlaylistController.savePlaylistSongRating()
+GET			/playlist/favorite/save/:playlistId		controllers.PlaylistController.saveFavoritePlaylist(playlistId:java.lang.Integer ) 
 GET			/playlist/favorite/delete/:playlistId	controllers.PlaylistController.deleteFavoritePlaylist(playlistId:java.lang.Integer )
 
 GET			/playlist/create		controllers.PlaylistController.create()
@@ -40,45 +41,48 @@ POST		/playlist/edit/:id		controllers.PlaylistController.editSubmit(id:java.lang
 GET			/playlist/publish/:id	controllers.PlaylistController.publish(id:java.lang.Integer)
 GET			/user/playlists			controllers.PlaylistController.userPlaylists(page: java.lang.Integer ?= 0)
 
-GET     /login                      controllers.UserController.login()
-POST    /login                      controllers.UserController.authenticate()
-GET     /logout                     controllers.UserController.logout()
 
-GET		/register					controllers.UserController.register(invitationCode:String ?= "")
-POST	/register					controllers.UserController.registerSubmit()
-GET		/register_success			controllers.UserController.registerSuccess()
-GET		/register_with_fb			controllers.UserController.registerWithFacebook(invitationCode:String ?= "")
+GET     /login                      				controllers.UserController.login()
+POST    /login                      				controllers.UserController.authenticate()
+GET     /logout                     				controllers.UserController.logout()
+
+GET		/register									controllers.UserController.register(invitationCode:String ?= "")
+POST	/register									controllers.UserController.registerSubmit()
+GET		/register_success							controllers.UserController.registerSuccess()
+GET		/register_with_fb							controllers.UserController.registerWithFacebook(invitationCode:String ?= "")
 
 
-GET		/user/get_current.json		controllers.UserController.getAuthUserJson()
+GET		/user/get_current.json						controllers.UserController.getAuthUserJson()
 
-GET		/artists/browse/:id			controllers.ArtistController.browse(id:java.lang.Integer)
-GET		/artists/browse				controllers.ArtistController.browse(id:java.lang.Integer = 0)
-GET		/album/:id					controllers.AlbumController.view(id:java.lang.Integer)
+GET		/artists/browse/:id							controllers.ArtistController.browse(id:java.lang.Integer)
+GET		/artists/browse								controllers.ArtistController.browse(id:java.lang.Integer = 0)
+GET		/album/:id									controllers.AlbumController.view(id:java.lang.Integer)
 
-GET 	/albums/browse/:artistId	controllers.AlbumController.browseByArtist(artistId:java.lang.Integer)
+GET 	/albums/browse/:artistId					controllers.AlbumController.browseByArtist(artistId:java.lang.Integer)
 
-GET		/homepage_register			controllers.UserController.homepageRegister()
-POST 	/homepage_register 			controllers.UserController.homepageRegisterSubmit()
-GET 	/homepage_register_success 	controllers.UserController.homepageRegisterSuccess()
+#GET		/homepage_register						controllers.UserController.homepageRegister()
+#POST 	/homepage_register 							controllers.UserController.homepageRegisterSubmit()
+#GET 	/homepage_register_success 					controllers.UserController.homepageRegisterSuccess()
 
-GET		/user/view/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
+GET		/user/view/:id								controllers.UserController.publicProfile(id:java.lang.Integer)
 
-GET		/contact_us					controllers.PageController.contactUs()
-GET		/about						controllers.PageController.about()
-GET		/privacy_policy				controllers.PageController.privacyPolicy()
-GET		/terms_of_use				controllers.PageController.termsOfUse()
-GET		/copyright_infringment		controllers.PageController.copyrightInfringment()
+GET		/contact_us									controllers.PageController.contactUs()
+GET		/about										controllers.PageController.about()
+GET		/privacy_policy								controllers.PageController.privacyPolicy()
+GET		/terms_of_use								controllers.PageController.termsOfUse()
+GET		/copyright_infringment						controllers.PageController.copyrightInfringment()
 
-GET		/profile					controllers.UserController.profile()
-POST	/profile					controllers.UserController.profileUpdate()
+GET		/profile									controllers.UserController.profile()
+POST	/profile									controllers.UserController.profileUpdate()
 
-GET		/profile/:id				controllers.UserController.publicProfile(id:java.lang.Integer)
+GET		/profile/:id								controllers.UserController.publicProfile(id:java.lang.Integer)
 
-# internal
-GET		/import/s3_music			controllers.ImportController.importMusicFromS3Account()
-GET		/import/generate_playlists/:playlistsPerCategory/:songsPerPlaylist			controllers.ImportController.generateRandomPlaylists(playlistsPerCategory:java.lang.Integer,songsPerPlaylist:java.lang.Integer)
+
+GET		/											controllers.UserController.homepageRegister()
+POST 	/ 											controllers.UserController.homepageRegisterSubmit()
+GET 	/homepage_register_success 					controllers.UserController.homepageRegisterSuccess()
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-

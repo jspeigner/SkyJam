@@ -1,0 +1,34 @@
+﻿body { background: #ddd url(../img/bg.png); padding-top: 120px; }
+
+body.stub { padding-top: 40px; }
+
+h1 { color: #f73b3b; }
+
+p { font-size: 16px; line-height: 25px; margin-top: 1.5em; }
+
+#logo {
+    background-color: #f73b3b;
+    border-radius: 65px;
+    -moz-border-radius: 65px;
+    -webkit-border-radius: 65px;
+    color: #fff;
+    font-family: 'Lobster', cursive;
+    font-size: 25px;
+    height: 130px;
+    line-height: 130px;
+    margin: 0 auto;
+    text-align: center;
+    width: 130px;
+}
+
+input.input-large { padding: 9px 14px; }
+
+div.gradient { background: url(../img/gradient.png) no-repeat top center; min-height: 770px; }
+
+div.content { text-align: center; margin-top: 1.5em; }
+
+a.sb.gplus, .sb a.gplus { background-image: url(../img/social-buttons/gplus.png); }
+
+footer { text-align: center; }
+
+div.errors .alert { float:none; margin:0 auto 1em auto; }

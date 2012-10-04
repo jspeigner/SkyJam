@@ -64,8 +64,7 @@ public class User extends AppModel implements RoleHolder
 	private String username;
 	
 	@Constraints.MaxLength(value=40)
-	@Constraints.Required
-	@Email
+	@Email(message="Valid email is required")
 	private String email;
 
 	@Constraints.MinLength(value=6)

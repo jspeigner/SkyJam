@@ -22,14 +22,9 @@ public class SongController extends BaseController {
 		  }
 		  else
 		  {
-			  List<Song> songs = Song.searchWideByName(query, 30);
+			  List<Song> songs = Song.searchWideByName( query.trim() , 30);
 			  
 			  return ok(views.html.Song.searchJson.render(songs)).as( Global.JSON_CONTENT_TYPE );
-
 		  }
-		
 	}
-	
-	
-
 }

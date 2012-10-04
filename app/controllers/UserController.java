@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Entity;
 import javax.persistence.PersistenceException;
 import be.objectify.deadbolt.actions.Restrict;
 
@@ -74,6 +75,27 @@ public class UserController extends BaseController {
         	return "Login{ " + "email: \""+email+"\", password:\""+password + "\"}";
         }
     }
+    
+    
+    @Entity
+    public static class InvitationUser {
+
+    	@Constraints.MaxLength(value=40)
+    	@Constraints.MinLength(value=1, message="Minimum Lenght")
+    	@Email(message="Valid email is required")
+    	public String email;
+  	
+    	
+        public String validate() {
+        	
+        	if(email.length() < 1){
+        		return "Valid email is required";
+        	}
+        	
+            return null;
+        }    	
+    	
+    }
 
     /**
      * Login page.
@@ -127,14 +149,14 @@ public class UserController extends BaseController {
     
     public static Result homepageRegister()
     {
-    	Form<User> userForm = form(User.class);
+    	Form<InvitationUser> userForm = form(InvitationUser.class);
     	
     	return ok(views.html.User.homepageRegister.render(userForm));
     }
     
     public static Result homepageRegisterSubmit()
     {
-    	Form<User> userForm = form(User.class).bindFromRequest("email");
+    	Form<InvitationUser> userForm = form(InvitationUser.class).bindFromRequest("email");
     	
     	
     	if(userForm.hasErrors())
@@ -144,21 +166,23 @@ public class UserController extends BaseController {
     	}
     	else
     	{
-  			
-    		User user = userForm.get();
+    		InvitationUser i = userForm.get(); 
+    		User user = new User();
+    		user.setEmail( i.email );
     		user.setPassword("empty");
     		user.setUsername( user.getEmail() );
     		user.setRegisteredDate(new Date());
     		user.roles = new ArrayList<UserRole>();
-    		user.roles.add(UserRole.findByName("user"));
+    		user.roles.add(UserRole.findByName("awaiting"));
     		
     		try
     		{
 	    		user.save();
 	    		Ebean.saveManyToManyAssociations(user,"roles");
     		}
-    		catch(PersistenceException p)
+    		catch(Exception p)
     		{
+    			
     			// email is not unique
     			userForm.reject( new ValidationError( "email", "Email is already used", null) );
     			
@@ -323,8 +347,6 @@ public class UserController extends BaseController {
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
     	
-    	
-    	
     	MultipartFormData body = request().body().asMultipartFormData();
     	FilePart picture = body.getFile("image");
     	
@@ -345,7 +367,7 @@ public class UserController extends BaseController {
     	    	{
 	    	        boolean savedSuccessfully = user.updateImage( new FileInputStream(imageFile));
 	    	        if(savedSuccessfully){
-	    	        	flash("image_success", "Image has been updated successfully");
+	    	        	flash("image_success", "Your photo was updated successfully");
 	    	        } else {
 	    	        	flash("image_error", "There was an error changing the image.");
 	    	        }
@@ -354,14 +376,15 @@ public class UserController extends BaseController {
     	    }
     	    catch (Exception e) 
     	    {
-    	    	System.out.print(e);
+    	    	// System.out.print(e);
     	    }
     	    
     	    imageFile.delete();
     	}
     	
     	
-    	if( ( formData.get("password_reset").length() > 0 ) && (formData.get("password_repeat").length() > 0 ) ){
+
+    	if( ( formData.get("password_reset").length() > 0 ) || ( formData.get("password_repeat").length() > 0 ) ){
     	
 	    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
 	    		
@@ -376,10 +399,12 @@ public class UserController extends BaseController {
 	    			
 	    			user.setPassword(formData.get("password_reset"));
 	    			user.save();
-	    			flash("password_success", "Password has been updated successfully");
-	    	}
-    	}
 
+	    			flash("password_success", "Your password has been successfully updated");
+	    	}
+	    		
+
+    	}
     	
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
     }
