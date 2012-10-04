@@ -48,11 +48,16 @@ public class PlaylistController extends BaseController
 	  {
 		  Playlist playlist = Playlist.find.byId(playlistId);
 		  
-		  List<User> recentListeners = UserPlaylistActivity.getUsersOnPlaylist( playlist, 25);
+		  if( playlist.getStatus() != Playlist.Status.Deleted ){
 		  
-		  MusicCategory m = musicCategoryId != null ? MusicCategory.find.byId(musicCategoryId) : null;
+			  List<User> recentListeners = UserPlaylistActivity.getUsersOnPlaylist( playlist, 25);
+			  
+			  MusicCategory m = musicCategoryId != null ? MusicCategory.find.byId(musicCategoryId) : null;
 		  
-		  return ok( views.html.Playlist.playlist.render(playlist, recentListeners, m) );
+			  return ok( views.html.Playlist.playlist.render(playlist, recentListeners, m) );
+		  } else {
+			  return badRequest("Playlist not found");
+		  }
 	  }
 	  
 	  public static Result playlist(Integer playlistId)
@@ -294,12 +299,11 @@ public class PlaylistController extends BaseController
 		  {
 			  Integer playlistId = playlistIdPassed > 0 ? playlistIdPassed : Integer.parseInt(playlistIdString);
 			  
-			  setCurrentPlaylistJson( playlistId );
-			  
-			  Playlist playlist = Playlist.find.byId(playlistId);
+			  Playlist playlist = Playlist.find.where().eq("id", playlistId).ne("status", Playlist.Status.Deleted).findUnique();
 			  if( playlist != null )
 			  {
 				  
+				  setCurrentPlaylistJson( playlistId );
 				  playlist.setLoadedTimes( playlist.getLoadedTimes()+1 );
 				  playlist.save();
 				  
@@ -329,7 +333,7 @@ public class PlaylistController extends BaseController
 		  }
 		  else
 		  {
-			  return badRequest("User not found");
+			  return notFound("User not found");
 		  }
 		
 		  
@@ -389,7 +393,9 @@ public class PlaylistController extends BaseController
 	  public static Result edit(Integer playlistId)
 	  {
 		  User user = UserController.getAuthUser();
-		  Playlist p = Playlist.find.where().eq("id", playlistId).eq("user", user ).findUnique();
+		  
+		  Playlist p = Playlist.getUserPlaylist(playlistId, user);
+		  
 		  if( p == null ) return notFound("Playlist not found");
 		  
 		  List<PlaylistSong> playlistSongs = p.getPlaylistSongs();
@@ -403,7 +409,7 @@ public class PlaylistController extends BaseController
 			  playlistSongs = Playlist.getSongsFromForm( form().bindFromRequest().data() );
 			  
 			  if( form.hasErrors()){
-				  
+				  // render errors
 			  } else {
 				  
 				  Playlist formPlaylist = form.get();
@@ -441,8 +447,12 @@ public class PlaylistController extends BaseController
 	  public static Result publish(Integer playlistId){
 		  
 		  User user = UserController.getAuthUser();
-		  Playlist p = Playlist.find.where().eq("id", playlistId).eq("user", user ).findUnique();
-		  if( p == null ) return notFound("Playlist not found");
+		  
+		  Playlist p = Playlist.getUserPlaylist(playlistId, user);
+		  
+		  if( p == null ){
+			  return notFound("Playlist not found");
+		  }
 		  
 		  if( p.isAllowedToPublish() ){
 			  
@@ -467,7 +477,7 @@ public class PlaylistController extends BaseController
 		  User user = UserController.getAuthUser();
 		  int pageSize = 5;
 		  
-		  Page<Playlist> playlists = Playlist.find.where().eq("user", user).orderBy("createdDate DESC").findPagingList(pageSize).getPage(page);
+		  Page<Playlist> playlists = Playlist.getUserPlaylistsPage( user, page, pageSize); 
 		  
 		  return ok(views.html.Playlist.userPlaylists.render(playlists));
 	  }
@@ -476,9 +486,7 @@ public class PlaylistController extends BaseController
 		  
 		  int limitTopPlaylists = 10;
 		  
-		  List<Playlist> playlists = Playlist.find.where().setMaxRows(limitTopPlaylists).findList();
-		  
-		  
+		  List<Playlist> playlists;
 		  
 		  if ( type.equals("week")){
 			  playlists = Playlist.getPopularPlaylists( new Date() , new Date(System.currentTimeMillis() - ( 7 * DAY_IN_MS) ), "loaded_times DESC", limitTopPlaylists);
@@ -503,5 +511,39 @@ public class PlaylistController extends BaseController
 		  return ok(views.html.Playlist.popular.render(type,playlists,categories));
 	  }
 	  
-	
+	  @Restrict("user")
+	  public static Result delete(Integer playlistId){
+		  
+		  User user = UserController.getAuthUser();
+		  Playlist playlist = Playlist.getUserPlaylist(playlistId, user);
+		  
+		  if( playlist != null){
+			  Form<Playlist> playlistForm = form(Playlist.class).fill(playlist);
+			  
+			  return ok(views.html.Playlist.delete.render(playlist, playlistForm));
+		  } else {
+			  return notFound("Playlist not found");
+		  }
+	  }
+	  
+	  
+	  
+	  @Restrict("user")
+	  public static Result deleteSubmit(Integer playlistId){
+		  User user = UserController.getAuthUser();
+		  Playlist playlist = Playlist.find.where().eq("user", user).eq("id", playlistId).ne("status", Playlist.Status.Deleted).findUnique();
+		  
+		  if( playlist != null){
+			  
+			  playlist.setStatus(Playlist.Status.Deleted);
+			  playlist.save();
+			  
+			  flash("success", "Playlist was deleted successfully");
+			  
+			  return pjaxRedirect( routes.PlaylistController.userPlaylists(0) );
+			  
+		  } else {
+			  return notFound("Playlist not found");
+		  }		  
+	  }
 }

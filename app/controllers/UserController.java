@@ -360,20 +360,24 @@ public class UserController extends BaseController {
     	    imageFile.delete();
     	}
     	
-    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
-    		
-    		userForm.reject(new ValidationError("password_reset", "Minimum length is " + User.getMinPasswordLength(), null));
-   			
-    	}
-    	else if( !formData.get("password_repeat").equals( formData.get("password_reset") ) ){ 
-    			
-    		userForm.reject(new ValidationError("password_repeat", "Passwords should match", null));
-    			
-    	} else {
-    			
-    			user.setPassword(formData.get("password_reset"));
-    			user.save();
-    			flash("password_success", "Password has been updated successfully");
+    	
+    	if( ( formData.get("password_reset").length() > 0 ) && (formData.get("password_repeat").length() > 0 ) ){
+    	
+	    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
+	    		
+	    		userForm.reject(new ValidationError("password_reset", "Minimum length is " + User.getMinPasswordLength(), null));
+	   			
+	    	}
+	    	else if( !formData.get("password_repeat").equals( formData.get("password_reset") ) ){ 
+	    			
+	    		userForm.reject(new ValidationError("password_repeat", "Passwords should match", null));
+	    			
+	    	} else {
+	    			
+	    			user.setPassword(formData.get("password_reset"));
+	    			user.save();
+	    			flash("password_success", "Password has been updated successfully");
+	    	}
     	}
 
     	

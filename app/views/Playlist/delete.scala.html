@@ -1,0 +1,12 @@
+@(playlist:Playlist, playlistForm:Form[Playlist])@Layout.default("Delete the Playlist"){ 
+	<h1>Are you sure to delete the playlist : <i>@playlist.getName</i></h1>
+	
+	@helper.form(action = routes.PlaylistController.deleteSubmit( playlist.getId ) , 'class -> "form-horizontal playlist-delete", 'id -> "delete-playlist-form") {
+		<p>Are you sure to delete the Playlist ? It can't be undone.</p>
+		<div class="form-actions">
+			<input class="btn btn-danger btn-large" type="submit" value="Delete" />
+			OR <a href="@routes.PlaylistController.userPlaylists(0)" class="btn btn-large">Cancel</a>
+
+		</div>		
+	}
+}

@@ -2,6 +2,11 @@
 <div id="user-playlists">
 	<h1>My Playlists <a class="btn btn-large pull-right" href="@routes.PlaylistController.create()"><i class="icon-plus-sign"></i> Create a Playlist</a></h1>
 	<hr>
+	
+	@if(flash.contains("success")) {
+		<div class="alert alert-success">@flash.get("success")</div>
+   	}	
+	
 	@if( ( playlists != null ) && ( playlists.getList.size > 0 )){
 		<ul>
 			@for(playlist <- playlists.getList ){
