@@ -28,7 +28,7 @@
 		@helper.inputPassword(form("password" ), '_showConstraints -> false, '_label -> "Password")
 				
 		<div class="form-actions">
-			<input class="btn btn-success" type="submit" value="Register" /> OR <a class="btn btn-primary" href="@routes.UserController.registerWithFacebook(form("invitation_code").value)">Register with Facebook</a>
+			<input class="btn btn-success" type="submit" value="Register" /> OR <a class="btn btn-primary" href="@routes.UserController.registerWithFacebook( if( form("invitation_code").value != null ) form("invitation_code").value else "" )">Register with Facebook</a>
 		</div>
     
 	}

@@ -123,7 +123,7 @@ public class UserController extends BaseController {
         	setAuthUser( user );
         	
         	user.setLastLoginDate(new Date());
-        	user.save();
+        	user.update();
             
             return  pjaxRedirect(  routes.ApplicationController.index() );
         }
@@ -212,11 +212,15 @@ public class UserController extends BaseController {
     	return ok(views.html.User.register.render(userForm));
     }
 
-    public static Result registerSubmit()
+    public static Result registerSubmit(String invitationCode)
     {
     	Form<User> userForm;
     	// process the FB signed_request
     	DynamicForm form = form().bindFromRequest();
+    	if(invitationCode != ""){
+    		form.data().put("data[invitation_code]", invitationCode);
+    	}
+    	
     	
     	UserInvitationCode invitation = null;
     	
@@ -231,7 +235,11 @@ public class UserController extends BaseController {
     	
     	if( ( form.field("invitation_code").value() != null ) ){
     		
-    		invitation = UserInvitationCode.isAvailable( form.field("invitation_code").value() );
+    		String formInvitationCode = form.field("invitation_code").value();
+    		userForm.data().put("invitation_code", formInvitationCode );
+    		
+    		invitation = UserInvitationCode.isAvailable( formInvitationCode );
+    		
     		if( invitation == null ){
     			// invitation code is invalid
     			userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
