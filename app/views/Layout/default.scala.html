@@ -33,9 +33,7 @@
         <script src="@routes.Assets.at("js/libs/jquery.cookie.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.form.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/libs/jquery.pageUpdate.js")" type="text/javascript"></script>
-        
         <script src="@routes.Assets.at("soundmanager2/script/soundmanager2-nodebug-jsmin.js")" type="text/javascript"></script>
-        
         <script src="@routes.Assets.at("js/application.js")" type="text/javascript"></script>
         
         <link rel="shortcut icon" href="@routes.Assets.at("favicon.ico")" >
@@ -115,7 +113,7 @@
 		   }(document));
 		</script>        
 		<!-- twitter -->
-		<script src="https://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&v=1" type="text/javascript"></script>
+		<script src="https://platform.twitter.com/anywhere.js?id=@play.Play.application().configuration().getString("application.twitter_app_id")&amp;v=1" type="text/javascript"></script>
     
     </head>
     <body class="main">
@@ -134,7 +132,7 @@
           			
           			@tags.userTopMenu()
 		            
-		            <form class="navbar-search pull-right" action="">
+		            <form class="navbar-search pull-right" action="#">
             			<input type="text" class="search-query span4" placeholder="Search by Artist, Album or Song Name">
           			</form>		                 			
 		            
