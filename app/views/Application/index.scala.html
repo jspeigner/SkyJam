@@ -7,7 +7,7 @@
 @if( parentCategory != null ){
 	<h3>Select your activity from <i>@parentCategory.getName()</i></h3>
 } else { 
-	<h3>Select your activity, browse <a href="@routes.PlaylistController.popular("trending")">popular Playlists</a> or <a href="@routes.PlaylistController.browseCategories()">Categories</a></h2>
+	<h3>Select your activity, browse <a href="@routes.PlaylistController.popular("trending")">popular Playlists</a> or <a href="@routes.PlaylistController.browseCategories()">Categories</a></h3>
 }
 
 <div id="activityBar" class="row-fluid">

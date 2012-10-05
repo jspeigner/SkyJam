@@ -152,14 +152,15 @@ public class User extends AppModel implements RoleHolder
 			
 			// System.out.println( "HASH " + message );
 			
-			m.update(message.getBytes());
+			String saltedMessage = Play.application().configuration().getString("application.secret") + message;
+			
+			m.update(saltedMessage.getBytes());
 			
 			return Global.getHex(m.digest());
 			
 		} 
 		catch (NoSuchAlgorithmException e) 
 		{
-			// TODO Auto-generated catch block
 			return null;
 		}
 
@@ -382,7 +383,8 @@ public class User extends AppModel implements RoleHolder
 	{
 		StorageObject s = StorageObject.updateStorageObjectWithImage(getImageObjectName(), sourceImage, this.imageMetadata);
 		setImageStorageObject(s);
-		save();
+		
+		update();
 		
 		return s != null;
 			

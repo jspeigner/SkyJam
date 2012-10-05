@@ -47,7 +47,7 @@ POST    /login                      				controllers.UserController.authenticate(
 GET     /logout                     				controllers.UserController.logout()
 
 GET		/register									controllers.UserController.register(invitationCode:String ?= "")
-POST	/register									controllers.UserController.registerSubmit()
+POST	/register									controllers.UserController.registerSubmit(invitationCode:String ?= "")
 GET		/register_success							controllers.UserController.registerSuccess()
 GET		/register_with_fb							controllers.UserController.registerWithFacebook(invitationCode:String ?= "")
 

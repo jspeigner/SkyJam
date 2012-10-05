@@ -4,22 +4,13 @@ import global.Global;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 
 import be.objectify.deadbolt.actions.Restrict;
 
-import com.amazonaws.services.autoscaling.model.Activity;
-import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
-import com.avaje.ebean.PagingList;
-
 
 import models.MusicCategory;
 import models.Playlist;
@@ -31,7 +22,7 @@ import models.UserSavedPlaylist;
 import play.mvc.Result;
 import play.data.DynamicForm;
 
-import views.html.*;
+
 import play.data.Form;
 import scala.Tuple2;
 
@@ -55,7 +46,9 @@ public class PlaylistController extends BaseController
 			  MusicCategory m = musicCategoryId != null ? MusicCategory.find.byId(musicCategoryId) : null;
 		  
 			  return ok( views.html.Playlist.playlist.render(playlist, recentListeners, m) );
+			  
 		  } else {
+			  
 			  return badRequest("Playlist not found");
 		  }
 	  }

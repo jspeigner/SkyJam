@@ -4,7 +4,7 @@
 )
 @Layout.default("Register with facebook") {
  
- <iframe src="https://www.facebook.com/plugins/registration?client_id=@play.Play.application().configuration().getString("application.facebook_app_id")&redirect_uri=@java.net.URLEncoder.encode(routes.UserController.register( invitationCode ).absoluteURL(play.mvc.Http.Context.current().request(), global.Global.isSecure()),"UTF8")&fields=[{'name':'name'},{'name':'email'},{'name':'password'}]"
+ <iframe src="https://www.facebook.com/plugins/registration?client_id=@play.Play.application().configuration().getString("application.facebook_app_id")&amp;redirect_uri=@java.net.URLEncoder.encode(routes.UserController.registerSubmit( invitationCode ).absoluteURL(play.mvc.Http.Context.current().request(), global.Global.isSecure()),"UTF8")&amp;fields=[{'name':'name'},{'name':'email'},{'name':'password'}]"
         scrolling="auto"
         frameborder="no"
         style="border:none"
