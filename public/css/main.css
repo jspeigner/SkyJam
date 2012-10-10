@@ -78,9 +78,12 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 		ul li.playlistSearchDropdown span.artists { font-size:0.9em; display:block; padding-left:1em; }
 		
 
-#homepage-register  { width:600px; margin: 0 auto; }
+#homepage-register  { width:60%; margin: 0 auto; }
 	#homepage-register h1 { margin-bottom: 1em; }
 	
+.form-horizontal.well.center { width:60%; margin: 0 auto; }	
+	.form-horizontal.well.center h1 { margin-bottom: 1em; }
+		
 	#playlist-page { }
 		#playlist-page .controls { margin:1em 0 1em 0;}
 		#playlist-page .controls .pause { display:none;}

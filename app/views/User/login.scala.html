@@ -4,7 +4,7 @@
         
         
         
-        @helper.form(action = routes.UserController.authenticate, 'class -> "form-horizontal well span6 offset2", 'id -> "user-sign-in") {
+        @helper.form(action = routes.UserController.authenticate, 'class -> "form-horizontal well center", 'id -> "user-sign-in") {
             
             <h2>Sign in</h2><hr>
             
@@ -27,6 +27,7 @@
 				
 			<div class="form-actions">
 				<input class="btn btn-success" type="submit" value="Sign In" /> OR <a href="@routes.UserController.register()">Sign Up</a>
+				<a style="display:block; margin-top:1em;" href="@routes.UserController.forgotPassword()">Forgot your password ?</a>
 			</div>
             
         }
