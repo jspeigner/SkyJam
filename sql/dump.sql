@@ -68,7 +68,7 @@ CREATE TABLE `music_categories` (
 
 CREATE TABLE `playlists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` enum('Public','Private','Draft') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Draft',
+  `status` enum('Public','Private','Draft','Deleted') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Draft',
   `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -159,6 +159,7 @@ CREATE TABLE `users` (
   `facebook_user_id` varchar(35) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`,`password`),
+  UNIQUE KEY `email_2` (`email`),
   KEY `fk_users_storage_object1` (`image_storage_object_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -174,6 +175,18 @@ CREATE TABLE `user_invitation_codes` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `code` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `user_password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `reset_date` datetime DEFAULT NULL,
+  `code` varchar(48) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`),
+  KEY `user_id` (`user_id`,`created_date`),
+  KEY `reset_date` (`reset_date`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `user_playlist_activities` (
