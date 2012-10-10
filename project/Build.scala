@@ -11,7 +11,8 @@ object ApplicationBuild extends Build {
     val appDependencies = Seq(
       // Add your project dependencies here,
 		"mysql" % "mysql-connector-java" % "5.1.18",
-		"be.objectify" %% "deadbolt-2" % "1.1.2"
+		"be.objectify" %% "deadbolt-2" % "1.1.2",
+		"com.typesafe" %% "play-plugins-mailer" % "2.0.4"
 
     )
     

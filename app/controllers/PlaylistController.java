@@ -395,7 +395,7 @@ public class PlaylistController extends BaseController
 		  
 		  Form<Playlist> form = form(Playlist.class);
 		  
-		  if( ( request().method() == "POST" ) || ( request().method() == "PUT" ) ){
+		  if( ( request().method().equals("POST") ) || ( request().method().equals("PUT") ) ){
 			  
 			  form = form.bindFromRequest("name", "description");
 			  

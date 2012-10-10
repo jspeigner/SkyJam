@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
-import javax.persistence.PersistenceException;
 import be.objectify.deadbolt.actions.Restrict;
 
 import com.avaje.ebean.Ebean;
@@ -26,6 +25,7 @@ import play.api.libs.Crypto;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
+import views.html.Album.view;
 import models.*;
 
 
@@ -96,6 +96,43 @@ public class UserController extends BaseController {
         }    	
     	
     }
+    
+    @Entity
+    public static class ForgotPassword {
+
+    	@Constraints.MaxLength(value=40)
+    	@Constraints.MinLength(value=1, message="Minimum Lenght")
+    	@Email(message="Valid email is required")
+		public String email;
+  	
+    	
+        public String validate() {
+        	
+       	
+        	if( getEmail().length() < 1 ){
+        		return "Valid email is required";
+        	} else if( !userAccountFound() ){
+        		return "Your user record was not found";
+        	}
+        	
+            return null;
+        }    
+        
+        protected boolean userAccountFound(){
+        	int cnt = User.find.where().eq("email", getEmail()).findRowCount(); 
+        	return  cnt > 0;
+        }
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+    	
+    }    
 
     /**
      * Login page.
@@ -110,8 +147,6 @@ public class UserController extends BaseController {
     public static Result authenticate() {
     	
         Form<Login> loginForm = form(Login.class).bindFromRequest();
-        
-        // System.out.println("loginForm -> " + loginForm);
         
         if(loginForm.hasErrors()) 
         {
@@ -149,6 +184,11 @@ public class UserController extends BaseController {
     
     public static Result homepageRegister()
     {
+    	
+    	if( getAuthUser() != null ){
+    		return pjaxRedirect( routes.ApplicationController.index() );
+    	}
+    	
     	Form<InvitationUser> userForm = form(InvitationUser.class);
     	
     	return ok(views.html.User.homepageRegister.render(userForm));
@@ -157,7 +197,6 @@ public class UserController extends BaseController {
     public static Result homepageRegisterSubmit()
     {
     	Form<InvitationUser> userForm = form(InvitationUser.class).bindFromRequest("email");
-    	
     	
     	if(userForm.hasErrors())
     	{
@@ -201,7 +240,6 @@ public class UserController extends BaseController {
     	User user = getAuthUser();
     	
     	return user != null ?  ok(views.html.User.homepageRegisterSuccess.render(user)) : badRequest("User not found");
-    	
     }
     
     public static Result register(String invitationCode)
@@ -318,6 +356,9 @@ public class UserController extends BaseController {
     
     public static Result publicProfile(Integer id)
     {
+    	
+    	
+    	
     	User u = User.find.byId(id);
     	
     	if( u == null )
@@ -350,7 +391,7 @@ public class UserController extends BaseController {
     	User user = getAuthUser();
     	
     	Form<User> userForm = form(User.class).bindFromRequest();
-    	DynamicForm formData = form().bindFromRequest();
+    	DynamicForm formData = form().bindFromRequest();  
     	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
     	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
@@ -384,16 +425,30 @@ public class UserController extends BaseController {
     	    }
     	    catch (Exception e) 
     	    {
-    	    	// System.out.print(e);
     	    }
     	    
     	    imageFile.delete();
     	}
     	
-    	
+    	if( validateUserPassword(userForm)){
+			user.setPassword(formData.get("password_reset"));
+			user.save();
 
-    	if( ( formData.get("password_reset").length() > 0 ) || ( formData.get("password_repeat").length() > 0 ) ){
+			flash("password_success", "Your password has been successfully updated");    		
+    	}
+
+
     	
+    	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
+    }
+    
+    protected static boolean validateUserPassword( Form<User> userForm){
+    	
+    	
+    	DynamicForm formData = form().bindFromRequest();  
+    	
+    	if( ( formData.get("password_reset").length() > 0 ) || ( formData.get("password_repeat").length() > 0 ) ){
+        	
 	    	if ( formData.get("password_reset").length() < User.getMinPasswordLength() ){
 	    		
 	    		userForm.reject(new ValidationError("password_reset", "Minimum length is " + User.getMinPasswordLength(), null));
@@ -405,18 +460,13 @@ public class UserController extends BaseController {
 	    			
 	    	} else {
 	    			
-	    			user.setPassword(formData.get("password_reset"));
-	    			user.save();
-
-	    			flash("password_success", "Your password has been successfully updated");
+	    		return true;
 	    	}
-	    		
 
-    	}
+    	}    
     	
-    	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
+    	return false;
     }
-    
     
     public static Result getAuthUserJson()
     {
@@ -454,6 +504,69 @@ public class UserController extends BaseController {
     	}
     	
     	return user;
+    }
+    
+    public static Result forgotPassword(){
+    	
+    	Form<ForgotPassword> form = form(ForgotPassword.class);
+    	
+    	return ok( views.html.User.forgotPassword.render(form) );
+    }
+    
+    public static Result forgotPasswordSubmit(){
+    	
+    	Form<ForgotPassword> form = form(ForgotPassword.class).bindFromRequest("email");
+    	
+    	if(form.hasErrors()){
+    	
+    		return ok( views.html.User.forgotPassword.render(form) );
+    		
+    	} else {
+    		
+    		ForgotPassword fp = form.get();
+    		User user = User.find.where().eq("email", fp.getEmail()).findUnique();
+    		
+    		UserPasswordReset upr = new UserPasswordReset();
+    		upr.createNew(user);
+    		
+    		email( fp.getEmail() , "Your password reset instructions", views.html.Email.text.passwordResetInstructions.render(user, upr).toString() );
+    		
+    		
+    		return ok( views.html.User.forgotPasswordEmailSent.render( user  ) );
+    	}
+    	
+    	
+    }
+    
+    
+    public static Result resetPassword(String resetCode){
+    	
+    	Form<User> userForm = form(User.class).bindFromRequest();
+    	DynamicForm formData = form().bindFromRequest();
+    	UserPasswordReset u = UserPasswordReset.findByCode( resetCode );
+    	
+    	if( ( request().method().equals("POST") ) || ( request().method().equals("PUT") ) ){
+    		
+    		if( ( formData.get("password_reset").length() == 0 ) ){
+    		
+    			userForm.reject(new ValidationError("password_reset", "Minimum length is " + User.getMinPasswordLength(), null));
+    			
+    		} else if ( ( formData.get("password_repeat").length() == 0 ) ){
+    			
+    			userForm.reject(new ValidationError("password_repeat", "Minimum length is " + User.getMinPasswordLength(), null));
+    			
+    		} else if( validateUserPassword(userForm)){
+	    		
+	    		User user = u.getUser();
+				user.setPassword(formData.get("password_reset"));
+				user.save();
+				u.setAsUsed();
+	
+				flash("password_success", "Your password has been successfully updated");    		
+	    	}
+    	}
+    	
+    	return ok(views.html.User.resetPassword.render(u, userForm));
     }
     
     protected static boolean setAuthUser(User user)

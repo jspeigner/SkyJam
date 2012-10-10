@@ -2,8 +2,10 @@ package controllers;
 
 
 
+import com.typesafe.plugin.*;
 import controllers.components.ControllerFilter;
 
+import play.Play;
 import play.mvc.*;
 import play.mvc.Http.Context;
 
@@ -49,6 +51,16 @@ public class BaseController extends Controller {
 
 	}
 	
-	
+	public static boolean email(String to, String subject, String message ){
+		
+		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
+	    mail.setSubject(subject);
+	    mail.addRecipient(to);
+	    mail.addFrom( play.Play.application().configuration().getString("smtp.from") );
+	    mail.send( message );	
+	    
+		
+		return false;
+	}
 
 }

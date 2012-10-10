@@ -41,10 +41,15 @@ POST		/playlist/edit/:id		controllers.PlaylistController.editSubmit(id:java.lang
 GET			/playlist/publish/:id	controllers.PlaylistController.publish(id:java.lang.Integer)
 GET			/user/playlists			controllers.PlaylistController.userPlaylists(page: java.lang.Integer ?= 0)
 
-
 GET     /login                      				controllers.UserController.login()
 POST    /login                      				controllers.UserController.authenticate()
 GET     /logout                     				controllers.UserController.logout()
+GET		/user/forgot_password						controllers.UserController.forgotPassword()
+POST	/user/forgot_password						controllers.UserController.forgotPasswordSubmit()
+POST	/user/reset_password/:resetCode				controllers.UserController.resetPassword(resetCode:String)
+GET		/user/reset_password/:resetCode				controllers.UserController.resetPassword(resetCode:String)
+
+
 
 GET		/register									controllers.UserController.register(invitationCode:String ?= "")
 POST	/register									controllers.UserController.registerSubmit(invitationCode:String ?= "")
