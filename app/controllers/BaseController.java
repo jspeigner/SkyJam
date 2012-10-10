@@ -53,11 +53,20 @@ public class BaseController extends Controller {
 	
 	public static boolean email(String to, String subject, String message ){
 		
-		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
-	    mail.setSubject(subject);
-	    mail.addRecipient(to);
-	    mail.addFrom( play.Play.application().configuration().getString("smtp.from") );
-	    mail.send( message );	
+		try {
+		
+		
+			MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
+		    mail.setSubject(subject);
+		    mail.addRecipient(to);
+		    mail.addFrom( play.Play.application().configuration().getString("smtp.from") );
+		    mail.send( message );
+		    
+		    return true;
+		    
+		} catch(Exception e){
+			
+		}
 	    
 		
 		return false;
