@@ -465,6 +465,27 @@ public class PlaylistController extends BaseController
 	  }
 	  
 	  @Restrict("user")
+	  public static Result makePrivate(Integer playlistId){
+		  
+		  User user = UserController.getAuthUser();
+		  
+		  Playlist p = Playlist.getUserPlaylist(playlistId, user);
+		  
+		  if( p == null ){
+			  return notFound("Playlist not found");
+		  }
+			  
+		  p.setStatus(Playlist.Status.Private);
+		  p.save();
+		  
+		  flash("success", "Playlist was set to private");
+		  
+		  return pjaxRedirect( routes.PlaylistController.edit(playlistId) );
+		  
+		  
+	  }	  
+	  
+	  @Restrict("user")
 	  public static Result userPlaylists(Integer page){
 		  
 		  User user = UserController.getAuthUser();
