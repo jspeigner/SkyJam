@@ -61,12 +61,16 @@
 					
 					<div class="form-actions">
 						<input class="btn btn-success" type="submit" value="Save" />
-						@if( ( form("id").value != null ) && ( form("status").value == "Draft" ) ){
+						@if( ( form("id").value != null ) ){
 						
-							@if( publishAllowed ){
-							AND <a href="@routes.PlaylistController.publish(Integer.valueOf(form("id").value))" class="btn">Publish</a>
+							@if( ( ( form("status").value == "Draft" ) || ( form("status").value == "Private" ) ) ){
+								@if( publishAllowed ){
+								AND <a href="@routes.PlaylistController.publish(Integer.valueOf(form("id").value))" class="btn">Publish</a>
+								} else {
+								AND <a href=javascript://" class="btn disabled">Publish</a> <span> ( @models.Playlist.minSongsInList songs required to publish )</span>
+								}
 							} else {
-							AND <a href=javascript://" class="btn disabled">Publish</a> <span> ( @models.Playlist.minSongsInList songs required to publish )</span>
+								OR <a href="@routes.PlaylistController.makePrivate(Integer.valueOf(form("id").value))" class="btn">Make Private</a>
 							}
 						}
 					</div>
@@ -75,7 +79,7 @@
 			</div>
 		</div>
 		<div class="row-fluid playlist-songs-control">
-			<div class="span7">
+			<div class="span6">
 				<h3>Songs on this Playlist</h3>
 				<hr>
 				<div class="playlist-songs-container">
@@ -101,13 +105,14 @@
 					</ul>
 				</div>
 			</div>
-			<div class="span5">
+			<div class="span6">
 				<h3>Search songs</h3>
 				<hr>
 				<div class="song-search-form">
 					<input name="song-search" type="text" placeholder="Search by Song Name, Album or Artist" class="song-search span12">
 				</div>
 				<div class="songs-search-results-container">
+					<p class="initial">Search for new songs</p>
 				</div>
 				
 				

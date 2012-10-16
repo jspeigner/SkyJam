@@ -120,7 +120,9 @@ CreatePlaylistControl = can.Control({
 		 
 		list.append( elem );
 
-		$( "li[data-song-id="+ song.id +"]", list).data( "playlistSong", { id:null, song: song });
+		$( "li[data-song-id="+ song.id +"]", list)
+			.data( "playlistSong", { id:null, song: song })
+			.effect("highlight", {}, 800);
 		
 		this.onPlaylistSongsChange();
 		
