@@ -2,6 +2,9 @@ package global;
 
 import controllers.components.ForceHttps;
 import play.*;
+import play.mvc.*;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Results;
 
 
 public class Global extends GlobalSettings {
@@ -34,6 +37,12 @@ public class Global extends GlobalSettings {
 		Global.isSecure = isSecure;
 	}	
 	
-
+	public Result onError(RequestHeader request, Throwable t) {
+        return Results.badRequest( "there is an error" );
+    }
+	
+	public Result onHandlerNotFound(RequestHeader request) {
+        return Results.notFound("it's not found");
+    }
 	
 }
