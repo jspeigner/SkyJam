@@ -18,7 +18,10 @@ import java.util.List;
 @Table(name="user_roles")
 public class UserRole extends AppModel implements Role
 {
-
+	public static final  String ROLE_ADMIN = "admin";
+	public static final String ROLE_USER = "user";
+	
+	
     public String name;
 
     public static final Finder<Integer, UserRole> find = new Finder<Integer, UserRole>(Integer.class, UserRole.class);
