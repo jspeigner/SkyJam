@@ -171,57 +171,28 @@ public class ImportController extends BaseController {
 			        	cleanSongName = songName.substring(0, p);
 			        }
 					
-					System.out.println( artistName + " -> " + albumName + " -> " + cleanSongName );
 					
-					Artist artist = Artist.getByName(artistName, true);
 					
-					if( artist != null )
-					{
-						Album album = Album.getByNameAndArtistId(albumName, artist.getId());
-						if( album == null )
-						{
-							album = new Album();
-							album.setName(albumName);
-							album.setCreatedDate(Calendar.getInstance().getTime());
-							album.setCopyrightYear(1900);
-							album.setDescription("");
-							album.setKeywords("");
-							album.setArtist(artist);
+					StorageObject s = StorageObject.find.where().eq("name", name).eq("bucket", bucket).findUnique();
+					String logAction = "";
+					if( s!= null){
+						logAction = "EXISTS";
+					} else {
+						
+						if( isSong( artistName,  albumName, songName,  cleanSongName, bucket, object, name) ){
 							
-							album.save();
+							// addSong(artistName, albumName, songName, cleanSongName, bucket, object, name);
+							logAction = "CREATED";
+						} else {
+							logAction = "NOT_A_SONG";
 							
 						}
 						
-						Song song = Song.getByNameAndAlbumId(songName, album.getId());
-						if( song == null )
-						{
-							
-							StorageObject storageObject = StorageObject.getByName(name);
-							if( storageObject == null )
-							{
-								storageObject = new StorageObject();
-								storageObject.setBucket(bucket);
-								storageObject.setCreatedDate(Calendar.getInstance().getTime());
-								storageObject.setName(name);
-								storageObject.setFilesize(object.getSize());
-								storageObject.save();
-							}
-							
-
-							
-							song = new Song();
-							song.setName(cleanSongName);
-							song.setAlbum(album);
-							song.setKeywords("");
-							song.setDuration(0);
-							song.setStatus(Song.Status.visible);
-							song.setStorageObject(storageObject); 
-							
-							song.save();
-						}
 						
 						
 					}
+					
+					System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
 					
 				}
 			}
@@ -235,6 +206,100 @@ public class ImportController extends BaseController {
 		return false;
 		
 	}
+
+	protected static boolean isSong(String artistName, String albumName,
+			String songName, String cleanSongName, models.Bucket bucket,
+			S3ObjectSummary object, String storageObjectName) {
+		
+		String ext = "";
+        int p = storageObjectName.lastIndexOf(".");
+        if(p > 0){
+        	ext = storageObjectName.substring(p + 1).toLowerCase();
+        	
+        	
+        	if( ext.equals("mp3") || ext.equals("m4a")  ){
+        		return true;
+        	}
+        } 	
+        
+        
+		
+		return false;
+	}
+	
+	protected static void addSong(String artistName, String albumName,
+			String songName, String cleanSongName, models.Bucket bucket,
+			S3ObjectSummary object, String storageObjectName) {
+		
+		importSongByArtist(artistName, albumName, songName, cleanSongName, bucket, object, storageObjectName);
+	}
+
+	protected static void importSongByArtist(String artistName,
+			String albumName, String songName, String cleanSongName,
+			models.Bucket bucket, S3ObjectSummary object, String name) {
+		Artist artist = Artist.getByName(artistName, true);
+		
+		if( artist != null )
+		{
+			Album album = Album.getByNameAndArtistId(albumName, artist.getId());
+			if( album == null )
+			{
+				album = new Album();
+				album.setName(albumName);
+				album.setCreatedDate(Calendar.getInstance().getTime());
+				album.setCopyrightYear(1900);
+				album.setDescription("");
+				album.setKeywords("");
+				album.setArtist(artist);
+				
+				album.save();
+				
+			}
+			
+			importSongByAlbum(songName, cleanSongName, bucket, object, name, album);
+			
+			
+		}
+	}
+
+	protected static void importSongByAlbum(String songName,
+			String cleanSongName, models.Bucket bucket, S3ObjectSummary object,
+			String name, Album album) {
+		Song song = Song.getByNameAndAlbumId(songName, album.getId());
+		if( song == null )
+		{
+			
+			StorageObject storageObject = StorageObject.getByName(name);
+			if( storageObject == null )
+			{
+				storageObject = new StorageObject();
+				storageObject.setBucket(bucket);
+				storageObject.setCreatedDate(Calendar.getInstance().getTime());
+				storageObject.setName(name);
+				storageObject.setFilesize(object.getSize());
+				storageObject.save();
+			}
+			
+
+			
+			importSong(cleanSongName, album, storageObject);
+		}
+	}
+
+	protected static void importSong(String cleanSongName, Album album,
+			StorageObject storageObject) {
+		Song song;
+		song = new Song();
+		song.setName(cleanSongName);
+		song.setAlbum(album);
+		song.setKeywords("");
+		song.setDuration(0);
+		song.setStatus(Song.Status.visible);
+		song.setStorageObject(storageObject); 
+		
+		song.save();
+	}
+
 	
 		
 	
