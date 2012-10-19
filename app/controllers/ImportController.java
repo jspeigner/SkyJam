@@ -84,9 +84,11 @@ public class ImportController extends BaseController {
 		            {
 		                // System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
 		                
-		                files.add(objectSummary.getKey());
 		                
-		                importS3Object(bucket, objectSummary );
+		                
+		                if( importS3Object(bucket, objectSummary )){
+		                	files.add(objectSummary.getKey());
+		                }
 		            }
 		            
 		            
@@ -137,6 +139,8 @@ public class ImportController extends BaseController {
 	
 	protected static boolean importS3Object(models.Bucket bucket, S3ObjectSummary object)
 	{
+		boolean isImported = false;
+		
 		if( ( object != null ) && ( object.getSize() > 0 ) )
 		{
 			try
@@ -181,8 +185,12 @@ public class ImportController extends BaseController {
 						
 						if( isSong( artistName,  albumName, songName,  cleanSongName, bucket, object, name) ){
 							
-							// addSong(artistName, albumName, songName, cleanSongName, bucket, object, name);
+							addSong(artistName, albumName, songName, cleanSongName, bucket, object, name);
+							
 							logAction = "CREATED";
+							
+							isImported = true;
+							
 						} else {
 							logAction = "NOT_A_SONG";
 							
@@ -203,13 +211,22 @@ public class ImportController extends BaseController {
 			
 		}
 		
-		return false;
+		return isImported;
 		
 	}
 
 	protected static boolean isSong(String artistName, String albumName,
 			String songName, String cleanSongName, models.Bucket bucket,
 			S3ObjectSummary object, String storageObjectName) {
+		
+		if( 
+				artistName.trim().equals("") || 
+				albumName.trim().equals("") ||
+				cleanSongName.trim().equals("")
+		){
+			return false;
+		}
+		
 		
 		String ext = "";
         int p = storageObjectName.lastIndexOf(".");
