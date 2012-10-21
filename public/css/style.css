@@ -2,6 +2,10 @@
 
 body.stub { padding-top: 10px; }
 
+	body.error {}
+		body.error header a.brand { padding: 0; }
+	body.error #body-container .gradient .row h1 { text-align: center; }
+
 h1 { color: #f73b3b; }
 
 p { font-size: 16px; line-height: 25px; margin-top: 1.5em; }

@@ -5,6 +5,7 @@ import play.*;
 import play.mvc.*;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Results;
+import views.html.Album.view;
 
 
 public class Global extends GlobalSettings {
@@ -38,11 +39,12 @@ public class Global extends GlobalSettings {
 	}	
 	
 	public Result onError(RequestHeader request, Throwable t) {
-        return Results.badRequest( "there is an error" );
+		
+        return Results.badRequest( views.html.Errors.error.render() );
     }
 	
 	public Result onHandlerNotFound(RequestHeader request) {
-        return Results.notFound("it's not found");
+        return Results.notFound( views.html.Errors.handlerNotFound.render() );
     }
 	
 }

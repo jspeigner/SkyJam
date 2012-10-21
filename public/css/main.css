@@ -1,6 +1,7 @@
 html { background-image: url(../img/bg.png); background-repeat: repeat; }
 body {  padding-bottom: 40px; background: transparent !important; }
 	body.stub #body-container { padding-top:120px; padding-bottom:120px;}
+
 footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #E5E5E5; }
 
 #body-container { background-color:white; padding-top: 43px; border: 1px solid #DAD7D7;
