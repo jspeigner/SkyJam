@@ -40,7 +40,7 @@ public class Global extends GlobalSettings {
 	
 	public Result onError(RequestHeader request, Throwable t) {
 		
-        return Results.badRequest( views.html.Errors.error.render() );
+        return Results.badRequest( views.html.Errors.error.render(t) );
     }
 	
 	public Result onHandlerNotFound(RequestHeader request) {
