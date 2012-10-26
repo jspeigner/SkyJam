@@ -1,0 +1,17 @@
+@(error:Throwable)@Layout.error("Error 404") {
+	<h1>Error 404</h1>
+	<p>Page Not Found</p>
+	<!-- 
+	Error : @error
+	
+	@for( elem <- error.getStackTrace ){@elem
+	}
+	
+	Cause : @error.getCause
+	@if(error.getCause != null){
+		@for( elem <- error.getCause.getStackTrace ){@elem
+		}
+	}
+	
+	 -->
+}

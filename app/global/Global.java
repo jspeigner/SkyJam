@@ -2,6 +2,10 @@ package global;
 
 import controllers.components.ForceHttps;
 import play.*;
+import play.mvc.*;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Results;
+import views.html.Album.view;
 
 
 public class Global extends GlobalSettings {
@@ -34,6 +38,13 @@ public class Global extends GlobalSettings {
 		Global.isSecure = isSecure;
 	}	
 	
-
+	public Result onError(RequestHeader request, Throwable t) {
+		
+        return Results.badRequest( views.html.Errors.error.render(t) );
+    }
+	
+	public Result onHandlerNotFound(RequestHeader request) {
+        return Results.notFound( views.html.Errors.handlerNotFound.render() );
+    }
 	
 }

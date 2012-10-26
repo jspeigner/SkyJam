@@ -1,0 +1,34 @@
+@(form: Form[UserController.Login])
+@import helper.twitterBootstrap2._
+@Layout.admin("Admin Login") {
+        
+        
+        
+        @helper.form(action = routes.AdminController.authenticate, 'class -> "form-horizontal well center admin-login", 'id -> "user-sign-in") {
+            
+            <h2>Admin part</h2><hr>
+            
+            @if(form.hasGlobalErrors) { 
+                <div  class="alert alert-error">
+                    @form.globalError.message
+                </div>
+            }
+            
+            @if(flash.contains("success")) {
+                <div  class="alert alert-success">
+                    @flash.get("success")
+                </div>
+            }
+            
+            @helper.inputText(form("email" ), '_showConstraints -> false)
+            
+            @helper.inputPassword(form("password" ), '_showConstraints -> false)
+            
+				
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Sign In" />
+			</div>
+            
+        }
+        
+}
