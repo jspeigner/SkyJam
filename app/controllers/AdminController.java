@@ -73,6 +73,8 @@ public class AdminController extends BaseController {
     	int pageSize = 15;
     	Page<User> users = User.getPageWithSearch(page, pageSize, term);
     	
+    	
+    	
     	return ok(views.html.Admin.browseUsers.render(users, term));
     }
 

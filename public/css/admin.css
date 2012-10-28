@@ -2,3 +2,5 @@
 
 #body-container { background-color: white; padding-top: 50px; }
 	#admin-top-menu { margin-left:1em; }
+	
+	.pagination .pull-right p { margin:0; line-height: 40px;}
