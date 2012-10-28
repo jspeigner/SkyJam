@@ -12,7 +12,6 @@
 		@for(category <- topLevelCategories){
 		  <li class="@(if(category.isParentOf(currentCategory))"active")"><a href="@routes.PlaylistController.browseCategory(category.getId)">@category.getName</a></li>
 		}
-
 	</ul>
 	<hr />
 	<div class="categories row-fluid">

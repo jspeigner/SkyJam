@@ -58,9 +58,17 @@
 		          <a class="brand" href="@routes.ApplicationController.index()"><img src="@routes.Assets.at("img/top-menu-logo.png")" width="73" height="32" alt="Skyjam" ></a>
 		          
 		          <div class="nav-collapse">
-          			<ul class="nav">
-          				<li><a href="#">Users</a></li>
-          				<li><a href="#">Songs</a></li>
+          			<ul class="nav" id="admin-top-menu">
+          				<li><a href="@routes.AdminController.dashboard()">Dashboard</a></li>
+          				<li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+	                          <li><a href="@routes.AdminController.browseUsers()">Browse</a></li>
+	                        </ul>          				
+          				</li>
+          				<li class="dropdown">
+          					<a href="#">Songs</a>
+          				</li>
           			</ul>
           			
 		            <ul class="nav pull-right">
@@ -78,6 +86,14 @@
 		  <div class="container" id="body-container">    
 		     	
 		     	<div id="body-content" class="clearfix">
+		     	
+		     	@if(flash.contains("success")) {
+					<div class="alert alert-success">@flash.get("success")</div>
+   				}	
+				@if(flash.contains("error")) {
+					<div class="alert alert-error">@flash.get("error")</div>
+			   	}	   				
+		     	
         		@content
         		</div>
         		
