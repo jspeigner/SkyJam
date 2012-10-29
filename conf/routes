@@ -47,6 +47,11 @@ POST    	/admin/login            controllers.AdminController.authenticate()
 GET			/admin/login			controllers.AdminController.login()
 GET			/admin/logout			controllers.AdminController.logout()
 
+GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
+POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
+
+
+
 GET			/admin/users/browse			controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
 #GET			/admin/users/profile/:userId			controllers.AdminController.logout(page:java.lang.Integer ?= 0)
 

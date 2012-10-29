@@ -1,15 +1,18 @@
 package controllers;
 
 import java.util.Date;
+import java.util.List;
 
 import com.avaje.ebean.Page;
 
 import models.Playlist;
 import models.User;
 import models.UserRole;
+import models.UserSavedPlaylist;
 import controllers.UserController.Login;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Model.Finder;
 
@@ -78,5 +81,48 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.browseUsers.render(users, term));
     }
 
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result editUser(Integer userId){
+    
+    	User user = User.find.byId(userId);
+    	if( user != null ){
+    		
+    		Form<User> userForm;
+    		
+    		if(request().method().equals("POST")){
+    			userForm = form(User.class).bindFromRequest();
+    			DynamicForm formData = form().bindFromRequest();  
+    			
+    			if( UserController.validateUserPassword(userForm)){
+    				
+    				user.setPassword(formData.get("password_reset"));
+    				user.save();
+    				flash("success", "Password was successfully updated");    		
+    	    	}    			
+    			
+    			
+    		} else {
+    			userForm = form(User.class).fill( user );
+    		}
+	    	
+	    	
+	    	Page<Playlist> userPlaylists = Playlist.getUserPlaylistsPage(user, 0, 100);
+	    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(user, UserController.maxUserSavedPlaylists);
+	    	
+	    	return ok( views.html.Admin.editUser.render( user, userForm, userPlaylists, savedPlaylists ) );
+	    	
+    	} else {
+    		return notFound("User not found"); 
+    	}
+    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result editUserSubmit(Integer userId){
+    	
+    	return editUser(userId);
+    
+    }
+    
 	
 }
