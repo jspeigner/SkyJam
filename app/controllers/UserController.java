@@ -36,6 +36,8 @@ public class UserController extends BaseController {
 	public static final String AUTH_USER_COOKIE_ID = "User.id";	
 	public static final int AUTH_USER_COOKIE_LIFETIME = 7*24*3600;
 	
+	public static int maxUserSavedPlaylists = 50; 
+	
     // Authentication
 	//@Entity 
     public static class Login {
@@ -299,9 +301,7 @@ public class UserController extends BaseController {
     		user.setRegisteredDate(new Date());
     		user.setLastLoginDate(null);
     		user.roles = new ArrayList<UserRole>();
-    		user.roles.add(UserRole.findByName("user"));
-    		
-    		
+    		user.roles.add(UserRole.findByName( UserRole.ROLE_USER));
     		
     		try
     		{
@@ -357,17 +357,14 @@ public class UserController extends BaseController {
     public static Result publicProfile(Integer id)
     {
     	
-    	
-    	
     	User u = User.find.byId(id);
     	
-    	if( u == null )
-    	{
+    	if( u == null ) {
     		return badRequest("User not found");
     	}
     	
     	List<Playlist> userPlaylists = Playlist.find.where().eq("user", u).eq("status", Playlist.Status.Public ).orderBy("createdDate DESC").setMaxRows(10).findList();
-    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user", u).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(u, maxUserSavedPlaylists);
     	
     	return ok(views.html.User.publicProfile.render(u, userPlaylists, savedPlaylists));
     }
@@ -380,7 +377,7 @@ public class UserController extends BaseController {
     	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
     	
-    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(user, maxUserSavedPlaylists);
     	
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
     }
@@ -394,7 +391,7 @@ public class UserController extends BaseController {
     	DynamicForm formData = form().bindFromRequest();  
     	
     	List<Playlist> recentPlaylists = Playlist.getRecentPlaylists(user, 5);
-    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.find.where().eq("user",user).orderBy("createdDate DESC").setMaxRows(50).findList();
+    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(user, maxUserSavedPlaylists);
     	
     	MultipartFormData body = request().body().asMultipartFormData();
     	FilePart picture = body.getFile("image");
@@ -442,7 +439,7 @@ public class UserController extends BaseController {
     	return ok(views.html.User.profile.render(userForm, user, recentPlaylists, savedPlaylists));
     }
     
-    protected static boolean validateUserPassword( Form<User> userForm){
+    public static boolean validateUserPassword( Form<User> userForm){
     	
     	
     	DynamicForm formData = form().bindFromRequest();  

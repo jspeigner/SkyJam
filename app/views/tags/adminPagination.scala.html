@@ -1,0 +1,24 @@
+@( action: (java.lang.Integer) => Call , currentPage : Int, totalPages:Int, pagesToShow:Int = 3)
+@if(totalPages > 0 ){
+<div class="pagination">
+@if( totalPages > 1){
+<ul>
+	<li><a href="@action(0)" title="Go to First Page">«</a></li>
+	@for( p <- currentPage - pagesToShow to currentPage - 1 ){
+		@if(p >= 0){
+		<li><a href="@action(p)">@(p+1)</a></li>
+		}
+	}
+	<li class="active"  ><a href="@action(currentPage)">@(currentPage+1)</a></li>
+	@for( p <- currentPage + 1 to currentPage + pagesToShow ){
+		@if( p < totalPages ){
+		<li><a href="@action(p)">@(p+1)</a></li>
+		}
+	}
+	<li><a href="@action(totalPages-1)" title="Go to Last Page - @totalPages" >»</a></li>
+</ul>
+}
+<div class="pull-right"><p>Page @(currentPage+1) of @totalPages</p></div>
+
+</div>
+}

@@ -1,0 +1,127 @@
+@( user:User, userForm:Form[User], userPlaylists: Page[Playlist], savedPlaylists: List[UserSavedPlaylist])@import helper.twitterBootstrap2._
+@Layout.admin("Edit User") {
+	<h1>Edit User</h1>
+	<hr>
+	
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+	  <li><a href="#roles" data-toggle="tab">Roles</a></li>
+	  <li><a href="#created-playlists" data-toggle="tab">Created Playlists</a></li>
+	  <li><a href="#saved-playlists" data-toggle="tab">Saved Playlists</a></li>
+	</ul>
+	
+	
+	<div class="tab-content">
+	  <div class="tab-pane active" id="profile">
+			@helper.form(action = routes.AdminController.editUserSubmit(user.getId), 'class -> "form-horizontal well", 'id -> "user-edit", 'enctype ->"multipart/form-data" ) {
+					
+					<div class="control-group">
+				    <label class="control-label">Username</label>
+				    <div class="controls">
+				      <input type="text" value="@user.getUsername" disabled="disabled" >
+				    </div>
+				  </div>
+						
+				<div class="control-group">			
+				    <label class="control-label">Email</label>
+				    <div class="controls">
+				      <input type="text" value="@user.getEmail" disabled="disabled" >
+				    </div>
+				  </div>
+												
+					
+					@helper.inputPassword(userForm("password_reset" ), '_showConstraints -> false, '_label -> "Reset Password")
+					
+					@helper.inputPassword(userForm("password_repeat" ), '_showConstraints -> false, '_label -> "Repeat Password")
+						
+					<div class="form-actions">
+						<input class="btn btn-success" type="submit" value="Update" />
+					</div>
+			}	  
+	  </div>
+	  <div class="tab-pane" id="roles">
+	  @if(user.getRoles != null && ( user.getRoles.size > 0 )){
+	  <ul>
+	  	@for(userRole <- user.getRoles ){
+	  		<li>@userRole.getRoleName</li>
+	  	}
+	  </ul>
+	  }
+	  </div>
+	  <div class="tab-pane" id="created-playlists">
+	  @if( ( userPlaylists.getList != null ) && ( userPlaylists.getList.size > 0 ) ){
+	  	<table class="table table-bordered table-striped">
+	  		<thead>
+	  			<tr>
+	  				<th>ID</th>
+	  				<th>Name</th>
+	  				<th>Created On</th>
+	  				<th>Status</th>
+	  				<th>Loaded times</th>
+	  				<th>Actions</th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+	  		@for( playlist <- userPlaylists.getList ){
+	  			<tr>
+	  				<td>@playlist.getId</td>
+	  				<td>@playlist.getName</td>
+	  				<td>@playlist.getCreatedDate</td>
+	  				<td>@playlist.getStatus</td>
+	  				<td>@playlist.getLoadedTimes</td>
+	  				<td>
+	  					<a href="#">Edit</a>
+	  					@if( playlist.getStatus == models.Playlist.Status.Public ){ | <a href="@routes.PlaylistController.playlist(playlist.getId, null)" target="_blank">Preview</a> }
+	  				</td>
+	  				
+	  			</tr>
+	  			
+	  		}
+	  		</tbody>
+	  	</table>
+	  	
+	  } else {
+	  	<p>There are no playlists</p>
+	  }
+	  </div>
+	  <div class="tab-pane" id="saved-playlists">
+	  
+	  @if( ( savedPlaylists != null ) && ( savedPlaylists.size > 0 ) ){
+	  	<table class="table table-bordered table-striped">
+	  		<thead>
+	  			<tr>
+	  				<th>ID</th>
+	  				<th>Name</th>
+	  				<th>Saved On</th>
+	  				<th>Status</th>
+	  				<th>Loaded times</th>
+	  				<th>Actions</th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+	  		@for( savedPlaylist <- savedPlaylists ){
+	  			<tr>
+	  				<td>@savedPlaylist.getPlaylist.getId</td>
+	  				<td>@savedPlaylist.getPlaylist.getName</td>
+	  				<td>@savedPlaylist.getCreatedDate</td>
+	  				<td>@savedPlaylist.getPlaylist.getStatus</td>
+	  				<td>@savedPlaylist.getPlaylist.getLoadedTimes</td>
+	  				<td>
+	  					<a href="#">Edit</a>
+	  					@if( savedPlaylist.getPlaylist.getStatus == models.Playlist.Status.Public ){ | <a href="@routes.PlaylistController.playlist(savedPlaylist.getPlaylist.getId, null)" target="_blank">Preview</a> }
+	  				</td>
+	  				
+	  			</tr>
+	  			
+	  		}
+	  		</tbody>
+	  	</table>	  
+	  	
+	  } else {
+	  	<p>There are no playlists</p>
+	  }	  
+	  
+	  </div>
+	</div>
+	
+}

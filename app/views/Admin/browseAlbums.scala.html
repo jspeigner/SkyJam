@@ -1,0 +1,46 @@
+@(albums:Page[Album], term:String, artist:Artist = null)@Layout.admin("Browse Albums") {
+<h1>Albums</h1>
+@if(artist != null ){
+	<h3>@artist.getName</h3>
+}	
+	 
+	<hr>
+	
+	<div class="pull-right">
+	<form class="form-search" method="get" action="@routes.AdminController.browseAlbums()">
+  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID, Artist or Album name" value="@term">
+  		<button type="submit" class="btn">Search</button>
+	</form>
+	</div>	
+	
+	@if( ( albums != null ) && ( albums.getList.size > 0 )){
+	
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Artist</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(album <- albums.getList ){
+		<tr>
+			<td>@album.getId</td>
+			<td>@album.getName</td>
+			<td>@album.getArtist.getName</td>
+			<td><a href="#">Edit</a> | <a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a> | <a href="#">Delete</a></td>
+		</tr>	
+		}
+		</tbody>
+	</table>
+	
+	<div class="pagination">
+		@tags.adminPagination( routes.AdminController.browseAlbums( _, term = term, artistId = ( if( artist == null) 0 else artist.getId ) ), albums.getPageIndex, albums.getTotalPageCount )
+	</div>
+	
+	} else {
+	<p>There are no users found.</p>
+	}
+}

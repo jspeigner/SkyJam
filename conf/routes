@@ -47,6 +47,17 @@ POST    	/admin/login            controllers.AdminController.authenticate()
 GET			/admin/login			controllers.AdminController.login()
 GET			/admin/logout			controllers.AdminController.logout()
 
+GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
+POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
+GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
+
+GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
+
+GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:java.lang.Integer ?= 0, term:String ?= "")
+
+GET			/admin/albums/browse			controllers.AdminController.browseAlbums(page:java.lang.Integer ?= 0, term:String ?= "", artistId:java.lang.Integer ?= 0)
+
+
 GET     /login                      				controllers.UserController.login()
 POST    /login                      				controllers.UserController.authenticate()
 GET     /logout                     				controllers.UserController.logout()

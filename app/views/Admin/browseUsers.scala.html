@@ -1,0 +1,42 @@
+@(users:Page[User], term:String)@Layout.admin("Browse Users") {
+	<h1>Users</h1>
+	<hr>
+	
+	<div class="pull-right">
+	<form class="form-search" method="get" action="@routes.AdminController.browseUsers()">
+  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID, Username or Email" value="@term">
+  		<button type="submit" class="btn">Search</button>
+	</form>
+	</div>	
+	
+	@if( ( users != null ) && ( users.getList.size > 0 )){
+	
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(user <- users.getList ){
+		<tr>
+			<td>@user.getId</td>
+			<td><!-- <img src="@user.getImageUrl" alt="@user.getUsername"> --> @user.getUsername</td>
+			<td>@user.getEmail</td>
+			<td><a href="@routes.AdminController.editUser(user.getId)">Edit</a> | <a href="#">Delete</a></td>
+		</tr>	
+		}
+		</tbody>
+	</table>
+	
+	<div class="pagination">
+		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount )
+	</div>
+	
+	} else {
+	<p>There are no users found.</p>
+	}
+}

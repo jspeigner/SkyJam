@@ -37,6 +37,9 @@ import be.objectify.deadbolt.models.RoleHolder;
 
 import ch.qos.logback.core.Context;
 
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Page;
 import com.avaje.ebean.annotation.EnumValue;
 import com.avaje.ebean.validation.Length;
 import com.typesafe.config.Config;
@@ -46,6 +49,7 @@ import controllers.routes;
 import play.Application;
 import play.Play;
 import play.db.ebean.*;
+import play.db.ebean.Model.Finder;
 import play.data.format.*;
 
 import play.data.validation.*;
@@ -166,7 +170,33 @@ public class User extends AppModel implements RoleHolder
 
 	}
 
+	public static Page<User> getPageWithSearch(int page, int pageSize){
+		return getPageWithSearch(page, pageSize, null);
+	}
 	
+	public static Page<User> getPageWithSearch(int page, int pageSize, String term){
+    	
+    	if( ( term!=null ) && ( !term.isEmpty())){
+    		try {  
+    		      Integer id = Integer.parseInt( term );  
+    		      
+    		      return User.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      
+    		} catch( Exception e ) {  
+    	    		String likeQueryString =  "%" + term.trim() + "%";
+    	    		return User.find.where( 
+    	    			Expr.or(
+    						 Expr.ilike("username", likeQueryString),
+    						 Expr.ilike("email", likeQueryString)
+    					)
+    				).findPagingList(pageSize).getPage(page);
+    		}    		
+    		
+
+    	} else {
+    		return User.find.findPagingList(pageSize).getPage(page);
+    	}
+	}
 	
     public String toString() {
         return "User( #" + id + ")";

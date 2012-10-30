@@ -58,16 +58,38 @@
 		          <a class="brand" href="@routes.ApplicationController.index()"><img src="@routes.Assets.at("img/top-menu-logo.png")" width="73" height="32" alt="Skyjam" ></a>
 		          
 		          <div class="nav-collapse">
-          			<ul class="nav">
-          				<li><a href="#">Users</a></li>
-          				<li><a href="#">Songs</a></li>
+		          
+		          	@if(UserController.getAuthUser() != null ){
+		          
+          			<ul class="nav" id="admin-top-menu">
+          				<li><a href="@routes.AdminController.dashboard()">Dashboard</a></li>
+          				<li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+	                          <li><a href="@routes.AdminController.browseUsers()">Browse</a></li>
+	                        </ul>          				
+          				</li>
+          				<li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Music Data <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+	                          <li><a href="@routes.AdminController.browseArtists()">Artists</a></li>
+	                          <li><a href="@routes.AdminController.browseAlbums()">Albums</a></li>
+	                          <li><a href="@routes.AdminController.browseSongs()">Songs</a></li>
+	                        </ul>          					
+          				</li>
           			</ul>
           			
 		            <ul class="nav pull-right">
 		            	<li><a href="#">Profile</a></li>
 		            	<li><a href="@routes.AdminController.logout()">Logout</a></li>
 		            </ul>
-		            		                 			
+		            
+		            } else {
+		            <ul class="nav">
+		            	<li><a href="@routes.AdminController.login()">Login</a></li>
+		            </ul>
+		            }		
+		                             			
 		            
 		          </div>
 		        </div>
@@ -78,6 +100,14 @@
 		  <div class="container" id="body-container">    
 		     	
 		     	<div id="body-content" class="clearfix">
+		     	
+		     	@if(flash.contains("success")) {
+					<div class="alert alert-success">@flash.get("success")</div>
+   				}	
+				@if(flash.contains("error")) {
+					<div class="alert alert-error">@flash.get("error")</div>
+			   	}	   				
+		     	
         		@content
         		</div>
         		

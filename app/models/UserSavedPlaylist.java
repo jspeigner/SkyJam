@@ -53,4 +53,9 @@ public class UserSavedPlaylist extends AppModel {
 		this.user = user;
 	}
 
+	public static List<UserSavedPlaylist> getByUser(User user, int maxRows){
+		
+		return UserSavedPlaylist.find.where().eq("user",user).eq("playlist.status", Playlist.Status.Public).orderBy("createdDate DESC").setMaxRows(maxRows).findList();
+	}
+	
 }
