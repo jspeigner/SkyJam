@@ -49,11 +49,10 @@ GET			/admin/logout			controllers.AdminController.logout()
 
 GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
 POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
+GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
 
+GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "")
 
-
-GET			/admin/users/browse			controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
-#GET			/admin/users/profile/:userId			controllers.AdminController.logout(page:java.lang.Integer ?= 0)
 
 GET     /login                      				controllers.UserController.login()
 POST    /login                      				controllers.UserController.authenticate()

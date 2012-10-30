@@ -6,6 +6,7 @@ import models.Playlist.Status;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
+import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
 
 import java.util.List;
@@ -131,4 +132,34 @@ public class Song extends AppModel {
 		
 		return null;
 	}	
+	
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term){
+    	
+    	if( ( term!=null ) && ( !term.isEmpty())){
+    		try {  
+    		      Integer id = Integer.parseInt( term );  
+    		      
+    		      return Song.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      
+    		} catch( Exception e ) {
+    			
+    	    		String likeQueryString =  "%" + term.trim() + "%";
+    	    		
+    	    		Expression e2 = Expr.or(
+	    				Expr.ilike("name", likeQueryString), 
+	    					Expr.or(
+	    						Expr.ilike("album.name", likeQueryString), 
+	    						Expr.ilike("album.artist.name", likeQueryString)									
+	    					)
+    	    		);	
+    	    		
+    	    		return Song.find.where( e2 ).findPagingList(pageSize).getPage(page);
+    		}
+    		
+
+    	} else {
+    		return Song.find.findPagingList(pageSize).getPage(page);
+    	}
+	}	
+	
 }
