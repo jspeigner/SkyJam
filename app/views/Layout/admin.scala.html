@@ -58,6 +58,9 @@
 		          <a class="brand" href="@routes.ApplicationController.index()"><img src="@routes.Assets.at("img/top-menu-logo.png")" width="73" height="32" alt="Skyjam" ></a>
 		          
 		          <div class="nav-collapse">
+		          
+		          	@if(UserController.getAuthUser() != null ){
+		          
           			<ul class="nav" id="admin-top-menu">
           				<li><a href="@routes.AdminController.dashboard()">Dashboard</a></li>
           				<li class="dropdown">
@@ -75,7 +78,13 @@
 		            	<li><a href="#">Profile</a></li>
 		            	<li><a href="@routes.AdminController.logout()">Logout</a></li>
 		            </ul>
-		            		                 			
+		            
+		            } else {
+		            <ul class="nav">
+		            	<li><a href="@routes.AdminController.login()">Login</a></li>
+		            </ul>
+		            }		
+		                             			
 		            
 		          </div>
 		        </div>

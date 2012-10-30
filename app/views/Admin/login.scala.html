@@ -7,16 +7,10 @@
         @helper.form(action = routes.AdminController.authenticate, 'class -> "form-horizontal well center admin-login", 'id -> "user-sign-in") {
             
             <h2>Admin part</h2><hr>
-            
+		            
             @if(form.hasGlobalErrors) { 
                 <div  class="alert alert-error">
                     @form.globalError.message
-                </div>
-            }
-            
-            @if(flash.contains("success")) {
-                <div  class="alert alert-success">
-                    @flash.get("success")
                 </div>
             }
             
