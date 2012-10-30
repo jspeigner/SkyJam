@@ -134,10 +134,21 @@ public class Song extends AppModel {
 	}	
 	
 	public static Page<Song> getPageWithSearch(int page, int pageSize, String term){
+		return getPageWithSearch(page, pageSize, term, null);
+	}
+	
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
     	
     	if( ( term!=null ) && ( !term.isEmpty())){
     		try {  
     		      Integer id = Integer.parseInt( term );  
+    		      
+    		      Expression expr = Expr.eq("id", id);
+    		      
+  	    		
+	  	    		if( additionalConditions != null ){
+	  	    			expr = Expr.and( additionalConditions , expr );
+	  	    		}    		      
     		      
     		      return Song.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
     		      
@@ -145,7 +156,7 @@ public class Song extends AppModel {
     			
     	    		String likeQueryString =  "%" + term.trim() + "%";
     	    		
-    	    		Expression e2 = Expr.or(
+    	    		Expression expr = Expr.or(
 	    				Expr.ilike("name", likeQueryString), 
 	    					Expr.or(
 	    						Expr.ilike("album.name", likeQueryString), 
@@ -153,12 +164,16 @@ public class Song extends AppModel {
 	    					)
     	    		);	
     	    		
-    	    		return Song.find.where( e2 ).findPagingList(pageSize).getPage(page);
+    	    		if( additionalConditions != null ){
+    	    			expr = Expr.and( additionalConditions , expr );
+    	    		}
+    	    		
+    	    		return Song.find.where( expr ).findPagingList(pageSize).getPage(page);
     		}
     		
 
     	} else {
-    		return Song.find.findPagingList(pageSize).getPage(page);
+    		return ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
     	}
 	}	
 	

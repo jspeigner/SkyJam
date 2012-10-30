@@ -51,7 +51,11 @@ GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang
 POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
 GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
 
-GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "")
+GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
+
+GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:java.lang.Integer ?= 0, term:String ?= "")
+
+GET			/admin/albums/browse			controllers.AdminController.browseAlbums(page:java.lang.Integer ?= 0, term:String ?= "", artistId:java.lang.Integer ?= 0)
 
 
 GET     /login                      				controllers.UserController.login()

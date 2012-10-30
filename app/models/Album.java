@@ -9,6 +9,9 @@ import javax.persistence.Table;
 
 import models.behavior.ImageMetadata;
 
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
@@ -123,6 +126,44 @@ public class Album extends AppModel {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}		
+	
+	public static Page<Album> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
+    	
+    	if( ( term!=null ) && ( !term.isEmpty())){
+    		try {  
+    		      Integer id = Integer.parseInt( term );  
+    		      
+    		      Expression expr = Expr.eq("id", id);
+    		      
+  	    		
+	  	    		if( additionalConditions != null ){
+	  	    			expr = Expr.and( additionalConditions , expr );
+	  	    		}    		      
+    		      
+    		      return Album.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      
+    		} catch( Exception e ) {
+    			
+    	    		String likeQueryString =  "%" + term.trim() + "%";
+    	    		
+    	    		Expression expr = Expr.or(
+	    				Expr.ilike("name", likeQueryString), 
+   						Expr.ilike("artist.name", likeQueryString)									
+
+    	    		);	
+    	    		
+    	    		if( additionalConditions != null ){
+    	    			expr = Expr.and( additionalConditions , expr );
+    	    		}
+    	    		
+    	    		return Album.find.where( expr ).findPagingList(pageSize).getPage(page);
+    		}
+    		
+
+    	} else {
+    		return ( ( additionalConditions == null ) ? Album.find : Album.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
+    	}
 	}		
 	
 }

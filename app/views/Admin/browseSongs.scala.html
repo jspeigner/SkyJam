@@ -1,5 +1,9 @@
-@(songs:Page[Song], term:String)@Layout.admin("Browse Songs") {
-	<h1>Songs</h1>
+@(songs:Page[Song], term:String, album:Album = null)@Layout.admin("Browse Songs") {
+<h1>Songs</h1>
+@if(album != null ){
+	<h3>@album.getArtist.getName - @album.getName</h3>
+}	
+	 
 	<hr>
 	
 	<div class="pull-right">

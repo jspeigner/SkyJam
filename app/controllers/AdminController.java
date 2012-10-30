@@ -3,8 +3,11 @@ package controllers;
 import java.util.Date;
 import java.util.List;
 
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
 
+import models.Album;
+import models.Artist;
 import models.Playlist;
 import models.Song;
 import models.User;
@@ -124,14 +127,35 @@ public class AdminController extends BaseController {
     }
 
     @Restrict(UserRole.ROLE_ADMIN)    
-    public static Result browseSongs(Integer page, String term){
+    public static Result browseSongs(Integer page, String term, Integer albumId){
 
     	int pageSize = 15;
-    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term);
+    	Album album = albumId > 0 ? Album.find.byId(albumId) : null;
+    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term, album == null ? null : Expr.eq("album", album)  );
     	
-    	return ok(views.html.Admin.browseSongs.render(songs, term));
-    	
-    	
+    	return ok(views.html.Admin.browseSongs.render(songs, term, album));
     }
-	
+
+    
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result browseArtists(Integer page, String term){
+
+    	int pageSize = 15;
+    	
+    	Page<Artist> artists = Artist.getPageWithSearch(page, pageSize, term );
+    	
+    	return ok(views.html.Admin.browseArtists.render(artists, term));
+    } 
+      
+    
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result browseAlbums(Integer page, String term, Integer artistId){
+
+    	int pageSize = 15;
+    	Artist artist = artistId > 0 ? Artist.find.byId(artistId) : null;
+    	Page<Album> albums = Album.getPageWithSearch(page, pageSize, term, artist == null ? null : Expr.eq("artist", artist)  );
+    	
+    	return ok(views.html.Admin.browseAlbums.render(albums, term, artist));
+    }    
+    
 }
