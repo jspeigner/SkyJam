@@ -6,6 +6,7 @@ import java.util.List;
 import com.avaje.ebean.Page;
 
 import models.Playlist;
+import models.Song;
 import models.User;
 import models.UserRole;
 import models.UserSavedPlaylist;
@@ -76,8 +77,6 @@ public class AdminController extends BaseController {
     	int pageSize = 15;
     	Page<User> users = User.getPageWithSearch(page, pageSize, term);
     	
-    	
-    	
     	return ok(views.html.Admin.browseUsers.render(users, term));
     }
 
@@ -123,6 +122,16 @@ public class AdminController extends BaseController {
     	return editUser(userId);
     
     }
-    
+
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result browseSongs(Integer page, String term){
+
+    	int pageSize = 15;
+    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term);
+    	
+    	return ok(views.html.Admin.browseSongs.render(songs, term));
+    	
+    	
+    }
 	
 }

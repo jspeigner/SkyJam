@@ -175,7 +175,6 @@ public class User extends AppModel implements RoleHolder
 	}
 	
 	public static Page<User> getPageWithSearch(int page, int pageSize, String term){
-		
     	
     	if( ( term!=null ) && ( !term.isEmpty())){
     		try {  
@@ -197,9 +196,6 @@ public class User extends AppModel implements RoleHolder
     	} else {
     		return User.find.findPagingList(pageSize).getPage(page);
     	}
-    	
-		
-		
 	}
 	
     public String toString() {
