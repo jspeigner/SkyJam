@@ -164,7 +164,7 @@ public class AdminController extends BaseController {
     	User user = User.find.byId(userId);
     	
     	if(request().method().equals("POST")){
-    		flash("success", "Password was successfully updated");    		
+    		flash("success", "User was removed successfully");    		
     		
     		return redirect(routes.AdminController.browseUsers(0,""));
     	}
