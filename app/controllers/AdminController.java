@@ -158,4 +158,23 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.browseAlbums.render(albums, term, artist));
     }    
     
+    @Restrict(UserRole.ROLE_ADMIN)    
+    public static Result deleteUser(Integer userId){
+    	
+    	User user = User.find.byId(userId);
+    	
+    	if(request().method().equals("POST")){
+    		flash("success", "Password was successfully updated");    		
+    		
+    		return redirect(routes.AdminController.browseUsers(0,""));
+    	}
+    	
+    	return ok(views.html.Admin.deleteUser.render(user));
+    	
+    }
+    
+    public static Result deleteUserSubmit(Integer userId){
+    	return deleteUser(userId);
+    }
+    
 }
