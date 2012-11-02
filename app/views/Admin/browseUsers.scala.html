@@ -26,7 +26,7 @@
 			<td>@user.getId</td>
 			<td><!-- <img src="@user.getImageUrl" alt="@user.getUsername"> --> @user.getUsername</td>
 			<td>@user.getEmail</td>
-			<td><a href="@routes.AdminController.editUser(user.getId)">Edit</a> | <a href="#">Delete</a></td>
+			<td><a href="@routes.AdminController.editUser(user.getId)">Edit</a> | <a href="@routes.AdminController.deleteUser(user.getId)">Delete</a></td>
 		</tr>	
 		}
 		</tbody>

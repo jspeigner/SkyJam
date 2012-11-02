@@ -49,6 +49,8 @@ GET			/admin/logout			controllers.AdminController.logout()
 
 GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
 POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
+GET			/admin/users/delete/:id			controllers.AdminController.deleteUser(id: java.lang.Integer)
+POST		/admin/users/delete/:id			controllers.AdminController.deleteUserSubmit(id: java.lang.Integer)
 GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
 
 GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
@@ -65,7 +67,6 @@ GET		/user/forgot_password						controllers.UserController.forgotPassword()
 POST	/user/forgot_password						controllers.UserController.forgotPasswordSubmit()
 POST	/user/reset_password/:resetCode				controllers.UserController.resetPassword(resetCode:String)
 GET		/user/reset_password/:resetCode				controllers.UserController.resetPassword(resetCode:String)
-
 
 
 GET		/register									controllers.UserController.register(invitationCode:String ?= "")

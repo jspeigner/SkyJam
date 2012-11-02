@@ -1,0 +1,9 @@
+@(user:User)@Layout.admin("Delete Users") {
+
+<h1>Are you sure to delete the user ?</h1>
+<form class="well" method="post" action="@routes.AdminController.editUserSubmit(user.getId)" >
+	<h2><b>#@user.getId</b> - <a target="_blank" href="@routes.AdminController.editUser(user.getId)">@user.getUsername</a></h2>
+	<p>It cannot be undone</p>
+
+</form>
+}
