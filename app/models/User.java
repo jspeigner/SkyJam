@@ -37,6 +37,7 @@ import be.objectify.deadbolt.models.RoleHolder;
 
 import ch.qos.logback.core.Context;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Page;
@@ -435,6 +436,51 @@ public class User extends AppModel implements RoleHolder
 
 	public void setFacebookUserId(String facebookUserId) {
 		this.facebookUserId = facebookUserId;
+	}
+	
+	public void delete(){
+		
+		try {
+		
+			if( getImageStorageObject() != null ){
+				getImageStorageObject().delete();
+			}
+			
+			List<PlaylistSongRating> psr = PlaylistSongRating.find.where().eq("user", this).findList();
+			if(psr != null){
+				Ebean.delete(psr);
+			}
+			
+			List<UserInvitationCode> uic = UserInvitationCode.find.where().eq("user", this).findList();
+			if(uic != null){
+				Ebean.delete(uic);
+			}
+			
+			List<UserPasswordReset> upr = UserPasswordReset.find.where().eq("user", this).findList();
+			if(upr != null){
+				Ebean.delete(upr);
+			}
+			
+			List<UserPlaylistActivity> upa = UserPlaylistActivity.find.where().eq("user", this).findList();
+			if(upa!=null){
+				Ebean.delete(upa);
+			}
+			
+			List<UserSavedPlaylist> usp = UserSavedPlaylist.find.where().eq("user", this).findList();
+			if(usp!=null){
+				Ebean.delete(usp);
+			}
+			
+			List<Playlist> p = Playlist.find.where().eq("user", this).findList();
+			if(p!=null){
+				Ebean.delete(p);
+			}
+			
+		} catch (Exception e) {
+  
+		}
+		
+		super.delete();
 	}
 
 	public static long getMinPasswordLength() {

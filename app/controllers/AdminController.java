@@ -166,6 +166,8 @@ public class AdminController extends BaseController {
     	if(request().method().equals("POST")){
     		flash("success", "User was removed successfully");    		
     		
+    		user.delete();
+    		
     		return redirect(routes.AdminController.browseUsers(0,""));
     	}
     	
