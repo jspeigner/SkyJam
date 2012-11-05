@@ -22,6 +22,8 @@ import org.jets3t.service.acl.AccessControlList;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 import com.avaje.ebean.validation.Length;
 
@@ -217,6 +219,28 @@ public class StorageObject extends AppModel {
 	    return null;
 	}
 	
+	public void delete(){
+		// delete the S3 object
+		
+		try {
+			Bucket bucket = getBucket();
+			
+			if (  bucket!= null ){
+				
+				if( bucket.getAmazonAccount() != null ){
+					AmazonS3 s3 = new AmazonS3Client( bucket.getAmazonAccount() );
+					s3.deleteObject( bucket.getName() , getName());
+				}
+			}
+			
+		} catch (Exception e) {
+			
+			// TODO: handle exception
+		}
+		
+		super.delete();
+		
+	}
 	
 
 }
