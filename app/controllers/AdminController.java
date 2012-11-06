@@ -180,4 +180,76 @@ public class AdminController extends BaseController {
     	return deleteUser(userId);
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editArtist(Integer artistId){
+    	Artist artist = Artist.find.byId(artistId);
+    	if( artist == null){
+    		return notFound("Artist not found");
+    	}
+    	
+    	Form<Artist> form = form(Artist.class).fill(artist);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Artist.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Artist was successfully updated");
+        		
+        		artist = form.get();
+        		
+        		artist.update(artistId);
+        		
+        		return redirect(routes.AdminController.editArtist(artistId));
+    			
+    			
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editArtist.render(artist, form));
+    }
+    
+    public static Result editArtistSubmit(Integer artistId){
+    	return editArtist(artistId);
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editAlbum(Integer albumId){
+    	Album album = Album.find.byId(albumId);
+    	if( album == null){
+    		return notFound("Artist not found");
+    	}
+    	
+    	Form<Album> form = form(Album.class).fill(album);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Album.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Artist was successfully updated");
+        		
+        		album = form.get();
+        		
+        		album.update(albumId);
+        		
+        		return redirect(routes.AdminController.editAlbum(albumId));
+    			
+    			
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editAlbum.render(album, form));
+    }
+    
+    public static Result editAlbumSubmit(Integer artistId){
+    	return editAlbum(artistId);
+    }    
+    
 }
