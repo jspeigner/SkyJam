@@ -10,7 +10,7 @@
 		</ul>	
 	</div>
 	
-	@helper.form(action = routes.AdminController.editArtistSubmit(artist.getId), 'class -> "form-horizontal well", 'id -> "user-edit", 'enctype ->"multipart/form-data" ) {
+	@helper.form(action = routes.AdminController.editArtistSubmit(artist.getId), 'class -> "form-horizontal well", 'id -> "artist-edit", 'enctype ->"multipart/form-data" ) {
 			
 			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
 		

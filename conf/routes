@@ -59,6 +59,10 @@ GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:jav
 GET			/admin/artist/edit/:id			controllers.AdminController.editArtist(id: java.lang.Integer)
 POST		/admin/artist/edit/:id			controllers.AdminController.editArtistSubmit(id: java.lang.Integer)
 
+GET			/admin/album/edit/:id			controllers.AdminController.editAlbum(id: java.lang.Integer)
+POST		/admin/album/edit/:id			controllers.AdminController.editAlbumSubmit(id: java.lang.Integer)
+
+
 GET			/admin/albums/browse			controllers.AdminController.browseAlbums(page:java.lang.Integer ?= 0, term:String ?= "", artistId:java.lang.Integer ?= 0)
 
 

@@ -1,0 +1,22 @@
+@(album:Album, form: Form[Album])@import helper.twitterBootstrap2._
+@Layout.admin("Edit Album") {
+	<h1>Edit Album</h1>
+	<hr>
+	<div>
+		<ul class="nav nav-pills">
+		  
+		  <li><a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a></li>
+		  
+		</ul>	
+	</div>
+	
+	@helper.form(action = routes.AdminController.editAlbumSubmit(album.getId), 'class -> "form-horizontal well", 'id -> "album-edit", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Update" />
+			</div>		
+		
+	}
+}
