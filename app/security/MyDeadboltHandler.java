@@ -36,7 +36,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
     public DynamicResourceHandler getDynamicResourceHandler(Http.Context context)
     {
     	 Http.Context.current.set(context);
-        // return new MyDynamicResourceHandler();
+        
     	return null;
     }
 
@@ -44,9 +44,16 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler
     {
     	 Http.Context.current.set(context);
         // you can return any result from here - forbidden, etc
+
+    	 //TODO - create a better way to determine the required role holder    	 
+    	 String path = context.request().path();
     	 
-        // return forbidden("Access forbidden");
+    	 if( path.startsWith("/admin")){
+        	 return BaseController.pjaxRedirect(routes.AdminController.login());    		 
+    	 } else {
+        	 return BaseController.pjaxRedirect(routes.UserController.login());
+    	 }
     	 
-    	 return BaseController.pjaxRedirect(routes.UserController.login());
+
     }
 }

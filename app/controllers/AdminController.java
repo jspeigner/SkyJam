@@ -175,6 +175,7 @@ public class AdminController extends BaseController {
     	
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
     public static Result deleteUserSubmit(Integer userId){
     	return deleteUser(userId);
     }
