@@ -184,7 +184,7 @@ public class AdminController extends BaseController {
     public static Result editArtist(Integer artistId){
     	Artist artist = Artist.find.byId(artistId);
     	if( artist == null){
-    		return notFound("Artist not found");
+    		return notFound("Artist was not found");
     	}
     	
     	Form<Artist> form = form(Artist.class).fill(artist);
@@ -212,6 +212,7 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.editArtist.render(artist, form));
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
     public static Result editArtistSubmit(Integer artistId){
     	return editArtist(artistId);
     }
@@ -220,7 +221,7 @@ public class AdminController extends BaseController {
     public static Result editAlbum(Integer albumId){
     	Album album = Album.find.byId(albumId);
     	if( album == null){
-    		return notFound("Artist not found");
+    		return notFound("Album was not found");
     	}
     	
     	Form<Album> form = form(Album.class).fill(album);
@@ -231,7 +232,7 @@ public class AdminController extends BaseController {
     		
     		if(!form.hasErrors()){
     			
-        		flash("success", "Artist was successfully updated");
+        		flash("success", "Album was successfully updated");
         		
         		album = form.get();
         		
@@ -248,8 +249,46 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.editAlbum.render(album, form));
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
     public static Result editAlbumSubmit(Integer artistId){
     	return editAlbum(artistId);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editSong(Integer songId){
+    	Song song = Song.find.byId(songId);
+    	if( song == null){
+    		return notFound("Song was not found");
+    	}
+    	
+    	Form<Song> form = form(Song.class).fill(song);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Song.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Song was successfully updated");
+        		
+        		song = form.get();
+        		
+        		song.update(songId);
+        		
+        		return redirect(routes.AdminController.editSong(songId));
+    			
+    			
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editSong.render(song, form));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editSongSubmit(Integer artistId){
+    	return editSong(artistId);
     }    
     
 }

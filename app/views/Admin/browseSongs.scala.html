@@ -32,7 +32,7 @@
 			<td>@song.getName</td>
 			<td>@song.getAlbum.getName</td>
 			<td>@song.getAlbum.getArtist.getName</td>
-			<td><a href="#">Edit</a> | <a href="#">Delete</a> | <a href="@song.getSongUrl()"><i class="icon-download"></i>&nbsp;S3&nbsp;URL</a></td>
+			<td><a href="@routes.AdminController.editSong(song.getId)">Edit</a> | <a href="#">Delete</a> | <a href="@song.getSongUrl()"><i class="icon-download"></i>&nbsp;S3&nbsp;URL</a></td>
 		</tr>	
 		}
 		</tbody>
