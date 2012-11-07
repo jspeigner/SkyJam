@@ -1,5 +1,9 @@
 package controllers;
 
+import global.utils.Utils;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +12,7 @@ import com.avaje.ebean.Page;
 
 import models.Album;
 import models.Artist;
+import models.Genre;
 import models.Playlist;
 import models.Song;
 import models.User;
@@ -16,7 +21,10 @@ import models.UserRole;
 import models.UserSavedPlaylist;
 import controllers.UserController.Login;
 import be.objectify.deadbolt.actions.Restrict;
+import play.Play;
 import play.mvc.Result;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Model.Finder;
@@ -206,8 +214,6 @@ public class AdminController extends BaseController {
         		
         		return redirect(routes.AdminController.editArtist(artistId));
     			
-    			
-    			
     		}
     		
     	}
@@ -231,25 +237,56 @@ public class AdminController extends BaseController {
     	
     	if(request().method().equals("POST")){
     		
+
+    		
     		form = form(Album.class).bindFromRequest();
     		
     		if(!form.hasErrors()){
     			
+        		album = form.get();
+        		album.setId(albumId);
+        		        		
+    			
+        		
+    	    	MultipartFormData body = request().body().asMultipartFormData();
+    	    	FilePart picture = body.getFile("albumArtImage");
+    	    	
+    	    	if (picture != null){
+    	    	    File imageFile = picture.getFile();
+    	    	    
+    	    	    try {
+    	    	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
+    	    	    	
+    	    	    	if(imageFile.length() > filesizeLimit) {
+    	    	    		flash("image_error", "Image size exceeds the "+ Utils.humanReadableByteCount(filesizeLimit, true)+" limit");
+    	    	    	} else {
+    		    	        boolean savedSuccessfully = album.updateImage( new FileInputStream(imageFile));
+    	    	    	}
+    	    	        
+    	    	    }
+    	    	    catch (Exception e) {
+
+    	    	    }
+    	    	    
+    	    	    imageFile.delete();
+    	    	}    			
+    			
+    	    	album.update(albumId);
+    			
         		flash("success", "Album was successfully updated");
         		
-        		album = form.get();
-        		
-        		album.update(albumId);
+
         		
         		return redirect(routes.AdminController.editAlbum(albumId));
     			
-    			
+    		
+        		
     			
     		}
     		
     	}
     	
-    	return ok(views.html.Admin.editAlbum.render(album, form));
+    	return ok(views.html.Admin.editAlbum.render(album, form, Genre.find.findList()));
     }
     
     @Restrict(UserRole.ROLE_ADMIN)

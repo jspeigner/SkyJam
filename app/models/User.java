@@ -412,7 +412,7 @@ public class User extends AppModel implements RoleHolder
 	
 	public boolean updateImage(InputStream sourceImage)
 	{
-		StorageObject s = StorageObject.updateStorageObjectWithImage(getImageObjectName(), sourceImage, this.imageMetadata);
+		StorageObject s = StorageObject.updateStorageObjectWithImage(getImageObjectName(), sourceImage, imageMetadata);
 		setImageStorageObject(s);
 		
 		update();

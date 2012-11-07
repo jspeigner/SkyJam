@@ -1,18 +1,37 @@
-@(album:Album, form: Form[Album])@import helper.twitterBootstrap2._
+@(album:Album, form: Form[Album], genres:List[Genre])@import helper.twitterBootstrap2._
 @Layout.admin("Edit Album") {
+
+
 	<h1>Edit Album</h1>
 	<hr>
 	<div>
 		<ul class="nav nav-pills">
-		  
+		  <li><a href="@routes.AdminController.editArtist(album.getArtist.getId)">Edit Artist - @album.getArtist.getName</a></li>
 		  <li><a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a></li>
 		  
 		</ul>	
 	</div>
 	
+	
+	
 	@helper.form(action = routes.AdminController.editAlbumSubmit(album.getId), 'class -> "form-horizontal well", 'id -> "album-edit", 'enctype ->"multipart/form-data" ) {
+	
+            @if(flash.contains("image_error")) {
+                <div class="alert alert-error">@flash.get("image_error")</div>
+            }	
+	
 			
 			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
+			
+			@helper.inputText(form("keywords" ), '_showConstraints -> false, '_label -> "Keywords", 'class -> "span8")
+			
+			@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Info", 'class -> "span8", 'rows -> 5)
+		
+			@helper.select(form("genreId"), genres.map( genre => ( genre.getId.toString, genre.getName ) ), '_label -> "Genre" )
+			
+			@helper.inputText(form("copyrightYear" ), '_showConstraints -> false, '_label -> "Copyright Year", 'class -> "span1")
+		
+			@helper.inputFile(form("albumArtImage"), '_label -> "Album Art")
 		
 			<div class="form-actions">
 				<input class="btn btn-success" type="submit" value="Update" />
