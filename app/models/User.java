@@ -108,7 +108,7 @@ public class User extends AppModel implements RoleHolder
 	{
 		Map<String,List<ValidationError>> validationErrors = new HashMap<String,List<ValidationError>>(); 
 		
-		if( User.find.where().eq("email", email ).findRowCount() > 0 )
+		if( User.find.where().eq("email", email ).ne("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).findRowCount() > 0 )
 		{
 			List<ValidationError> emailErrors = new ArrayList<ValidationError>();
 			emailErrors.add(new ValidationError( "email", "Email is already taken", null));
@@ -116,7 +116,7 @@ public class User extends AppModel implements RoleHolder
 			validationErrors.put( "email", emailErrors );
 		}
 
-		if( User.find.where().eq("username", username ).findRowCount() > 0 )
+		if( User.find.where().eq("username", username ).ne("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).findRowCount() > 0 )
 		{
 			List<ValidationError> usernameErrors = new ArrayList<ValidationError>();
 			
@@ -217,7 +217,7 @@ public class User extends AppModel implements RoleHolder
 
 
 
-	protected String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
@@ -372,7 +372,7 @@ public class User extends AppModel implements RoleHolder
 	}
 
 	@Override
-	public List<? extends Role> getRoles() {
+	public List<UserRole> getRoles() {
 		return roles;
 	}
 

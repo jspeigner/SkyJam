@@ -1,0 +1,19 @@
+@(user:User, uic: UserInvitationCode )@Email.text.layout.default(){
+
+Skyjam has selected you, and only you, out of nearly 9 billion other unworthy members of your species to receive a once in a lifetime, exquisitely hand crafted, self destructing, private invitation to discover the amazing new music cloud service all the cool rich geeks are talking about.
+
+Some people know this service as ... SkyJam.fm
+
+Other people know it as the most awesome music streaming service deployment and cloud storage service KNOWN TO MAN!
+
+This is not hyperbole.
+
+It is a simple, indisputable, scientifically validated, empirical observation that has been discovered by philosophers to be a provable metaphysical quality that transcends the very fabric of objective reality. That makes it so true that it's not just true in our universe but in every conceivable universe!
+
+What's even better is that by accepting this invitation and trying out the SkyJam you will not only give your life meaning and greatly enrich yourself, but also the wonderful person who invited you, to whom Karma will grant access to even more free SkyJam features.
+
+Here's the invitation link, made from only the highest quality hand picked bits:
+
+@routes.UserController.register(uic.getCode).absoluteURL(play.mvc.Http.Context.current().request())
+
+}

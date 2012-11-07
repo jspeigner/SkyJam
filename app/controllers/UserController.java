@@ -214,12 +214,12 @@ public class UserController extends BaseController {
     		user.setUsername( user.getEmail() );
     		user.setRegisteredDate(new Date());
     		user.roles = new ArrayList<UserRole>();
-    		user.roles.add(UserRole.findByName("awaiting"));
+    		user.roles.add(UserRole.findByName( UserRole.ROLE_AWAITING));
     		
     		try
     		{
 	    		user.save();
-	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		Ebean.saveManyToManyAssociations(user, "roles");
     		}
     		catch(Exception p)
     		{
@@ -289,14 +289,20 @@ public class UserController extends BaseController {
     		userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
     	}
     	
-    	if(userForm.hasErrors())
-    	{
+    	if(userForm.hasErrors()) {
     		
     		return ok (views.html.User.register.render(userForm));
     	}
     	else
     	{
     		User user = userForm.get();
+    		
+    		// remove the existing user waiting for invitation
+    		List<User> existingUsers = User.find.where().eq("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).eq("email", user.getEmail() ).findList();
+    		if(( existingUsers != null ) && ( existingUsers.size() > 0 ) ){
+    			Ebean.delete(existingUsers);
+    		}
+    		
     		
     		user.setRegisteredDate(new Date());
     		user.setLastLoginDate(null);

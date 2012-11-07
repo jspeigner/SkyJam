@@ -11,6 +11,7 @@ import models.Artist;
 import models.Playlist;
 import models.Song;
 import models.User;
+import models.UserInvitationCode;
 import models.UserRole;
 import models.UserSavedPlaylist;
 import controllers.UserController.Login;
@@ -19,6 +20,8 @@ import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.ebean.Model.Finder;
+import views.html.Album.view;
+import views.html.Email.text.userInvitation;
 
 public class AdminController extends BaseController {
 
@@ -290,5 +293,26 @@ public class AdminController extends BaseController {
     public static Result editSongSubmit(Integer artistId){
     	return editSong(artistId);
     }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result sendInvitation(Integer userId){
+    	
+    	User user = User.find.byId(userId);
+    	if(user == null){
+    		return notFound("User not found");
+    	}
+    	
+    	UserInvitationCode uic = UserInvitationCode.createNewCode();
+    	
+    	
+    	
+    	// email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	
+    	email("aloise@aloise.name", "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	
+    	flash("success", "Invitation has been sent");
+    	
+    	return redirect(routes.AdminController.editUser(userId));
+    }
     
 }

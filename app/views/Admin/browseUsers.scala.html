@@ -17,6 +17,7 @@
 				<th>ID</th>
 				<th>Username</th>
 				<th>Email</th>
+				<th>Role</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -26,6 +27,10 @@
 			<td>@user.getId</td>
 			<td><!-- <img src="@user.getImageUrl" alt="@user.getUsername"> --> @user.getUsername</td>
 			<td>@user.getEmail</td>
+			<td>@if(user.getRoles != null){
+					@user.getRoles.map( (role) => role.getRoleName ).mkString(", ")
+				}
+			</td>
 			<td><a href="@routes.AdminController.editUser(user.getId)">Edit</a> | <a href="@routes.AdminController.deleteUser(user.getId)">Delete</a></td>
 		</tr>	
 		}

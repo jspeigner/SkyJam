@@ -20,6 +20,7 @@ public class UserRole extends AppModel implements Role
 {
 	public static final  String ROLE_ADMIN = "admin";
 	public static final String ROLE_USER = "user";
+	public static final String ROLE_AWAITING = "awaiting";
 	
 	
     public String name;
