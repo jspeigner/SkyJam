@@ -3,7 +3,8 @@
 	metaKeywords: String = "", 
 	metaDescription: String = "", 
 	context:play.mvc.Http.Context = play.mvc.Http.Context.current(),
-	isSecureConnection:Boolean = global.Global.isSecure()
+	isSecureConnection:Boolean = global.Global.isSecure(),
+	hideBottomMenu:Boolean = false
 )(content: Html)@import be.objectify.deadbolt.views.html._
 <!DOCTYPE html>
 <html>
@@ -148,17 +149,30 @@
         		@content
         		</div>
         		
+        		
 	        	<footer class="clearfix">
+	        		
 	        		<p class="pull-left">
-	        			<a href="@routes.ApplicationController.index()">Homepage</a> | 
-	        			<a href="@routes.PageController.termsOfUse()">Terms of Service</a> | 
-	        			<a href="@routes.PageController.privacyPolicy()">Privacy Policy</a> |
-	        			<a href="@routes.PageController.copyrightInfringment()">Copyright</a> |
-	        			<a href="@routes.PageController.about()">About</a> | 
-	        			<a href="@routes.PageController.contactUs()">Contact Us</a> |
-	        			<a href="@routes.ArtistController.browse(0)">Artists</a></p>
+	        			
+	        			<span class="user-logged-menu @if(hideBottomMenu){hidden}">
+		        			<a href="@routes.ApplicationController.index()">Homepage</a> | 
+		        			<a href="@routes.PageController.termsOfUse()">Terms of Service</a> | 
+		        			<a href="@routes.PageController.privacyPolicy()">Privacy Policy</a> |
+		        			<a href="@routes.PageController.copyrightInfringment()">Copyright</a> |
+		        			<a href="@routes.PageController.about()">About</a> | 
+		        			<a href="@routes.PageController.contactUs()">Contact Us</a> |
+		        			<a href="@routes.ArtistController.browse(0)">Artists</a>
+	        			</span>
+	        			
+        				<span class="user-unlogged-menu @if(!hideBottomMenu){hidden}">
+        					<a href="@routes.UserController.homepageRegister()" class="no-pjax">Homepage</a>
+        				</span>
+	        			
+	        		</p>
+	        		
+	        			
 	        		<p class="pull-right"><a href="#body-container">Back to Top</a></p>
-	        	</footer>        		
+	        	</footer>        	
         		
         </div>
 		<div id="fb-root"></div>

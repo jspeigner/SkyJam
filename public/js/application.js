@@ -34,6 +34,16 @@ function Application(config)
 	this.setUser = function (newUser)
 	{
 		this.user = newUser;
+		
+		// update the bottom menu
+		if( this.user ){
+			$("footer .user-logged-menu").removeClass("hidden");
+			$("footer .user-unlogged-menu").addClass("hidden");
+		} else {
+			$("footer .user-logged-menu").addClass("hidden");
+			$("footer .user-unlogged-menu").removeClass("hidden");
+		}
+		
 		$.event.trigger("application:user", [ this.user ]);
 	};
 	

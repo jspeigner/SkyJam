@@ -59,7 +59,7 @@
 		          
 		          <div class="nav-collapse">
 		          
-		          	@if(UserController.getAuthUser() != null ){
+		          	@if( ( UserController.getAuthUser != null ) && ( UserController.getAuthUser.getRoles.find( role => role.getName.equals(UserRole.ROLE_ADMIN) ) ) ){
 		          
           			<ul class="nav" id="admin-top-menu">
           				<li><a href="@routes.AdminController.dashboard()">Dashboard</a></li>
@@ -86,7 +86,7 @@
 		            
 		            } else {
 		            <ul class="nav">
-		            	<li><a href="@routes.AdminController.login()">Login</a></li>
+		            	<li><a href="@routes.AdminController.login()">Admin Login</a></li>
 		            </ul>
 		            }		
 		                             			
