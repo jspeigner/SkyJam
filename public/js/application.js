@@ -215,7 +215,7 @@ function Application(config)
 		
 		self.jCurrentForm = null;
 		
-		$(document).trigger( Application.events.PAGE_LOAD );
+		self.onPageLoaded();
 		
 	};
 	
@@ -247,7 +247,7 @@ function Application(config)
 			
 		}
 		
-		$(document).trigger( Application.events.PAGE_LOAD );
+		self.onPageLoaded();
 	};
 	
 	this.onPjaxError = function(e, xhr, textStatus, errorThrown, options)
@@ -264,6 +264,41 @@ function Application(config)
 		return false;
 	};
 	
+	this.loadLiveFyreComments = function(element){
+		
+		element = element ? element : 'livefyre-comments';
+		
+		// TODO it's a hack
+		delete window.FyreLoader; 
+		
+		(function () {
+		    var articleId = fyre.conv.load.makeArticleId(null);
+		    fyre.conv.load({}, [{
+		        el: element,
+		        network: "livefyre.com",
+		        siteId: "315942",
+		        articleId: articleId,
+		        signed: false,
+		        collectionMeta: {
+		            articleId: articleId,
+		            url: fyre.conv.load.makeCollectionUrl(),
+		        }
+		    }], 
+		    function() {
+		    	// on load
+		    	
+		    });
+		}());
+
+		
+	};
+	
+	this.onPageLoaded = function(){
+		
+		// self.loadLiveFyreComments("livefyre-comments");
+		
+		$(document).trigger( Application.events.PAGE_LOAD );
+	};
 	
 	// this is quick and dirty implementation
 	this.onDomReady = function()
@@ -395,7 +430,7 @@ function Application(config)
 		}
 		
 
-		$(document).trigger( Application.events.PAGE_LOAD );
+		self.onPageLoaded();
 
 	};
 	
@@ -408,5 +443,6 @@ function Application(config)
 Application.events = {
 		PAGE_LOAD : "app:page_load"
 }
+
 
 
