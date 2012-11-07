@@ -304,11 +304,7 @@ public class AdminController extends BaseController {
     	
     	UserInvitationCode uic = UserInvitationCode.createNewCode();
     	
-    	
-    	
-    	// email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
-    	
-    	email("aloise@aloise.name", "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
     	
     	flash("success", "Invitation has been sent");
     	
