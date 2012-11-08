@@ -177,6 +177,38 @@ public class StorageObject extends AppModel {
 		
 	}
 	
+	public InputStream getInputStream(){
+		
+		try {
+			
+			Bucket bucket = getBucket();
+			
+			if( ( bucket != null ) && ( bucket.getAmazonAccount() != null ) ){
+				/*
+				S3Service s3Service = new RestS3Service(bucket.getAmazonAccount().getJets3tAWSCredentials());
+				
+				S3Bucket s3bucket = s3Service.getBucket(bucket.getName());
+				
+				org.jets3t.service.model.S3Object obj = new org.jets3t.service.model.S3Object(getName());
+				*/
+				
+				
+				AmazonS3 s3 = new AmazonS3Client( bucket.getAmazonAccount() );
+				S3Object s3Object = s3.getObject(bucket.getName(), getName() );
+				
+				
+				
+				return s3Object.getObjectContent();
+				
+			}
+			
+		} catch ( Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public static StorageObject updateStorageObjectWithImage( String name, InputStream i, ImageMetadata imageMetadata )
 	{
 		return updateStorageObjectWithImage(name,  i, imageMetadata, Bucket.getDefault());

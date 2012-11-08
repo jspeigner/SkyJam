@@ -46,8 +46,8 @@
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.ning/async-http-client/jars/async-http-client-1.7.0.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/oauth.signpost/signpost-core/jars/signpost-core-1.2.1.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.codahale/jerkson_2.9.1/jars/jerkson_2.9.1-0.5.0.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.codehaus.jackson/jackson-core-asl/jars/jackson-core-asl-1.9.10.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.codehaus.jackson/jackson-mapper-asl/jars/jackson-mapper-asl-1.9.10.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.codehaus.jackson/jackson-core-asl/jars/jackson-core-asl-1.9.11.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.codehaus.jackson/jackson-mapper-asl/jars/jackson-mapper-asl-1.9.11.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.reflections/reflections/jars/reflections-0.9.6.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/javax.servlet/javax.servlet-api/jars/javax.servlet-api-3.0.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/javax.transaction/jta/jars/jta-1.1.jar" kind="lib"></classpathentry>
@@ -104,6 +104,7 @@
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/org.ow2.spec.ee/ow2-atinject-1.0-spec/bundles/ow2-atinject-1.0-spec-1.0.10.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.cedarsoft/guice-annotations/jars/guice-annotations-2.0.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.intellij/annotations/jars/annotations-7.0.3.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/net.jthink/jaudiotagger/jars/jaudiotagger-2.0.4-SNAPSHOT.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.github.play2war/play2-war-core-servlet30_2.9.1/jars/play2-war-core-servlet30_2.9.1-0.7.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/cache/com.github.play2war/play2-war-core-common_2.9.1/jars/play2-war-core-common_2.9.1-0.7.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/aloise/work/www/jspeigner/skyjam/src/lib/play/framework/../repository/local/play/play-test_2.9.1/2.0.3/jars/play-test_2.9.1.jar" kind="lib"></classpathentry>

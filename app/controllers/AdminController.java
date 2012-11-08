@@ -1,11 +1,30 @@
 package controllers;
 
-import global.utils.Utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
@@ -15,21 +34,18 @@ import models.Artist;
 import models.Genre;
 import models.Playlist;
 import models.Song;
+import models.StorageObject;
 import models.User;
 import models.UserInvitationCode;
 import models.UserRole;
 import models.UserSavedPlaylist;
 import controllers.UserController.Login;
 import be.objectify.deadbolt.actions.Restrict;
-import play.Play;
 import play.mvc.Result;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.db.ebean.Model.Finder;
-import views.html.Album.view;
-import views.html.Email.text.userInvitation;
+
+
 
 public class AdminController extends BaseController {
 
@@ -252,12 +268,7 @@ public class AdminController extends BaseController {
     			
         		flash("success", "Album was successfully updated");
         		
-
-        		
         		return redirect(routes.AdminController.editAlbum(albumId));
-    			
-    		
-        		
     			
     		}
     		
@@ -292,9 +303,8 @@ public class AdminController extends BaseController {
         		
         		song.update(songId);
         		
+        		
         		return redirect(routes.AdminController.editSong(songId));
-    			
-    			
     			
     		}
     		
@@ -302,6 +312,8 @@ public class AdminController extends BaseController {
     	
     	return ok(views.html.Admin.editSong.render(song, form));
     }
+
+
     
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editSongSubmit(Integer artistId){
