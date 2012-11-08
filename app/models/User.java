@@ -87,7 +87,13 @@ public class User extends AppModel implements RoleHolder
 	@Nullable
 	private String facebookUserId;
 	
-	public static final ImageMetadata imageMetadata = new ImageMetadata(64, 64, ImageMetadata.IMAGE_TYPE_PNG, "files/user/image/%d.png", "files/user/image/default.png" );
+	public static final ImageMetadata imageMetadata = new ImageMetadata(
+			64, 
+			64, 
+			ImageMetadata.IMAGE_TYPE_PNG, 
+			"files/user/image/%d.png", 
+			"files/user/image/default.png"
+	);
 	
 	@ManyToMany
     public List<UserRole> roles;		

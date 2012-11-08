@@ -246,30 +246,7 @@ public class AdminController extends BaseController {
         		album = form.get();
         		album.setId(albumId);
         		        		
-    			
-        		
-    	    	MultipartFormData body = request().body().asMultipartFormData();
-    	    	FilePart picture = body.getFile("albumArtImage");
-    	    	
-    	    	if (picture != null){
-    	    	    File imageFile = picture.getFile();
-    	    	    
-    	    	    try {
-    	    	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
-    	    	    	
-    	    	    	if(imageFile.length() > filesizeLimit) {
-    	    	    		flash("image_error", "Image size exceeds the "+ Utils.humanReadableByteCount(filesizeLimit, true)+" limit");
-    	    	    	} else {
-    		    	        boolean savedSuccessfully = album.updateImage( new FileInputStream(imageFile));
-    	    	    	}
-    	    	        
-    	    	    }
-    	    	    catch (Exception e) {
-
-    	    	    }
-    	    	    
-    	    	    imageFile.delete();
-    	    	}    			
+    			processImageUpload(album, "setAlbumArtStorageObject", Album.imageMetadata );
     			
     	    	album.update(albumId);
     			

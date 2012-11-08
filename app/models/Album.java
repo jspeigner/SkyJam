@@ -173,10 +173,7 @@ public class Album extends AppModel {
 		StorageObject s = StorageObject.updateStorageObjectWithImage( imageMetadata.getFilename(getId()), sourceImage, imageMetadata);
 		setAlbumArtStorageObject(s);
 		
-		
-		System.out.println(s.getId());
-		
-		update( getId() );
+		update();
 		
 		return s != null;
 			

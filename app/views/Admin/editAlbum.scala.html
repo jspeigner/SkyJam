@@ -8,7 +8,6 @@
 		<ul class="nav nav-pills">
 		  <li><a href="@routes.AdminController.editArtist(album.getArtist.getId)">Edit Artist - @album.getArtist.getName</a></li>
 		  <li><a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a></li>
-		  
 		</ul>	
 	</div>
 	
@@ -19,6 +18,7 @@
             @if(flash.contains("image_error")) {
                 <div class="alert alert-error">@flash.get("image_error")</div>
             }	
+	
 	
 			
 			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
@@ -31,7 +31,18 @@
 			
 			@helper.inputText(form("copyrightYear" ), '_showConstraints -> false, '_label -> "Copyright Year", 'class -> "span1")
 		
-			@helper.inputFile(form("albumArtImage"), '_label -> "Album Art")
+			@helper.inputFile(form("image"), '_label -> "Album Art", '_help -> ( "album Art image will be resized to " + models.Album.imageMetadata.width.toString + "x" + models.Album.imageMetadata.height.toString + " px" ) )
+
+			@if( album.getAlbumArtStorageObject != null ){
+				<div class="control-group">
+				
+					<div class="controls row-fluid">
+						<div class="span1"><a href="@album.getAlbumArtUrl?_=@util.Random.nextInt" class="thumbnail" target="_blank"><img alt="Album Art" src="@album.getAlbumArtUrl?_=@util.Random.nextInt" ></a></div>
+					</div>
+					
+				</div>
+			}			
+			
 		
 			<div class="form-actions">
 				<input class="btn btn-success" type="submit" value="Update" />

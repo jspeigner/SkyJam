@@ -1,5 +1,7 @@
 package models.behavior;
 
+import java.lang.reflect.Method;
+
 import models.Bucket;
 import models.StorageObject;
 import play.Play;
@@ -19,6 +21,7 @@ public class ImageMetadata {
 	public String contentType = null;
 	public String filenameFormat = null;
 	public String defaultImageUrl = null;
+	public Method updateFieldMethod = null; 
 	
 	public ImageMetadata(int width, int height, String imageType, String contentType, String filenameFormat, String defaultImageUrl )
 	{
@@ -35,7 +38,7 @@ public class ImageMetadata {
 
 	public ImageMetadata(int width, int height, String imageType, String imagePathFormat, String defaultImageUrl )
 	{
-		this(width, height, imageType, "image/"+imageType, imagePathFormat, defaultImageUrl);
+		this(width, height, imageType, "image/"+imageType, imagePathFormat, defaultImageUrl );
 	}
 
 	public ImageMetadata(int width, int height, String imageType, String imagePathFormat )

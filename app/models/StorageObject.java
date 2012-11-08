@@ -189,7 +189,7 @@ public class StorageObject extends AppModel {
 	    {
 	    	BufferedImage sourceImage = ImageIO.read( i );
 	        
-	    	BufferedImage resizedImage = Scalr.resize(sourceImage,  Scalr.Method.BALANCED, Scalr.Mode.AUTOMATIC, User.imageMetadata.width, User.imageMetadata.height, Scalr.OP_ANTIALIAS );
+	    	BufferedImage resizedImage = Scalr.resize(sourceImage,  Scalr.Method.BALANCED, Scalr.Mode.AUTOMATIC, imageMetadata.width, imageMetadata.height, Scalr.OP_ANTIALIAS );
 	        
 	        ByteArrayOutputStream encodedImageStream = new ByteArrayOutputStream();
 	        
