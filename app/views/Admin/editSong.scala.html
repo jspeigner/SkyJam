@@ -21,6 +21,8 @@
 			
 			@helper.inputText(form("duration"),  '_label -> "Song Duration, s", 'class -> "span1")
 			
+			@helper.inputText(form("tracknumber"),  '_label -> "Track Number", 'class -> "span1")
+			
 			@helper.select(form("status"), scala.collection.immutable.List( Tuple2("hidden", "hidden"), Tuple2("visible", "visible") )  ,   '_label -> "Is visible ?", 'class -> "span2")
 		
 			<div class="form-actions">

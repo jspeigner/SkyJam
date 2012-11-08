@@ -28,6 +28,8 @@ public class Song extends AppModel {
 	
 	private Integer duration;
 	
+	private Integer tracknumber;
+	
 	@ManyToOne
 	private StorageObject storageObject;
 	
@@ -175,6 +177,14 @@ public class Song extends AppModel {
     	} else {
     		return ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
     	}
+	}
+
+	public Integer getTracknumber() {
+		return tracknumber;
+	}
+
+	public void setTracknumber(Integer tracknumber) {
+		this.tracknumber = tracknumber;
 	}	
 	
 }
