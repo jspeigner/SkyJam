@@ -1,0 +1,26 @@
+@(song:Song, tags: org.jaudiotagger.tag.Tag)
+
+@if(tags!=null){
+<ul class="song-metadata">
+	<li>
+		<dl>
+			<dt>Artist</dt>
+			<dd>@tags.getFirst( org.jaudiotagger.tag.FieldKey.ARTIST )</dd>
+		</dl>
+	</li>
+	<li>
+		<dl>
+			<dt>Album</dt>
+			<dd>@tags.getFirst( org.jaudiotagger.tag.FieldKey.ALBUM )</dd>
+		</dl>
+	</li>
+	<li>
+		<dl>
+			<dt>Title</dt>
+			<dd>@tags.getFirst( org.jaudiotagger.tag.FieldKey.TITLE )</dd>
+		</dl>
+	</li>		
+</ul>
+} else {
+<p>There was an error retrieving the metadata.</p>
+}

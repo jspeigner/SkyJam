@@ -1,0 +1,76 @@
+@(song:Song, form: Form[Song])@import helper.twitterBootstrap2._
+@Layout.admin("Edit Song") {
+<script type="text/javascript">
+
+$(function(){
+	$(".read-id3-tags").click(function(){
+		$(".read-id3-tags").hide();
+		
+		$("#id3-tags").removeClass("hide");
+		
+		$.get("@routes.AdminController.readSongMetadata(song.getId)", {}, 
+				function(result){
+					
+					
+					$("#id3-tags").html( result );
+					
+				},
+				"html"
+				
+		);
+		
+		return false;
+	});
+});
+
+</script>
+	
+	<h1>Edit Song</h1>
+	<hr>
+	<div>
+		<ul class="nav nav-pills">
+		  <li><a href="@routes.AdminController.editArtist(song.getAlbum.getArtist.getId)">Edit Artist - @song.getAlbum.getArtist.getName</a></li>
+		  <li><a href="@routes.AdminController.editAlbum(song.getAlbum.getId)">Edit Album - @song.getAlbum.getName</a></li>
+		  @if(song.getSongUrl != null){
+		  <li><a target="_blank" href="@song.getSongUrl"><i class="icon-download"></i> Direct S3 URL</a></li>
+		  }
+		</ul>	
+	</div>	
+	<hr>
+	
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+	  <li class=""><a href="#actions" data-toggle="tab">Actions</a></li>
+	</ul>
+	<div class="tab-content">
+			<div class="tab-pane active" id="profile">
+			
+				@helper.form(action = routes.AdminController.editSongSubmit(song.getId), 'class -> "form-horizontal well", 'id -> "song-edit", 'enctype ->"multipart/form-data" ) {
+						
+						@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
+						
+						@helper.inputText(form("keywords" ), '_showConstraints -> false, '_label -> "Keywords", 'class -> "span8")
+						
+						@helper.inputText(form("duration"),  '_label -> "Song Duration, s", 'class -> "span1")
+						
+						@helper.inputText(form("tracknumber"),  '_label -> "Track Number", 'class -> "span1")
+						
+						@helper.select(form("status"), scala.collection.immutable.List( Tuple2("hidden", "hidden"), Tuple2("visible", "visible") )  ,   '_label -> "Is visible ?", 'class -> "span2")
+					
+						<div class="form-actions">
+							<input class="btn btn-success" type="submit" value="Update" />
+						</div>
+					
+				}			
+			
+			</div>
+			<div class="tab-pane hide" id="actions">
+				<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
+				<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+			</div>
+	</div>	
+	
+
+	
+	
+}

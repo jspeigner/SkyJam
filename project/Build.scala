@@ -12,14 +12,16 @@ object ApplicationBuild extends Build {
       // Add your project dependencies here,
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"be.objectify" %% "deadbolt-2" % "1.1.2",
-		"com.typesafe" %% "play-plugins-mailer" % "2.0.4"
+		"com.typesafe" %% "play-plugins-mailer" % "2.0.4",
+		"net.jthink" % "jaudiotagger" % "2.0.4-SNAPSHOT"
 
     )
     
 	val projectSettings = Play2WarPlugin.play2WarSettings ++ Seq(
 	  // Your settings
 	  Play2WarKeys.servletVersion := "3.0",
-	  resolvers += Resolver.url("Objectify Play Repository", url("http://schaloner.github.com/releases/"))(Resolver.ivyStylePatterns)
+	  resolvers += Resolver.url("Objectify Play Repository", url("http://schaloner.github.com/releases/"))(Resolver.ivyStylePatterns),
+	  resolvers += "Jaudiotagger" at "https://maven.java.net/content/repositories/snapshots/"
 	)    
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(

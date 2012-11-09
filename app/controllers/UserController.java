@@ -48,7 +48,6 @@ public class UserController extends BaseController {
     	
         protected String password;
         
-        
         public String getEmail() { return email; }
         
         public void setEmail(String e) { email = e; }
@@ -214,12 +213,12 @@ public class UserController extends BaseController {
     		user.setUsername( user.getEmail() );
     		user.setRegisteredDate(new Date());
     		user.roles = new ArrayList<UserRole>();
-    		user.roles.add(UserRole.findByName("awaiting"));
+    		user.roles.add(UserRole.findByName( UserRole.ROLE_AWAITING));
     		
     		try
     		{
 	    		user.save();
-	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		Ebean.saveManyToManyAssociations(user, "roles");
     		}
     		catch(Exception p)
     		{
@@ -289,14 +288,20 @@ public class UserController extends BaseController {
     		userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
     	}
     	
-    	if(userForm.hasErrors())
-    	{
+    	if(userForm.hasErrors()) {
     		
     		return ok (views.html.User.register.render(userForm));
     	}
     	else
     	{
     		User user = userForm.get();
+    		
+    		// remove the existing user waiting for invitation
+    		List<User> existingUsers = User.find.where().eq("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).eq("email", user.getEmail() ).findList();
+    		if(( existingUsers != null ) && ( existingUsers.size() > 0 ) ){
+    			Ebean.delete(existingUsers);
+    		}
+    		
     		
     		user.setRegisteredDate(new Date());
     		user.setLastLoginDate(null);
@@ -396,36 +401,7 @@ public class UserController extends BaseController {
     	MultipartFormData body = request().body().asMultipartFormData();
     	FilePart picture = body.getFile("image");
     	
-    	if (picture != null) 
-    	{
-    	    File imageFile = picture.getFile();
-    	    
-    	    try
-    	    {
-    	        long filesizeLimit = Play.application().configuration().getInt("application.thumbnail.max_filesize");
-    	    	
-    	    	if(imageFile.length() > filesizeLimit)
-    	    		
-    	    	{
-    	    		flash("image_error", "Image size exceeds the "+ Utils.humanReadableByteCount(filesizeLimit, true)+" limit");
-    	    	}
-    	    	else
-    	    	{
-	    	        boolean savedSuccessfully = user.updateImage( new FileInputStream(imageFile));
-	    	        if(savedSuccessfully){
-	    	        	flash("image_success", "Your photo was updated successfully");
-	    	        } else {
-	    	        	flash("image_error", "There was an error changing the image.");
-	    	        }
-    	    	}
-    	        
-    	    }
-    	    catch (Exception e) 
-    	    {
-    	    }
-    	    
-    	    imageFile.delete();
-    	}
+    	processImageUpload(user, "setImageStorageObject", User.imageMetadata );
     	
     	if( validateUserPassword(userForm)){
 			user.setPassword(formData.get("password_reset"));
@@ -433,6 +409,7 @@ public class UserController extends BaseController {
 
 			flash("password_success", "Your password has been successfully updated");    		
     	}
+    	
 
 
     	

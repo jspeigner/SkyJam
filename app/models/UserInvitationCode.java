@@ -18,12 +18,13 @@ import play.db.ebean.Model.Finder;
 public class UserInvitationCode extends AppModel {
 
 	@Length(max=32)
-	protected String code;
+	private String code;
 
 	@Column(nullable=true)
 	@ManyToOne
 	protected User user;
 	
+	protected static String codeCharacters = "abcdefghijklmnopqrstuvwxyz01234567890";
 	
 	public static Model.Finder<Integer,UserInvitationCode> find = new Finder<Integer, UserInvitationCode>(Integer.class, UserInvitationCode.class);
 	
@@ -39,5 +40,22 @@ public class UserInvitationCode extends AppModel {
 	public static UserInvitationCode isAvailable(String code){
 		return find.where().eq("code", code).eq("user_id", null).setMaxRows(1).findUnique();
 	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 	
+	public static UserInvitationCode createNewCode(){
+		UserInvitationCode uic = new UserInvitationCode();
+		String code;
+		while( UserInvitationCode.isAvailable( code = org.apache.commons.lang.RandomStringUtils.random(32, UserInvitationCode.codeCharacters ) ) != null );
+		uic.setCode( code );
+		uic.save();
+		
+		return uic;
+	}
 }

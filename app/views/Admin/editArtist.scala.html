@@ -1,0 +1,28 @@
+@(artist:Artist, form: Form[Artist])@import helper.twitterBootstrap2._
+@Layout.admin("Edit Artist") {
+	<h1>Edit Artist</h1>
+	<hr>
+	<div>
+		<ul class="nav nav-pills">
+		  
+		  <li><a href="@routes.AdminController.browseAlbums(artistId = artist.getId)">List Albums</a></li>
+		  
+		</ul>	
+	</div>
+	
+	@helper.form(action = routes.AdminController.editArtistSubmit(artist.getId), 'class -> "form-horizontal well", 'id -> "artist-edit", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+			
+			@helper.inputText(form("url" ), '_showConstraints -> false, '_label -> "URL", 'class -> "span4")
+			
+			@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Info", 'class -> "span8", 'rows -> 5)
+			
+			
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Update" />
+			</div>		
+		
+	}
+}

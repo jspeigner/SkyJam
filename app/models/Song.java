@@ -2,6 +2,12 @@ package models;
 
 import javax.persistence.*;
 
+import org.apache.commons.io.FilenameUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+
 import models.Playlist.Status;
 
 import com.avaje.ebean.Expr;
@@ -9,6 +15,12 @@ import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 import play.db.ebean.Model;
@@ -27,6 +39,8 @@ public class Song extends AppModel {
 	private String keywords;
 	
 	private Integer duration;
+	
+	private Integer tracknumber;
 	
 	@ManyToOne
 	private StorageObject storageObject;
@@ -175,6 +189,67 @@ public class Song extends AppModel {
     	} else {
     		return ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
     	}
+	}
+
+	public Integer getTracknumber() {
+		return tracknumber;
+	}
+
+	public void setTracknumber(Integer tracknumber) {
+		this.tracknumber = tracknumber;
+	}	
+	
+	public Tag readMetadataTags() {
+		Tag tags = null;
+		
+		if( this.getStorageObject() != null ){
+    			
+			File tempFile = null;
+			StorageObject s = this.getStorageObject();
+    			
+    			if( s.getInputStream() != null ){
+    			
+    				try {
+    				
+		    	        tempFile = readStorageObjectInFile(s);
+		    			
+						AudioFile a;
+						
+						a = AudioFileIO.read( tempFile );
+		
+						tags = a.getTag();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+    			}
+    			
+    			if( tempFile != null ){
+    				tempFile.delete();
+    			}
+    			
+    		}
+		
+		return tags;
+	}
+
+	private File readStorageObjectInFile(StorageObject s) throws IOException,
+			FileNotFoundException {
+		File tempFile;
+		InputStream in = s.getInputStream();
+		tempFile = File.createTempFile("song_id_"+this.getId()+"_", "." + FilenameUtils.getExtension(s.getName()) );
+		OutputStream out = new FileOutputStream(tempFile );
+		
+		byte[] buffer = new byte[1024*64];
+		int bytesRead = 0;
+		
+		while ((bytesRead = in.read(buffer)) > 0) {  
+			out.write(buffer, 0, bytesRead);
+		}
+
+		in.close();
+		out.close();
+		return tempFile;
 	}	
 	
 }

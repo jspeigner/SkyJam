@@ -24,7 +24,7 @@
 		<tr>
 			<td>@artist.getId</td>
 			<td>@artist.getName</td>
-			<td><a href="#">Edit</a> | <a href="@routes.AdminController.browseAlbums(artistId = artist.getId)">List Albums</a> | <a href="#">Delete</a></td>
+			<td><a href="@routes.AdminController.editArtist(artist.getId)">Edit</a> | <a href="@routes.AdminController.browseAlbums(artistId = artist.getId)">List Albums</a> | <a href="#">Delete</a></td>
 		</tr>	
 		}
 		</tbody>

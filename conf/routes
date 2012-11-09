@@ -42,22 +42,30 @@ GET			/playlist/publish/:id	controllers.PlaylistController.publish(id:java.lang.
 GET			/playlist/private/:id	controllers.PlaylistController.makePrivate(id:java.lang.Integer)
 GET			/user/playlists			controllers.PlaylistController.userPlaylists(page: java.lang.Integer ?= 0)
 
-GET			/admin/dashboard		controllers.AdminController.dashboard()
+GET			/admin					controllers.AdminController.dashboard()
 POST    	/admin/login            controllers.AdminController.authenticate()
 GET			/admin/login			controllers.AdminController.login()
 GET			/admin/logout			controllers.AdminController.logout()
 
-GET			/admin/users/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
-POST		/admin/users/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
-GET			/admin/users/delete/:id			controllers.AdminController.deleteUser(id: java.lang.Integer)
-POST		/admin/users/delete/:id			controllers.AdminController.deleteUserSubmit(id: java.lang.Integer)
+GET			/admin/user/edit/:id			controllers.AdminController.editUser(id: java.lang.Integer)
+POST		/admin/user/edit/:id			controllers.AdminController.editUserSubmit(id: java.lang.Integer)
+GET			/admin/user/delete/:id			controllers.AdminController.deleteUser(id: java.lang.Integer)
+POST		/admin/user/delete/:id			controllers.AdminController.deleteUserSubmit(id: java.lang.Integer)
+POST		/admin/user/send_invitation/:id	controllers.AdminController.sendInvitation(id: java.lang.Integer)
 GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
 
-GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
-
 GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:java.lang.Integer ?= 0, term:String ?= "")
+GET			/admin/artist/edit/:id			controllers.AdminController.editArtist(id: java.lang.Integer)
+POST		/admin/artist/edit/:id			controllers.AdminController.editArtistSubmit(id: java.lang.Integer)
 
 GET			/admin/albums/browse			controllers.AdminController.browseAlbums(page:java.lang.Integer ?= 0, term:String ?= "", artistId:java.lang.Integer ?= 0)
+GET			/admin/album/edit/:id			controllers.AdminController.editAlbum(id: java.lang.Integer)
+POST		/admin/album/edit/:id			controllers.AdminController.editAlbumSubmit(id: java.lang.Integer)
+
+GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
+GET			/admin/song/edit/:id			controllers.AdminController.editSong(id: java.lang.Integer)
+POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java.lang.Integer)
+GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 
 
 GET     /login                      				controllers.UserController.login()

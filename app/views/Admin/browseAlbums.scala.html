@@ -30,7 +30,7 @@
 			<td>@album.getId</td>
 			<td>@album.getName</td>
 			<td>@album.getArtist.getName</td>
-			<td><a href="#">Edit</a> | <a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a> | <a href="#">Delete</a></td>
+			<td><a href="@routes.AdminController.editAlbum(album.getId)">Edit</a> | <a href="@routes.AdminController.browseSongs(albumId = album.getId)">List Songs</a> | <a href="#">Delete</a></td>
 		</tr>	
 		}
 		</tbody>

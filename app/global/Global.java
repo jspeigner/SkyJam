@@ -5,7 +5,6 @@ import play.*;
 import play.mvc.*;
 import play.mvc.Http.RequestHeader;
 import play.mvc.Results;
-import views.html.Album.view;
 
 
 public class Global extends GlobalSettings {

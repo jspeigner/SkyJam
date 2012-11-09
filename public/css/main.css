@@ -81,6 +81,7 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 
 #homepage-register  { width:60%; margin: 0 auto; }
 	#homepage-register h1 { margin-bottom: 1em; }
+	#homepage-register .controls input { width:300px;} 
 	
 .form-horizontal.well.center { width:60%; margin: 0 auto; }	
 	.form-horizontal.well.center h1 { margin-bottom: 1em; }
@@ -154,3 +155,5 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 			
 #terms-of-use {}
 	#terms-of-use ul li { line-height: 1.5em; margin-bottom: 0.5em; }
+	
+	

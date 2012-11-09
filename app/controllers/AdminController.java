@@ -1,16 +1,42 @@
 package controllers;
 
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
 
 import models.Album;
 import models.Artist;
+import models.Genre;
 import models.Playlist;
 import models.Song;
+import models.StorageObject;
 import models.User;
+import models.UserInvitationCode;
 import models.UserRole;
 import models.UserSavedPlaylist;
 import controllers.UserController.Login;
@@ -18,7 +44,8 @@ import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.db.ebean.Model.Finder;
+
+
 
 public class AdminController extends BaseController {
 
@@ -175,8 +202,152 @@ public class AdminController extends BaseController {
     	
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
     public static Result deleteUserSubmit(Integer userId){
     	return deleteUser(userId);
     }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editArtist(Integer artistId){
+    	Artist artist = Artist.find.byId(artistId);
+    	if( artist == null){
+    		return notFound("Artist was not found");
+    	}
+    	
+    	Form<Artist> form = form(Artist.class).fill(artist);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Artist.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Artist was successfully updated");
+        		
+        		artist = form.get();
+        		
+        		artist.update(artistId);
+        		
+        		return redirect(routes.AdminController.editArtist(artistId));
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editArtist.render(artist, form));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editArtistSubmit(Integer artistId){
+    	return editArtist(artistId);
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editAlbum(Integer albumId){
+    	Album album = Album.find.byId(albumId);
+    	if( album == null){
+    		return notFound("Album was not found");
+    	}
+    	
+    	Form<Album> form = form(Album.class).fill(album);
+    	
+    	if(request().method().equals("POST")){
+    		
+
+    		
+    		form = form(Album.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		album = form.get();
+        		album.setId(albumId);
+        		        		
+    			processImageUpload(album, "setAlbumArtStorageObject", Album.imageMetadata );
+    			
+    	    	album.update(albumId);
+    			
+        		flash("success", "Album was successfully updated");
+        		
+        		return redirect(routes.AdminController.editAlbum(albumId));
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editAlbum.render(album, form, Genre.find.findList()));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editAlbumSubmit(Integer artistId){
+    	return editAlbum(artistId);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editSong(Integer songId){
+    	Song song = Song.find.byId(songId);
+    	if( song == null){
+    		return notFound("Song was not found");
+    	}
+    	
+    	Form<Song> form = form(Song.class).fill(song);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Song.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Song was successfully updated");
+        		
+        		song = form.get();
+        		
+        		song.update(songId);
+        		
+        		
+        		return redirect(routes.AdminController.editSong(songId));
+    			
+    		}
+    		
+    	}
+    	
+    	return ok(views.html.Admin.editSong.render(song, form));
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result readSongMetadata(Integer songId){
+    	Song song = Song.find.byId(songId);
+    	if(song==null){
+    		return notFound("Song was not found");
+    	}
+    	
+    	Tag t = song.readMetadataTags();
+    	
+    	return ok(views.html.Admin.readSongMetadata.render(song, t));
+    }
+
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editSongSubmit(Integer artistId){
+    	return editSong(artistId);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result sendInvitation(Integer userId){
+    	
+    	User user = User.find.byId(userId);
+    	if(user == null){
+    		return notFound("User not found");
+    	}
+    	
+    	UserInvitationCode uic = UserInvitationCode.createNewCode();
+    	
+    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	
+    	flash("success", "Invitation has been sent");
+    	
+    	return redirect(routes.AdminController.editUser(userId));
+    }
+    
+    
     
 }
