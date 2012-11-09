@@ -6,3 +6,5 @@ header .navbar .brand img { width: 73px; height: 32px; }
 	#admin-top-menu { margin-left:1em; }
 	
 	.pagination .pull-right p { margin:0; line-height: 40px;}
+	
+	#id3-tags ul {list-style: none;}

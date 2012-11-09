@@ -200,6 +200,8 @@ public class Song extends AppModel {
 	}	
 	
 	public Tag readMetadataTags() {
+		Tag tags = null;
+		
 		if( this.getStorageObject() != null ){
     			
 			File tempFile = null;
@@ -215,16 +217,7 @@ public class Song extends AppModel {
 						
 						a = AudioFileIO.read( tempFile );
 		
-						Tag t = a.getTag();
-						
-						return t;
-						
-						/*
-						System.out.println( "Song #" + song.getId() + " - Artist : " + t.getFirst( FieldKey.ARTIST ) );
-						System.out.println( "Song #" + song.getId() + " - Album  : " + t.getFirst( FieldKey.ALBUM ) );
-						System.out.println( "Song #" + song.getId() + " - Title  : " + t.getFirst( FieldKey.TITLE ) );
-						*/
-						
+						tags = a.getTag();
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -237,7 +230,7 @@ public class Song extends AppModel {
     			
     		}
 		
-		return null;
+		return tags;
 	}
 
 	private File readStorageObjectInFile(StorageObject s) throws IOException,

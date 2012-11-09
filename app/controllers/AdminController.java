@@ -313,6 +313,17 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.editSong.render(song, form));
     }
 
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result readSongMetadata(Integer songId){
+    	Song song = Song.find.byId(songId);
+    	if(song==null){
+    		return notFound("Song was not found");
+    	}
+    	
+    	Tag t = song.readMetadataTags();
+    	
+    	return ok(views.html.Admin.readSongMetadata.render(song, t));
+    }
 
     
     @Restrict(UserRole.ROLE_ADMIN)
@@ -336,5 +347,7 @@ public class AdminController extends BaseController {
     	
     	return redirect(routes.AdminController.editUser(userId));
     }
+    
+    
     
 }

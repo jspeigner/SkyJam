@@ -65,6 +65,7 @@ POST		/admin/album/edit/:id			controllers.AdminController.editAlbumSubmit(id: ja
 GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
 GET			/admin/song/edit/:id			controllers.AdminController.editSong(id: java.lang.Integer)
 POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java.lang.Integer)
+GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 
 
 GET     /login                      				controllers.UserController.login()

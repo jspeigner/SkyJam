@@ -1,5 +1,30 @@
 @(song:Song, form: Form[Song])@import helper.twitterBootstrap2._
 @Layout.admin("Edit Song") {
+<script type="text/javascript">
+
+$(function(){
+	$(".read-id3-tags").click(function(){
+		$(".read-id3-tags").hide();
+		
+		$("#id3-tags").removeClass("hide");
+		
+		$.get("@routes.AdminController.readSongMetadata(song.getId)", {}, 
+				function(result){
+					
+					
+					$("#id3-tags").html( result );
+					
+				},
+				"html"
+				
+		);
+		
+		return false;
+	});
+});
+
+</script>
+	
 	<h1>Edit Song</h1>
 	<hr>
 	<div>
@@ -11,23 +36,41 @@
 		  }
 		</ul>	
 	</div>	
+	<hr>
 	
-	
-	@helper.form(action = routes.AdminController.editSongSubmit(song.getId), 'class -> "form-horizontal well", 'id -> "song-edit", 'enctype ->"multipart/form-data" ) {
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+	  <li class=""><a href="#actions" data-toggle="tab">Actions</a></li>
+	</ul>
+	<div class="tab-content">
+			<div class="tab-pane active" id="profile">
 			
-			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
+				@helper.form(action = routes.AdminController.editSongSubmit(song.getId), 'class -> "form-horizontal well", 'id -> "song-edit", 'enctype ->"multipart/form-data" ) {
+						
+						@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span8")
+						
+						@helper.inputText(form("keywords" ), '_showConstraints -> false, '_label -> "Keywords", 'class -> "span8")
+						
+						@helper.inputText(form("duration"),  '_label -> "Song Duration, s", 'class -> "span1")
+						
+						@helper.inputText(form("tracknumber"),  '_label -> "Track Number", 'class -> "span1")
+						
+						@helper.select(form("status"), scala.collection.immutable.List( Tuple2("hidden", "hidden"), Tuple2("visible", "visible") )  ,   '_label -> "Is visible ?", 'class -> "span2")
+					
+						<div class="form-actions">
+							<input class="btn btn-success" type="submit" value="Update" />
+						</div>
+					
+				}			
 			
-			@helper.inputText(form("keywords" ), '_showConstraints -> false, '_label -> "Keywords", 'class -> "span8")
-			
-			@helper.inputText(form("duration"),  '_label -> "Song Duration, s", 'class -> "span1")
-			
-			@helper.inputText(form("tracknumber"),  '_label -> "Track Number", 'class -> "span1")
-			
-			@helper.select(form("status"), scala.collection.immutable.List( Tuple2("hidden", "hidden"), Tuple2("visible", "visible") )  ,   '_label -> "Is visible ?", 'class -> "span2")
-		
-			<div class="form-actions">
-				<input class="btn btn-success" type="submit" value="Update" />
 			</div>
-		
-	}
+			<div class="tab-pane hide" id="actions">
+				<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
+				<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+			</div>
+	</div>	
+	
+
+	
+	
 }
