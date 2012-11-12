@@ -1,16 +1,10 @@
 package models;
 
-import javax.annotation.Nullable;
+
 import javax.persistence.*;
-
-import com.avaje.ebean.Expr;
-import com.avaje.ebean.Expression;
 import com.avaje.ebean.validation.Length;
-
-import java.util.List;
-import java.util.Set;
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
+
 
 
 @Entity
@@ -23,6 +17,10 @@ public class UserInvitationCode extends AppModel {
 	@Column(nullable=true)
 	@ManyToOne
 	protected User user;
+	
+	@Column(nullable=true)
+	@ManyToOne
+	private User sourceUser;
 	
 	protected static String codeCharacters = "abcdefghijklmnopqrstuvwxyz01234567890";
 	
@@ -50,12 +48,26 @@ public class UserInvitationCode extends AppModel {
 	}
 	
 	public static UserInvitationCode createNewCode(){
+		return createNewCode(null);
+	}
+	
+	public static UserInvitationCode createNewCode(User sourceUser){
 		UserInvitationCode uic = new UserInvitationCode();
+		uic.setSourceUser(sourceUser);
+		
 		String code;
 		while( UserInvitationCode.isAvailable( code = org.apache.commons.lang.RandomStringUtils.random(32, UserInvitationCode.codeCharacters ) ) != null );
 		uic.setCode( code );
 		uic.save();
 		
 		return uic;
+	}
+
+	public User getSourceUser() {
+		return sourceUser;
+	}
+
+	public void setSourceUser(User sourceUser) {
+		this.sourceUser = sourceUser;
 	}
 }
