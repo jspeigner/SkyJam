@@ -1,44 +1,17 @@
 package controllers;
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
+
+
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
 
-import models.Album;
-import models.Artist;
-import models.Genre;
-import models.Playlist;
-import models.Song;
-import models.StorageObject;
-import models.User;
-import models.UserInvitationCode;
-import models.UserRole;
-import models.UserSavedPlaylist;
+import models.*;
 import controllers.UserController.Login;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
@@ -339,7 +312,7 @@ public class AdminController extends BaseController {
     		return notFound("User not found");
     	}
     	
-    	UserInvitationCode uic = UserInvitationCode.createNewCode();
+    	UserInvitationCode uic = UserInvitationCode.createNewCode(user);
     	
     	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
     	
