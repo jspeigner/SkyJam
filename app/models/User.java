@@ -511,5 +511,8 @@ public class User extends AppModel implements RoleHolder
 		return 0;
 	}
 	
+	public int getSentInvitationsCount(){
+		return UserInvitationCode.find.where().eq("sourceUser", this).findRowCount(); 
+	}
 	
 }

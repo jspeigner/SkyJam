@@ -29,10 +29,16 @@
 			<td>@user.getEmail</td>
 			<td>@if(user.getRoles != null){
 					@user.getRoles.map( (role) => role.getRoleName ).mkString(", ")
+					@if(user.getRoles.exists( _.getRoleName.equals(models.UserRole.ROLE_AWAITING) )){
+						@if(user.getSentInvitationsCount > 0){
+						/ invited
+						}				
+					} 
 				}
+				
 			</td>
 			<td><a href="@routes.AdminController.editUser(user.getId)">Edit</a> | <a href="@routes.AdminController.deleteUser(user.getId)">Delete</a></td>
-		</tr>	
+		</tr>
 		}
 		</tbody>
 	</table>

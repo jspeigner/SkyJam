@@ -1,4 +1,4 @@
-@( user:User, userForm:Form[User], userPlaylists: Page[Playlist], savedPlaylists: List[UserSavedPlaylist])@import helper.twitterBootstrap2._
+@( user:User, userForm:Form[User], userPlaylists: Page[Playlist], savedPlaylists: List[UserSavedPlaylist], invitationsSent:List[UserInvitationCode])@import helper.twitterBootstrap2._
 @Layout.admin("Edit User") {
 	<h1>Edit User</h1>
 	<hr>
@@ -28,13 +28,25 @@
 				  
 				  <div class="control-group">
 				  	<div class="controls">
-				  		<p>This user is waiting for the inviation.</p>
+				  		@if(invitationsSent.size > 0 ){
+				  			@if(invitationsSent.size == 1){
+				  			<p>Invitation has been sent to this user.</p>
+				  			} else {
+				  			<p>There were @invitationsSent.size invitations sent.</p>
+				  			}
+				  		} else {
+				  		<p>This user is waiting for the invitation.</p>
+				  		}
 				  	</div>
 				  	
 				  </div>		
 
 				  <div class="form-actions">
-						<input class="btn btn-primary" type="submit" value="Send Invitation" />
+				  		@if(invitationsSent.size > 0 ){
+							<input class="btn btn-primary" 	type="submit" value="Send an Invitation again" />
+						} else {
+							<input class="btn btn-primary" 	type="submit" value="Send an Invitation" />
+						}
 				  </div>
 
 	  				

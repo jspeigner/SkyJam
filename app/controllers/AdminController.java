@@ -110,8 +110,9 @@ public class AdminController extends BaseController {
 	    	
 	    	Page<Playlist> userPlaylists = Playlist.getUserPlaylistsPage(user, 0, 100);
 	    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(user, UserController.maxUserSavedPlaylists);
+	    	List<UserInvitationCode> inviatationsSent = UserInvitationCode.find.where().eq("sourceUser", user).findList();
 	    	
-	    	return ok( views.html.Admin.editUser.render( user, userForm, userPlaylists, savedPlaylists ) );
+	    	return ok( views.html.Admin.editUser.render( user, userForm, userPlaylists, savedPlaylists, inviatationsSent ) );
 	    	
     	} else {
     		return notFound("User not found"); 
