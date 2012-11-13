@@ -1,0 +1,85 @@
+@(song:Song, songs:List[com.echonest.api.v4.Song], e:Exception = null)@Layout.admin("Edit Artist") {
+<h1>Echonest Metadata</h1>
+<h2><a href="@routes.AdminController.editSong(song.getId)">@song.getName</a></h2>
+<hr>
+@if(e!=null){
+<div class="alert alert-error">@e</div>
+}
+
+@if(songs!=null){
+	<ul>
+	@for(echonestSong <- songs){
+		<li>
+			<dl>
+				<dt>Title</dt>
+				<dd>@echonestSong.getTitle</dd>
+			</dl>
+			<dl>
+				<dt>Artist</dt>
+				<dd>@echonestSong.getArtistName</dd>
+			</dl>
+			<dl>
+				<dt>Duration</dt>
+				<dd>@echonestSong.getDuration</dd>
+			</dl>
+			<dl>
+				<dt>BPM</dt>
+				<dd>@echonestSong.getTempo</dd>
+			</dl>
+			<dl>
+				<dt>Mode</dt>
+				<dd>@echonestSong.getMode</dd>
+			</dl>
+			<dl>
+				<dt>Song Hotttnesss</dt>
+				<dd>@echonestSong.getSongHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Hotttnesss</dt>
+				<dd>@echonestSong.getArtistHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Familiarity</dt>
+				<dd>@echonestSong.getArtistFamiliarity</dd>
+			</dl>
+			<dl>
+				<dt>Artist Location</dt>
+				<dd>@echonestSong.getArtistLocation</dd>
+			</dl>
+			<dl>
+				<dt>Audio Info</dt>
+				<dd>@if( echonestSong.getAudio ){
+						@echonestSong.getAudio
+					} else { 
+						<i>null</i> 
+					} </dd>
+			</dl>			
+			<dl>
+				<dt>Cover Art</dt>
+				<dd>@if( echonestSong.getCoverArt ){
+						@echonestSong.getCoverArt
+					} else { 
+						<i>null</i> 
+					} 
+				</dd>
+			</dl>
+			<dl>
+				<dt>Release Name</dt>
+				<dd>@echonestSong.getReleaseName</dd>
+			</dl>
+			<dl>
+				<dt>Release Image</dt>
+				<dd>@if( echonestSong.getReleaseImage ){
+					@echonestSong.getReleaseImage
+				} else {
+					<i>null</i>
+				}
+				</dd>
+			</dl>															
+		
+		</li>
+	}
+	</ul>
+}
+
+}
