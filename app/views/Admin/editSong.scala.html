@@ -56,7 +56,7 @@ $(function(){
 	
 	<ul class="nav nav-tabs">
 	  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-	  <li class=""><a href="#actions" data-toggle="tab">Actions</a></li>
+	  <li class=""><a href="#actions" data-toggle="tab">Metadata</a></li>
 	  <li class=""><a href="#echonest" data-toggle="tab">Echonest Data</a></li>
 	</ul>
 	<div class="tab-content">
@@ -82,8 +82,48 @@ $(function(){
 			
 			</div>
 			<div class="tab-pane hide" id="actions">
-				<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
-				<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+				@if( song.getSongMetadata != null ){
+					
+					<dl>
+						<dt>Artist</dt>
+						<dd>@song.getSongMetadata.getArtist</dd>
+					</dl>	
+					<dl>
+						<dt>Album</dt>
+						<dd>@song.getSongMetadata.getAlbum</dd>
+					</dl>
+					<dl>
+						<dt>Title</dt>
+						<dd>@song.getSongMetadata.getTitle</dd>
+					</dl>		
+					<dl>
+						<dt>Genre</dt>
+						<dd>@song.getSongMetadata.getGenre</dd>
+					</dl>			
+					<dl>
+						<dt>Track</dt>
+						<dd>@song.getSongMetadata.getTrack</dd>
+					</dl>							
+					<dl>
+						<dt>Musicbrainz Track ID</dt>
+						<dd>@song.getSongMetadata.getMusicbrainzTrackId</dd>
+					</dl>
+					<dl>
+						<dt>Mood</dt>
+						<dd>@song.getSongMetadata.getMood</dd>
+					</dl>																			
+					<dl>
+						<dt>BPM</dt>
+						<dd>@song.getSongMetadata.getBpm</dd>
+					</dl>						
+					<dl>
+						<dt>Year</dt>
+						<dd>@song.getSongMetadata.getYear</dd>
+					</dl>					
+				} else {
+					<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
+					<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+				}
 			</div>
 			<div class="tab-pane hide" id="echonest">
 				@if( song.getEchonestSong != null ){

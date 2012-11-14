@@ -295,6 +295,9 @@ public class AdminController extends BaseController {
     	}
     	
     	Tag t = song.readMetadataTags();
+    	if( t != null){
+    		song.saveSongMetadata(t);
+    	}
     	
     	return ok(views.html.Admin.readSongMetadata.render(song, t));
     }
@@ -328,7 +331,6 @@ public class AdminController extends BaseController {
     	if(song==null){
     		return notFound("Song was not found");
     	}    	
-    	
         
         Exception exception = null;
         
@@ -350,23 +352,6 @@ public class AdminController extends BaseController {
     	
     	return ok(views.html.Admin.getEchonestInfo.render(song, songs, exception));
     }
-    
-    public static void dumpSong(com.echonest.api.v4.Song song) throws EchoNestException {
-    	
-    	System.out.println("Echonest Result "+ song.getID());
-        System.out.printf("%s\n", song.getTitle());
-        System.out.printf("   artist: %s\n", song.getArtistName());
-        System.out.printf("   dur   : %.3f\n", song.getDuration());
-        System.out.printf("   BPM   : %.3f\n", song.getTempo());
-        System.out.printf("   Mode  : %d\n", song.getMode());
-        System.out.printf("   S hot : %.3f\n", song.getSongHotttnesss());
-        System.out.printf("   A hot : %.3f\n", song.getArtistHotttnesss());
-        System.out.printf("   A fam : %.3f\n", song.getArtistFamiliarity());
-        System.out.printf("   A loc : %s\n", song.getArtistLocation());
-        System.out.printf("   Covert Art : %s\n", song.getCoverArt());
-        System.out.printf("   Release Name : %s\n", song.getReleaseName());
-        System.out.printf("   Release Image : %s\n", song.getReleaseImage());
-        
-    }    
+
     
 }

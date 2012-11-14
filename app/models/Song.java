@@ -63,6 +63,8 @@ public class Song extends AppModel {
 	@OneToOne
 	private EchonestSong echonestSong;
 	
+	@OneToOne
+	private SongMetadata songMetadata;	
 	
 	/*
 	@ManyToMany
@@ -228,6 +230,9 @@ public class Song extends AppModel {
 		
 						tags = a.getTag();
 
+						
+						
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -302,12 +307,34 @@ public class Song extends AppModel {
 		EchonestSong eSong = getEchonestSong();
 		if(eSong == null){
 			eSong = new EchonestSong();
+			eSong.init(echonestSong);
+			eSong.save();
+		} else {
+			eSong.init(echonestSong);
+			eSong.update();
 		}
-		eSong.init(echonestSong);
-		eSong.save();
+		
+		
 		
 		setEchonestSong( eSong );
 		update();
+	}
+	
+	public void saveSongMetadata( Tag tags ){
+		SongMetadata m = getSongMetadata();
+		if(m == null){
+			m = new SongMetadata();
+			m.init(tags);
+			m.save();
+		} else {
+			m.init(tags);
+			m.update();
+		}
+		
+		
+		setSongMetadata(m);
+		update();
+		
 	}
 
 	public EchonestSong getEchonestSong() {
@@ -316,6 +343,14 @@ public class Song extends AppModel {
 
 	public void setEchonestSong(EchonestSong echonestSong) {
 		this.echonestSong = echonestSong;
+	}
+
+	public SongMetadata getSongMetadata() {
+		return songMetadata;
+	}
+
+	public void setSongMetadata(SongMetadata songMetadata) {
+		this.songMetadata = songMetadata;
 	}
 	
 }
