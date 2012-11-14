@@ -14,6 +14,9 @@ import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
+import com.echonest.api.v4.EchoNestAPI;
+import com.echonest.api.v4.EchoNestException;
+import com.echonest.api.v4.SongParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
+
+import play.Play;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 
@@ -53,6 +58,10 @@ public class Song extends AppModel {
 	
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	
+
+	@OneToOne
+	private EchonestSong echonestSong;
 	
 	
 	/*
@@ -251,5 +260,62 @@ public class Song extends AppModel {
 		out.close();
 		return tempFile;
 	}	
+	
+	
+	
+	public List<com.echonest.api.v4.Song> getEchonestApiSongs()  throws EchoNestException {
+		return this.getEchonestSongsCall(1);
+	}
+	
+	
+	public List<com.echonest.api.v4.Song> getEchonestSongsCall(int results) throws EchoNestException {
+    	String fullName = this.getName();
+    	
+    	EchoNestAPI en = new EchoNestAPI( Play.application().configuration().getString("echonest.api_key") );
+    	
+    	SongParams p = new SongParams();
+    	
+    	if( ( this.getAlbum() != null ) && ( this.getAlbum().getArtist() != null ) ){
+
+    		p.setArtist(this.getAlbum().getArtist().getName());
+    		
+    		fullName = this.getAlbum().getArtist().getName() + " " + fullName;
+    	}
+    	
+    	// System.out.printf("[%s]\n", fullName);
+    	
+        p.includeTracks();               // the album art is in the track data
+        p.setLimit(true);                // only return songs that have track data
+        p.addIDSpace("7digital-US");     // include 7digital specific track data
+    	
+    	
+    	p.setTitle(this.getName());
+        
+        p.setResults(results);
+        
+		return en.searchSongs(p);
+			
+		
+	}
+	
+	public void saveEchonestSong(com.echonest.api.v4.Song echonestSong){
+		EchonestSong eSong = getEchonestSong();
+		if(eSong == null){
+			eSong = new EchonestSong();
+		}
+		eSong.init(echonestSong);
+		eSong.save();
+		
+		setEchonestSong( eSong );
+		update();
+	}
+
+	public EchonestSong getEchonestSong() {
+		return echonestSong;
+	}
+
+	public void setEchonestSong(EchonestSong echonestSong) {
+		this.echonestSong = echonestSong;
+	}
 	
 }

@@ -10,21 +10,15 @@ import org.jaudiotagger.tag.Tag;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
-import com.echonest.api.v4.EchoNestAPI;
 import com.echonest.api.v4.EchoNestException;
-import com.echonest.api.v4.Params;
-import com.echonest.api.v4.SongCatalog;
-import com.echonest.api.v4.SongParams;
+
 
 import models.*;
 import controllers.UserController.Login;
 import be.objectify.deadbolt.actions.Restrict;
-import play.Play;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
-
-
 
 public class AdminController extends BaseController {
 
@@ -335,45 +329,15 @@ public class AdminController extends BaseController {
     		return notFound("Song was not found");
     	}    	
     	
-    	String fullName = song.getName();
-    	
-    	
-    	
-    	int results = 1;
-    	EchoNestAPI en = new EchoNestAPI( Play.application().configuration().getString("echonest.api_key") );
-    	
-    	SongParams p = new SongParams();
-    	
-    	if( ( song.getAlbum() != null ) && ( song.getAlbum().getArtist() != null ) ){
-
-    		p.setArtist(song.getAlbum().getArtist().getName());
-    		
-    		fullName = song.getAlbum().getArtist().getName() + " " + fullName;
-    	}
-    	
-    	System.out.printf("[%s]\n", fullName);
-    	
-    	p.setTitle(song.getName());
-        
-        p.setResults(results);
         
         Exception exception = null;
         
         List<com.echonest.api.v4.Song> songs = null;
 		try {
-			songs = en.searchSongs(p);
-			
-			/*
-			if( songs.size() > 0 ){
-	        	for (com.echonest.api.v4.Song songItem : songs) {
-	        		dumpSong(songItem);
-	        	}
-	            
-	        }  else {
-	        	System.out.println("There are no songs found");
-	        }
-	        */
-		
+			songs = song.getEchonestApiSongs();
+			if( ( songs != null ) && ( songs.size() > 0 )){
+				song.saveEchonestSong(songs.get(0));
+			}
 			
 		} catch (EchoNestException e) {
 			// TODO Auto-generated catch block
@@ -381,16 +345,13 @@ public class AdminController extends BaseController {
 			exception = e;
 		}
   	
+		
     	
     	
     	return ok(views.html.Admin.getEchonestInfo.render(song, songs, exception));
     }
     
     public static void dumpSong(com.echonest.api.v4.Song song) throws EchoNestException {
-    	
-    	// song.
-    	
-    	
     	
     	System.out.println("Echonest Result "+ song.getID());
         System.out.printf("%s\n", song.getTitle());
@@ -405,29 +366,6 @@ public class AdminController extends BaseController {
         System.out.printf("   Covert Art : %s\n", song.getCoverArt());
         System.out.printf("   Release Name : %s\n", song.getReleaseName());
         System.out.printf("   Release Image : %s\n", song.getReleaseImage());
-        
-        
-        
-        /*
-
- 		http://developer.echonest.com/forums/thread/443
- 
-        SongParams p = new SongParams();
-        p.setArtist("Weezer");
-        p.setTitle("El Scorcho");
-        p.includeTracks();               // the album art is in the track data
-        p.setLimit(true);                // only return songs that have track data
-        p.addIDSpace("7digital-US");     // include 7digital specific track data
-        List<Song> songs = en.searchSongs(p);   // make the query
-        for (Song song : songs) {
-            String url = song.getString("tracks[0].release_image");   // get the release data from the first track returned for each song
-            System.out.println("release image" + url);
-        }        
-        
-        http://developer.echonest.com/forums/thread/744
-        
-        */
-        
         
     }    
     

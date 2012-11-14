@@ -1,15 +1,13 @@
-@(song:Song, songs:List[com.echonest.api.v4.Song], e:Exception = null)@Layout.admin("Edit Artist") {
-<h1>Echonest Metadata</h1>
-<h2><a href="@routes.AdminController.editSong(song.getId)">@song.getName</a></h2>
-<hr>
+@(song:Song, songs:List[com.echonest.api.v4.Song], e:Exception = null)
+<div class="echones-data-songs">
 @if(e!=null){
 <div class="alert alert-error">@e</div>
 }
 
-@if(songs!=null){
-	<ul>
+@if( ( songs != null ) && ( songs.size > 0 ) ){
+	<div>
 	@for(echonestSong <- songs){
-		<li>
+		<div>
 			<dl>
 				<dt>Title</dt>
 				<dd>@echonestSong.getTitle</dd>
@@ -39,10 +37,6 @@
 				<dd>@echonestSong.getArtistHotttnesss</dd>
 			</dl>
 			<dl>
-				<dt>Artist Familiarity</dt>
-				<dd>@echonestSong.getArtistFamiliarity</dd>
-			</dl>
-			<dl>
 				<dt>Artist Location</dt>
 				<dd>@echonestSong.getArtistLocation</dd>
 			</dl>
@@ -56,30 +50,24 @@
 			</dl>			
 			<dl>
 				<dt>Cover Art</dt>
-				<dd>@if( echonestSong.getCoverArt ){
-						@echonestSong.getCoverArt
-					} else { 
-						<i>null</i> 
-					} 
+				<dd>@if(echonestSong.getString("tracks[0].release_image")){</dd>
+					<a href="@echonestSong.getString("tracks[0].release_image")" target="_blank">@echonestSong.getString("tracks[0].release_image")</a>
+				} else {
+					<i>null</i>
+				}
 				</dd>
 			</dl>
 			<dl>
 				<dt>Release Name</dt>
 				<dd>@echonestSong.getReleaseName</dd>
 			</dl>
-			<dl>
-				<dt>Release Image</dt>
-				<dd>@if( echonestSong.getReleaseImage ){
-					@echonestSong.getReleaseImage
-				} else {
-					<i>null</i>
-				}
-				</dd>
-			</dl>															
+														
 		
-		</li>
+		</div>
 	}
-	</ul>
+	</div>
+} else {
+	<p>There were no info found.</p>
 }
 
-}
+</div>
