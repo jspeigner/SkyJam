@@ -21,6 +21,22 @@ $(function(){
 		
 		return false;
 	});
+	
+	$(".get-echonest-data").click( function(){
+		
+		$(this).hide();
+		var echonestDataContainer = $("#echonest .echonest-data");
+		echonestDataContainer.removeClass("hide");
+		
+		$.get("@routes.AdminController.getEchonestInfo(song.getId)", {}, 
+			function(result){
+			echonestDataContainer.html(result);
+			}, 
+			"html"
+		);
+		
+		return false;
+	});
 });
 
 </script>
@@ -40,7 +56,8 @@ $(function(){
 	
 	<ul class="nav nav-tabs">
 	  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-	  <li class=""><a href="#actions" data-toggle="tab">Actions</a></li>
+	  <li class=""><a href="#actions" data-toggle="tab">Metadata</a></li>
+	  <li class=""><a href="#echonest" data-toggle="tab">Echonest Data</a></li>
 	</ul>
 	<div class="tab-content">
 			<div class="tab-pane active" id="details">
@@ -65,8 +82,113 @@ $(function(){
 			
 			</div>
 			<div class="tab-pane hide" id="actions">
-				<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
-				<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+				@if( song.getSongMetadata != null ){
+					
+					<dl>
+						<dt>Artist</dt>
+						<dd>@song.getSongMetadata.getArtist</dd>
+					</dl>	
+					<dl>
+						<dt>Album</dt>
+						<dd>@song.getSongMetadata.getAlbum</dd>
+					</dl>
+					<dl>
+						<dt>Title</dt>
+						<dd>@song.getSongMetadata.getTitle</dd>
+					</dl>		
+					<dl>
+						<dt>Genre</dt>
+						<dd>@song.getSongMetadata.getGenre</dd>
+					</dl>			
+					<dl>
+						<dt>Track</dt>
+						<dd>@song.getSongMetadata.getTrack</dd>
+					</dl>							
+					<dl>
+						<dt>Musicbrainz Track ID</dt>
+						<dd>@song.getSongMetadata.getMusicbrainzTrackId</dd>
+					</dl>
+					<dl>
+						<dt>Mood</dt>
+						<dd>@song.getSongMetadata.getMood</dd>
+					</dl>																			
+					<dl>
+						<dt>BPM</dt>
+						<dd>@song.getSongMetadata.getBpm</dd>
+					</dl>						
+					<dl>
+						<dt>Year</dt>
+						<dd>@song.getSongMetadata.getYear</dd>
+					</dl>					
+				} else {
+					<a href="#" class="btn read-id3-tags">Read ID3 tags...</a>
+					<div id="id3-tags" class="hide"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+				}
+			</div>
+			<div class="tab-pane hide" id="echonest">
+				@if( song.getEchonestSong != null ){
+		<div>
+			<dl>
+				<dt>Title</dt>
+				<dd>@song.getEchonestSong.getTitle</dd>
+			</dl>
+			<dl>
+				<dt>Artist</dt>
+				<dd>@song.getEchonestSong.getArtistName</dd>
+			</dl>
+			<dl>
+				<dt>Duration</dt>
+				<dd>@song.getEchonestSong.getDuration</dd>
+			</dl>
+			<dl>
+				<dt>BPM</dt>
+				<dd>@song.getEchonestSong.getTempo</dd>
+			</dl>
+			<dl>
+				<dt>Mode</dt>
+				<dd>@song.getEchonestSong.getMode</dd>
+			</dl>
+			<dl>
+				<dt>Song Hotttnesss</dt>
+				<dd>@song.getEchonestSong.getSongHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Hotttnesss</dt>
+				<dd>@song.getEchonestSong.getArtistHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Location</dt>
+				<dd>@song.getEchonestSong.getArtistLocation</dd>
+			</dl>
+			<dl>
+				<dt>Audio Info</dt>
+				<dd>@if( song.getEchonestSong.getAudio ){
+						@song.getEchonestSong.getAudio
+					} else { 
+						<i>null</i> 
+					} </dd>
+			</dl>			
+			<dl>
+				<dt>Cover Art</dt>
+				<dd>@if(song.getEchonestSong.getCoverArt){</dd>
+					<a href="@song.getEchonestSong.getCoverArt" target="_blank">@song.getEchonestSong.getCoverArt</a>
+				} else {
+					<i>null</i>
+				}
+				</dd>
+			</dl>
+			<dl>
+				<dt>Release Name</dt>
+				<dd>@song.getEchonestSong.getReleaseName</dd>
+			</dl>
+		
+		</div>					
+				} else {
+					<a href="#" class="btn btn-primary get-echonest-data">Read Echonest Data...</a>
+					<div class="hide echonest-data"><img alt="Loading..." src="@routes.Assets.at("img/ajax-loader-small.gif")" ></div>
+				
+				}
+				
 			</div>
 	</div>	
 	

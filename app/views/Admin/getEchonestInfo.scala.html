@@ -1,0 +1,73 @@
+@(song:Song, songs:List[com.echonest.api.v4.Song], e:Exception = null)
+<div class="echones-data-songs">
+@if(e!=null){
+<div class="alert alert-error">@e</div>
+}
+
+@if( ( songs != null ) && ( songs.size > 0 ) ){
+	<div>
+	@for(echonestSong <- songs){
+		<div>
+			<dl>
+				<dt>Title</dt>
+				<dd>@echonestSong.getTitle</dd>
+			</dl>
+			<dl>
+				<dt>Artist</dt>
+				<dd>@echonestSong.getArtistName</dd>
+			</dl>
+			<dl>
+				<dt>Duration</dt>
+				<dd>@echonestSong.getDuration</dd>
+			</dl>
+			<dl>
+				<dt>BPM</dt>
+				<dd>@echonestSong.getTempo</dd>
+			</dl>
+			<dl>
+				<dt>Mode</dt>
+				<dd>@echonestSong.getMode</dd>
+			</dl>
+			<dl>
+				<dt>Song Hotttnesss</dt>
+				<dd>@echonestSong.getSongHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Hotttnesss</dt>
+				<dd>@echonestSong.getArtistHotttnesss</dd>
+			</dl>
+			<dl>
+				<dt>Artist Location</dt>
+				<dd>@echonestSong.getArtistLocation</dd>
+			</dl>
+			<dl>
+				<dt>Audio Info</dt>
+				<dd>@if( echonestSong.getAudio ){
+						@echonestSong.getAudio
+					} else { 
+						<i>null</i> 
+					} </dd>
+			</dl>			
+			<dl>
+				<dt>Cover Art</dt>
+				<dd>@if(echonestSong.getString("tracks[0].release_image")){</dd>
+					<a href="@echonestSong.getString("tracks[0].release_image")" target="_blank">@echonestSong.getString("tracks[0].release_image")</a>
+				} else {
+					<i>null</i>
+				}
+				</dd>
+			</dl>
+			<dl>
+				<dt>Release Name</dt>
+				<dd>@echonestSong.getReleaseName</dd>
+			</dl>
+														
+		
+		</div>
+	}
+	</div>
+} else {
+	<p>There were no info found.</p>
+}
+
+</div>

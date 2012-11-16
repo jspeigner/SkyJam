@@ -10,15 +10,19 @@ import org.jaudiotagger.tag.Tag;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
+import com.echonest.api.v4.EchoNestException;
+
 
 import models.*;
 import controllers.UserController.Login;
+import actors.TestActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
-
-
 
 public class AdminController extends BaseController {
 
@@ -110,8 +114,9 @@ public class AdminController extends BaseController {
 	    	
 	    	Page<Playlist> userPlaylists = Playlist.getUserPlaylistsPage(user, 0, 100);
 	    	List<UserSavedPlaylist> savedPlaylists = UserSavedPlaylist.getByUser(user, UserController.maxUserSavedPlaylists);
+	    	List<UserInvitationCode> inviatationsSent = UserInvitationCode.find.where().eq("sourceUser", user).findList();
 	    	
-	    	return ok( views.html.Admin.editUser.render( user, userForm, userPlaylists, savedPlaylists ) );
+	    	return ok( views.html.Admin.editUser.render( user, userForm, userPlaylists, savedPlaylists, inviatationsSent ) );
 	    	
     	} else {
     		return notFound("User not found"); 
@@ -289,11 +294,14 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result readSongMetadata(Integer songId){
     	Song song = Song.find.byId(songId);
-    	if(song==null){
+    	if( song == null ){
     		return notFound("Song was not found");
     	}
     	
     	Tag t = song.readMetadataTags();
+    	if( t != null){
+    		song.saveSongMetadata(t);
+    	}
     	
     	return ok(views.html.Admin.readSongMetadata.render(song, t));
     }
@@ -321,6 +329,46 @@ public class AdminController extends BaseController {
     	return redirect(routes.AdminController.editUser(userId));
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result getEchonestInfo(Integer songId){
+    	Song song = Song.find.byId(songId);
+    	if(song==null){
+    		return notFound("Song was not found");
+    	}    	
+        
+        Exception exception = null;
+        
+        List<com.echonest.api.v4.Song> songs = null;
+		try {
+			songs = song.getEchonestApiSongs();
+			if( ( songs != null ) && ( songs.size() > 0 )){
+				song.saveEchonestSong(songs.get(0));
+			}
+			
+		} catch (EchoNestException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			exception = e;
+		}
+  	
+		
+    	
+    	
+    	return ok(views.html.Admin.getEchonestInfo.render(song, songs, exception));
+    }
+
     
+    public static Result akkaTest(){
+    	
+    	ActorSystem system = ActorSystem.create("MySystem");
+    	
+    	
+    	ActorRef myActor = system.actorOf(new Props(TestActor.class), "TestActor");
+    	for(int i=0; i<100000; i++){
+    		myActor.tell("Hello "+i);
+    	}
+    	
+    	return ok("OK");
+    }
     
 }
