@@ -15,6 +15,10 @@ import com.echonest.api.v4.EchoNestException;
 
 import models.*;
 import controllers.UserController.Login;
+import actors.TestActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
@@ -290,7 +294,7 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result readSongMetadata(Integer songId){
     	Song song = Song.find.byId(songId);
-    	if(song==null){
+    	if( song == null ){
     		return notFound("Song was not found");
     	}
     	
@@ -353,5 +357,18 @@ public class AdminController extends BaseController {
     	return ok(views.html.Admin.getEchonestInfo.render(song, songs, exception));
     }
 
+    
+    public static Result akkaTest(){
+    	
+    	ActorSystem system = ActorSystem.create("MySystem");
+    	
+    	
+    	ActorRef myActor = system.actorOf(new Props(TestActor.class), "TestActor");
+    	for(int i=0; i<100000; i++){
+    		myActor.tell("Hello "+i);
+    	}
+    	
+    	return ok("OK");
+    }
     
 }

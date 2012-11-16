@@ -67,6 +67,7 @@ GET			/admin/song/edit/:id			controllers.AdminController.editSong(id: java.lang.
 POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java.lang.Integer)
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )
+GET			/admin/akka_test				controllers.AdminController.akkaTest()
 
 GET     /login                      				controllers.UserController.login()
 POST    /login                      				controllers.UserController.authenticate()

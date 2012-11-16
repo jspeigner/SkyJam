@@ -14,7 +14,7 @@ object ApplicationBuild extends Build {
 		"be.objectify" %% "deadbolt-2" % "1.1.2",
 		"com.typesafe" %% "play-plugins-mailer" % "2.0.4",
 		"net.jthink" % "jaudiotagger" % "2.0.4-SNAPSHOT"
-
+//		"com.typesafe.akka" %% "akka-remote" % "2.2-SNAPSHOT"
     )
     
 	val projectSettings = Play2WarPlugin.play2WarSettings ++ Seq(
