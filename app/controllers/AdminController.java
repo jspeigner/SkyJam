@@ -368,13 +368,62 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editGenre(Integer genreId){
     	
-    	return ok("");
+    	Genre genre = Genre.find.byId(genreId);
+    	if( genre == null){
+    		return notFound("Genre was not found");
+    	}
+    	
+    	Form<Genre> form = form(Genre.class).fill(genre);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Genre.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Genre was successfully updated");
+        		
+        		genre = form.get();
+        		genre.update(genreId);
+        		return redirect(routes.AdminController.editGenre(genreId));
+    			
+    		}
+    		
+    	}    	
+    	
+    	return ok(views.html.Admin.editGenre.render(genre, form));
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editGenreSubmit(Integer genreId){
+    	return editGenre(genreId);
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addGenre(Integer genreId){
     	return ok("");
     }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addGenreSubmit(Integer genreId){
+    	return addGenre(genreId);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteGenre(Integer genreId){
+    	
+    	Genre genre = Genre.find.byId(genreId);
+    	if( genre != null){
+    		return notFound("Genre was not found");
+    	}
+    	
+    	flash("success", "Genre was successfully deleted");
+    	
+    	genre.delete();
+    	
+    	return redirect(routes.AdminController.browseGenres(0, null));
+    }
+    
     
     public static Result akkaTest(){
     	

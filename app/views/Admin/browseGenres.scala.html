@@ -1,10 +1,10 @@
 @(genres:Page[Genre], term:String)@Layout.admin("Browse Genres") {
-<h1>Artists</h1>
+<h1>Genres</h1>
 <hr>
 	
 	<div class="pull-right">
-	<form class="form-search" method="get" action="@routes.AdminController.browseArtists()">
-  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID or Artist name" value="@term">
+	<form class="form-search" method="get" action="@routes.AdminController.browseGenres()">
+  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search by ID or Genre name" value="@term">
   		<button type="submit" class="btn">Search</button>
 	</form>
 	</div>	
