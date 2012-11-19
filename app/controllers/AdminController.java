@@ -350,13 +350,31 @@ public class AdminController extends BaseController {
 			// e.printStackTrace();
 			exception = e;
 		}
-  	
-		
-    	
     	
     	return ok(views.html.Admin.getEchonestInfo.render(song, songs, exception));
     }
 
+    @Restrict(UserRole.ROLE_ADMIN)
+	public static Result browseGenres(Integer page, String term){
+		
+    	int pageSize = 15;
+    	
+    	Page<Genre> genres = Genre.getPageWithSearch(page, pageSize, term );
+    	
+    	
+    	return ok(views.html.Admin.browseGenres.render(genres, term));
+	}    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editGenre(Integer genreId){
+    	
+    	return ok("");
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editGenreSubmit(Integer genreId){
+    	return ok("");
+    }
     
     public static Result akkaTest(){
     	
