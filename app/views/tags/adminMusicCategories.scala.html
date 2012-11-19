@@ -1,0 +1,17 @@
+@(categories:List[MusicCategory])
+@if(categories != null && ( categories.size > 0 )){
+<div class="music-categories">
+	@for(category <- categories){
+		<div class="media music-category" data-id="@category.getId">
+		  <a class="pull-left span1" href="#">
+		    <img class="media-object" src="@category.getImageUrl">
+		  </a>
+		  <div class="media-body">
+		    <h4 class="media-heading"><a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a></h4>
+		    <p>Playlists : @category.getPlaylistsCount</p>
+		    @tags.adminMusicCategories( category.getChildren )
+		  </div>
+		</div>
+	}
+</div>
+}

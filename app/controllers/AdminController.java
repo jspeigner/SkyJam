@@ -446,6 +446,18 @@ public class AdminController extends BaseController {
     	return redirect(routes.AdminController.browseGenres(0, null));
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result browseMusicCategories(String type){
+    	
+    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent_id", 0).eq("type", type).findList();
+    	
+    	return ok(views.html.Admin.browseMusicCategories.render(musicCategories, type));
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editMusicCategory(Integer id){
+    	return ok("");
+    }
     
     public static Result akkaTest(){
     	

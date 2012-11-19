@@ -72,6 +72,8 @@ POST		/admin/genre/edit/:id			controllers.AdminController.editGenreSubmit(id: ja
 GET			/admin/genre/add				controllers.AdminController.addGenre()
 POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
 
+GET			/admin/music_categories/browse/:categoryType	controllers.AdminController.browseMusicCategories( categoryType:String )
+GET			/admin/music_category/edit/:id	controllers.AdminController.editMusicCategory( id: java.lang.Integer )
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )

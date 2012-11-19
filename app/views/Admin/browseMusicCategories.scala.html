@@ -1,0 +1,16 @@
+@(topLevelMusicCategories:List[MusicCategory], categoryType:String)@Layout.admin("Browse Music Categories") {
+<h1>Music Categories</h1>
+<hr>
+<div>
+	
+</div>
+	
+	@if( ( topLevelMusicCategories != null ) && ( topLevelMusicCategories.size > 0 )){
+	
+		@tags.adminMusicCategories(topLevelMusicCategories)
+	
+	
+	} else {
+	<p>There are no users found.</p>
+	}
+}
