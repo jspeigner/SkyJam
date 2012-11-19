@@ -69,6 +69,9 @@ POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java
 GET			/admin/genres/browse			controllers.AdminController.browseGenres(page:java.lang.Integer ?= 0, term:String ?= "")
 GET			/admin/genre/edit/:id			controllers.AdminController.editGenre(id: java.lang.Integer)
 POST		/admin/genre/edit/:id			controllers.AdminController.editGenreSubmit(id: java.lang.Integer)
+GET			/admin/genre/add				controllers.AdminController.addGenre()
+POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
+
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )

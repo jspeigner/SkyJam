@@ -400,13 +400,35 @@ public class AdminController extends BaseController {
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
-    public static Result addGenre(Integer genreId){
-    	return ok("");
+    public static Result addGenre(){
+    	Form<Genre> form = form(Genre.class);
+    	
+    	System.out.println((request().method()));
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Genre.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Genre was successfully created");
+        		
+        		Genre genre = form.get();
+        		genre.save();
+        		
+        		return redirect(routes.AdminController.editGenre(genre.getId()));
+    			
+    		}
+    		
+    	}    	
+    	
+    	
+    	return ok(views.html.Admin.addGenre.render(form));
     }
 
     @Restrict(UserRole.ROLE_ADMIN)
-    public static Result addGenreSubmit(Integer genreId){
-    	return addGenre(genreId);
+    public static Result addGenreSubmit(){
+    	return addGenre();
     }    
     
     @Restrict(UserRole.ROLE_ADMIN)
