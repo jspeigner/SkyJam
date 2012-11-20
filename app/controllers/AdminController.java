@@ -473,7 +473,12 @@ public class AdminController extends BaseController {
         		flash("success", "Music Category was successfully updated");
         		
         		category = form.get();
-        		category.update(id);
+        		category.setId(id);
+        		
+        		processImageUpload(category, "setImageStorageObject", MusicCategory.imageMetadata );
+        		
+        		category.update();
+        		
         		return redirect(routes.AdminController.editMusicCategory(id));
     			
     		}

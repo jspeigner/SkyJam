@@ -68,11 +68,11 @@ public class MusicCategory extends AppModel {
 		return parentId;
 	}
 
-	protected StorageObject getImageStorageObject() {
+	public StorageObject getImageStorageObject() {
 		return imageStorageObject;
 	}
 
-	protected void setImageStorageObject(StorageObject imageStorageObject) {
+	public void setImageStorageObject(StorageObject imageStorageObject) {
 		this.imageStorageObject = imageStorageObject;
 	}
 	

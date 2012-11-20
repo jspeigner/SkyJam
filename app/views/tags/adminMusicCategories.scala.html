@@ -8,7 +8,13 @@
 		    <img class="media-object" src="@category.getImageUrl">
 		  </a>
 		  <div class="media-body">
-		    <h4 class="media-heading"><a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a></h4>
+		    <h4 class="media-heading">
+		    	<a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a>
+		    	<span class="options">
+		    		<a href="@routes.AdminController.editMusicCategory(category.getId)" title="Edit a Category"><i class="icon-edit"></i></a>
+		    		<a href="@routes.AdminController.addMusicCategory(category.getId)" title="Add New Sub Category"><i class="icon-plus-sign"></i></a>  
+		    	</span>
+		    </h4>
 		    <p>Playlists : @category.getPlaylistsCount</p>
 		    @tags.adminMusicCategories( category.getChildren )
 		  </div>
