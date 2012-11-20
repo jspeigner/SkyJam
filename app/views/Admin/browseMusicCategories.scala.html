@@ -1,9 +1,12 @@
 @(topLevelMusicCategories:List[MusicCategory], categoryType:String)@Layout.admin("Browse Music Categories") {
 <h1>Music Categories</h1>
 <hr>
-<div>
-	
-</div>
+<ul class="nav nav-pills">
+	<li class="@if(categoryType.equals(MusicCategory.Type.activity.toString)){ active }"><a href="@routes.AdminController.browseMusicCategories(MusicCategory.Type.activity.toString)">Activities</a></li>
+	<li class="@if(categoryType.equals(MusicCategory.Type.popular.toString)){ active }"><a href="@routes.AdminController.browseMusicCategories(MusicCategory.Type.popular.toString)">Popular</a></li>
+</ul>
+<hr>
+
 	
 	@if( ( topLevelMusicCategories != null ) && ( topLevelMusicCategories.size > 0 )){
 	
@@ -11,6 +14,6 @@
 	
 	
 	} else {
-	<p>There are no users found.</p>
+	<p>There are no categories found.</p>
 	}
 }

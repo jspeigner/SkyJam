@@ -1,0 +1,25 @@
+@(category:MusicCategory, form: Form[MusicCategory])@import helper.twitterBootstrap2._
+@Layout.admin("Edit Music Category") {
+	<h1>Edit Music Category</h1>
+	<hr>
+	<div>
+		<ul class="nav nav-pills">
+		  <li><a href="@routes.AdminController.browseMusicCategories(category.getType.toString)">Back to the list</a></li>
+		  @if( ( category.getParent != null ) && ( category.getParent.getId > 0 ) ){
+		  <li><a href="@routes.AdminController.editMusicCategory(category.getParent.getId)">Parent Category - @category.getParent.getName</a></li>
+		  }
+		  
+		</ul>	
+	</div>	
+	<hr>
+	
+	@helper.form(action = routes.AdminController.editMusicCategorySubmit(category.getId), 'class -> "form-horizontal well", 'id -> "music-category-edit", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Update" />
+			</div>		
+		
+	}
+}

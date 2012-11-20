@@ -1,0 +1,15 @@
+@(form: Form[MusicCategory], parentId: Integer)@import helper.twitterBootstrap2._
+@Layout.admin("Add Music Category") {
+	<h1>Add Music Category</h1>
+	<hr>
+	
+	@helper.form(action = routes.AdminController.addMusicCategorySubmit(parentId), 'class -> "form-horizontal well", 'id -> "music-category-edit", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Add" />
+			</div>		
+		
+	}
+}

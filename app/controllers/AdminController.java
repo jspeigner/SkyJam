@@ -456,8 +456,72 @@ public class AdminController extends BaseController {
 
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editMusicCategory(Integer id){
-    	return ok("");
+    	
+    	MusicCategory category = MusicCategory.find.byId(id);
+    	if( category == null){
+    		return notFound("Music Category was not found");
+    	}
+    	
+    	Form<MusicCategory> form = form(MusicCategory.class).fill(category);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(MusicCategory.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Music Category was successfully updated");
+        		
+        		category = form.get();
+        		category.update(id);
+        		return redirect(routes.AdminController.editMusicCategory(id));
+    			
+    		}
+    		
+    	}     	
+    	
+    	return ok(views.html.Admin.editMusicCategory.render(category, form));
+
     }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editMusicCategorySubmit(Integer id){
+    	
+    	return editMusicCategory(id);
+    }
+    	
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addMusicCategory(Integer parentId){
+    	
+    	Form<MusicCategory> form = form(MusicCategory.class).bindFromRequest();
+    	
+    	if(request().method().equals("POST")){
+    		
+    		
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Music Category was successfully updated");
+        		
+        		MusicCategory category = form.get();
+        		category.setParent(MusicCategory.find.byId(parentId));
+        		category.save();
+        		
+        		return redirect(routes.AdminController.editMusicCategory(category.getId()));
+    			
+    		}
+    		
+    	}     	
+    	
+    	return ok(views.html.Admin.addMusicCategory.render(form, parentId));
+
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addMusicCategorySubmit(Integer parentId){
+    	
+    	return addMusicCategory(parentId);
+    }    
     
     public static Result akkaTest(){
     	
