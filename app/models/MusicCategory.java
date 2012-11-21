@@ -24,6 +24,7 @@ import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
 
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import scala.Tuple2;
@@ -33,13 +34,12 @@ import scala.Tuple2;
 public class MusicCategory extends AppModel {
 	
 	@Length(max=200)
+	@Constraints.Required
 	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name="parent_id")
 	private MusicCategory parent;
-	
-	protected Integer parentId;
 
 	@OneToOne
 	private StorageObject imageStorageObject;
@@ -62,11 +62,6 @@ public class MusicCategory extends AppModel {
 	*/
 	
 	public static Model.Finder<Integer,MusicCategory> find = new Finder<Integer, MusicCategory>(Integer.class, MusicCategory.class);
-	
-	public Integer getParentId()
-	{
-		return parentId;
-	}
 
 	public StorageObject getImageStorageObject() {
 		return imageStorageObject;
@@ -170,6 +165,16 @@ public class MusicCategory extends AppModel {
 		
 		return getActivitiesList(activities, activityNameSeparator);
 	}
+	
+	public static List<Tuple2<String, String>> getTypeList(){
+		
+		List<Tuple2<String,String>> types = new ArrayList<Tuple2<String,String>>();
+		types.add(new Tuple2<String, String>(MusicCategory.Type.activity.toString(), "Activity"));
+		types.add(new Tuple2<String, String>(MusicCategory.Type.popular.toString(), "Popular"));
+		
+		return types;
+	}
+	
 	
 	public static List<Tuple2<String, String>> getActivitiesList() {
 		return getActivitiesList(" - ");

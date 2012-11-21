@@ -333,7 +333,7 @@ public class ImportController extends BaseController {
 		int playlistIndex = 0;
 		for( MusicCategory category : categories )
 		{
-			if( category.getParentId() > 0 )
+			if( category.getParent().getId() > 0 )
 			{
 				for(int i =0; i<countPerCategory; i++)
 				{

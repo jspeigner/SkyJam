@@ -75,8 +75,8 @@ POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
 GET			/admin/music_categories/browse/:categoryType	controllers.AdminController.browseMusicCategories( categoryType:String )
 GET			/admin/music_category/edit/:id	controllers.AdminController.editMusicCategory( id: java.lang.Integer )
 POST		/admin/music_category/edit/:id	controllers.AdminController.editMusicCategorySubmit( id: java.lang.Integer )
-GET			/admin/music_category/add/:parentId		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer )
-POST		/admin/music_category/add/:parentId		controllers.AdminController.addMusicCategorySubmit( parentId: java.lang.Integer )
+GET			/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer, categoryType:String )
+POST		/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategorySubmit( parentId: java.lang.Integer, categoryType:String )
 
 
 

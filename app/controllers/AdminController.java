@@ -2,8 +2,10 @@ package controllers;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.jaudiotagger.tag.Tag;
 
 
@@ -485,7 +487,7 @@ public class AdminController extends BaseController {
     		
     	}     	
     	
-    	return ok(views.html.Admin.editMusicCategory.render(category, form));
+    	return ok(views.html.Admin.editMusicCategory.render(category, form, MusicCategory.getTypeList()));
 
     }
 
@@ -496,36 +498,41 @@ public class AdminController extends BaseController {
     }
     	
     @Restrict(UserRole.ROLE_ADMIN)
-    public static Result addMusicCategory(Integer parentId){
+    public static Result addMusicCategory(Integer parentId, String type){
     	
     	Form<MusicCategory> form = form(MusicCategory.class).bindFromRequest();
+    	MusicCategory parent = parentId > 0 ? MusicCategory.find.byId(parentId) : null;
     	
     	if(request().method().equals("POST")){
-    		
-    		
-    		
     		if(!form.hasErrors()){
     			
         		flash("success", "Music Category was successfully updated");
         		
         		MusicCategory category = form.get();
         		category.setParent(MusicCategory.find.byId(parentId));
+        		
+        		processImageUpload(category, "setImageStorageObject", MusicCategory.imageMetadata );
+        		
         		category.save();
         		
         		return redirect(routes.AdminController.editMusicCategory(category.getId()));
     			
     		}
     		
-    	}     	
+    	} else {
+    		HashMap<String,String> data = new HashMap<String,String>();
+    		data.put("type", type);
+    		form = form.bind( data, "type" );
+    	}
     	
-    	return ok(views.html.Admin.addMusicCategory.render(form, parentId));
+    	return ok(views.html.Admin.addMusicCategory.render(form, parent, MusicCategory.getTypeList(), type));
 
     }
 
     @Restrict(UserRole.ROLE_ADMIN)
-    public static Result addMusicCategorySubmit(Integer parentId){
+    public static Result addMusicCategorySubmit(Integer parentId, String type){
     	
-    	return addMusicCategory(parentId);
+    	return addMusicCategory(parentId, type);
     }    
     
     public static Result akkaTest(){

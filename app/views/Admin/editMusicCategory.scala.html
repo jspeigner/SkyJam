@@ -1,4 +1,4 @@
-@(category:MusicCategory, form: Form[MusicCategory])@import helper.twitterBootstrap2._
+@(category:MusicCategory, form: Form[MusicCategory], types: List[Tuple2[String,String]] )@import helper.twitterBootstrap2._
 @Layout.admin("Edit Music Category") {
 	<h1>Edit Music Category</h1>
 	<hr>
@@ -16,6 +16,8 @@
 	@helper.form(action = routes.AdminController.editMusicCategorySubmit(category.getId), 'class -> "form-horizontal well", 'id -> "music-category-edit", 'enctype ->"multipart/form-data" ) {
 			
 			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+
+			@helper.select(form("type"), types, '_label -> "Category Type")
 		
 			@helper.inputFile(form("image"), '_label -> "New Image", '_help -> ( "image will be resized to " + models.MusicCategory.imageMetadata.width.toString + "x" + models.MusicCategory.imageMetadata.height.toString + " px" ) )
 			<div class="control-group">
