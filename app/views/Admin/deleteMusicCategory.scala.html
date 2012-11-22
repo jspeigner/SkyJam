@@ -3,7 +3,14 @@
 <h1>Are you sure to delete the Category ?</h1>
 <form class="well" method="post" action="@routes.AdminController.deleteMusicCategorySubmit(category.getId)" >
 	<h2><b>#@category.getId</b> - <a target="_blank" href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a></h2>
-	<p>It cannot be undone</p>
+	@{ 
+		val x = category.getPlaylistsCount
+		if( x > 0 ){ 
+			Html("<p>There are " + x + " playlists connected.</p>")
+		}
+	}
+	<p>All nesting categories are preserved.</p>
+	<p>It cannot be undone. </p>
 
 	<div class="form-actions">
 		<input type="submit" value="Delete" class="btn btn-danger">

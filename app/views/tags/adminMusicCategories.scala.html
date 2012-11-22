@@ -8,14 +8,17 @@
 		    <img class="media-object" src="@category.getImageUrl?_=@util.Random.nextInt">
 		  </a>
 		  <div class="media-body">
-		    <h4 class="media-heading">
-		    	<a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a>
-		    	<span class="options">
-		    		<a href="@routes.AdminController.editMusicCategory(category.getId)" title="Edit a Category"><i class="icon-edit"></i></a>
-		    		<a href="@routes.AdminController.addMusicCategory(category.getId, category.getType.toString)" title="Add New Sub Category"><i class="icon-plus-sign"></i></a>  
-		    	</span>
-		    </h4>
-		    <p>Playlists : @category.getPlaylistsCount</p>
+			<div class="music-category-info">
+			    <h4 class="media-heading">
+			    	<a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a>
+			    	<span class="options hide">
+			    		<a href="@routes.AdminController.editMusicCategory(category.getId)" title="Edit a Category"><i class="icon-edit"></i></a>
+			    		<a href="@routes.AdminController.addMusicCategory(category.getId, category.getType.toString)" title="Add New Sub Category"><i class="icon-plus-sign"></i></a>  
+			    		<a href="@routes.AdminController.deleteMusicCategory(category.getId)" title="Delete"><i class="icon-remove-sign"></i></a>
+			    	</span>
+			    </h4>
+			    <p>Playlists : @category.getPlaylistsCount</p>
+		    </div>
 		    @tags.adminMusicCategories( category.getChildren )
 		  </div>
 		</div>

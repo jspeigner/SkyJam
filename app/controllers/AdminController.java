@@ -451,7 +451,7 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result browseMusicCategories(String type){
     	
-    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent_id", 0).eq("type", type).findList();
+    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent", null).eq("type", type).findList();
     	
     	return ok(views.html.Admin.browseMusicCategories.render(musicCategories, type));
     }
@@ -500,10 +500,13 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result addMusicCategory(Integer parentId, String type){
     	
-    	Form<MusicCategory> form = form(MusicCategory.class).bindFromRequest();
+    	Form<MusicCategory> form = form(MusicCategory.class);
     	MusicCategory parent = parentId > 0 ? MusicCategory.find.byId(parentId) : null;
     	
     	if(request().method().equals("POST")){
+    		
+    		form = form.bindFromRequest();
+    		
     		if(!form.hasErrors()){
     			
         		flash("success", "Music Category was successfully updated");
@@ -520,9 +523,10 @@ public class AdminController extends BaseController {
     		}
     		
     	} else {
-    		HashMap<String,String> data = new HashMap<String,String>();
-    		data.put("type", type);
-    		form = form.bind( data, "type" );
+    		// HashMap<String,String> data = new HashMap<String,String>();
+    		// data.put("type", type);
+    		// form = form.bind( data, "type" );
+    		form.data().put("type", type);
     	}
     	
     	return ok(views.html.Admin.addMusicCategory.render(form, parent, MusicCategory.getTypeList(), type));
@@ -547,7 +551,7 @@ public class AdminController extends BaseController {
     	
     	if(request().method().equals("POST")){
     		
-    		// category.delete();
+    		category.delete();
     		
     		flash("Music Category was removed successfully");
     		

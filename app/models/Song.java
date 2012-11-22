@@ -47,7 +47,7 @@ public class Song extends AppModel {
 	
 	private Integer tracknumber;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REMOVE)
 	private StorageObject storageObject;
 	
 	public enum Status
@@ -60,10 +60,10 @@ public class Song extends AppModel {
 	private Status status;
 	
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private EchonestSong echonestSong;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private SongMetadata songMetadata;	
 	
 	/*

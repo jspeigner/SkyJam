@@ -2,6 +2,8 @@ package models;
 
 import java.io.InputStream;
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -44,7 +46,7 @@ public class Album extends AppModel {
 	
 	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 240, ImageMetadata.IMAGE_TYPE_PNG, "files/album/image/%d.png", "files/album/image/default.png" );
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private StorageObject albumArtStorageObject;
 	
 	public static Model.Finder<Integer,Album> find = new Finder<Integer, Album>(Integer.class, Album.class);

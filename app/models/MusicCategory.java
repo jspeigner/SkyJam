@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -41,7 +42,7 @@ public class MusicCategory extends AppModel {
 	@JoinColumn(name="parent_id")
 	private MusicCategory parent;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private StorageObject imageStorageObject;
 	
 	public enum Type
@@ -232,7 +233,28 @@ public class MusicCategory extends AppModel {
 	}
 	
 	public void delete(){
-		parent.delete();
+		
+		List<MusicCategory> children = getChildren();
+		if( children != null ){
+			
+			MusicCategory parent = getParent();
+			// link children categories to the parent
+			for (int i = 0; i < children.size(); i++) {
+				children.get(i).setParent(parent);
+				children.get(i).update();
+			}
+		}
+		
+		List<Playlist> playlists = Playlist.find.where().eq("musicCategories", this).findList();
+		if(playlists!=null){
+			for(Playlist p : playlists){
+				p.getMusicCategories().remove(this);
+				p.update();
+			}
+		}
+		
+		
+		super.delete();
 	}
 	
 }

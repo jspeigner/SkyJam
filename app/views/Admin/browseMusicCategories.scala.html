@@ -1,4 +1,19 @@
 @(topLevelMusicCategories:List[MusicCategory], categoryType:String)@Layout.admin("Browse Music Categories") {
+<script type="text/javascript">
+$(function(){
+
+
+	$(".music-category-info").mouseenter(function(){
+		
+		$(".options", this).removeClass("hide");
+		
+	}).mouseleave(function(){
+		$(".options", this).addClass("hide");
+	});
+
+});
+//-->
+</script>
 <h1>Music Categories</h1>
 <hr>
 <ul class="nav nav-pills">
