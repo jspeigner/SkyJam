@@ -535,6 +535,35 @@ public class AdminController extends BaseController {
     	return addMusicCategory(parentId, type);
     }    
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMusicCategory(Integer id){
+    	
+    	
+    	MusicCategory category = MusicCategory.find.byId(id);
+    	if( category == null){
+    		return notFound("Music Category was not found");
+    	}    	
+    	String type = category.getType().toString();
+    	
+    	if(request().method().equals("POST")){
+    		
+    		// category.delete();
+    		
+    		flash("Music Category was removed successfully");
+    		
+    		return redirect( routes.AdminController.browseMusicCategories( type ) );
+    	}
+    	
+    	return ok( views.html.Admin.deleteMusicCategory.render(category) );
+    }
+    
+    public static Result deleteMusicCategorySubmit(Integer id){
+    	
+    	return deleteMusicCategory(id);
+    	
+    }
+    
+    
     public static Result akkaTest(){
     	
     	ActorSystem system = ActorSystem.create("MySystem");

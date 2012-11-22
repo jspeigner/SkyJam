@@ -231,4 +231,8 @@ public class MusicCategory extends AppModel {
 		return Playlist.findCountByMusicCategoryId(getId());
 	}
 	
+	public void delete(){
+		parent.delete();
+	}
+	
 }

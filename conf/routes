@@ -77,7 +77,8 @@ GET			/admin/music_category/edit/:id	controllers.AdminController.editMusicCatego
 POST		/admin/music_category/edit/:id	controllers.AdminController.editMusicCategorySubmit( id: java.lang.Integer )
 GET			/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer, categoryType:String )
 POST		/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategorySubmit( parentId: java.lang.Integer, categoryType:String )
-
+GET			/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCategory(id:java.lang.Integer)
+POST		/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCategorySubmit(id:java.lang.Integer)
 
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
