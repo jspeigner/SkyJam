@@ -196,11 +196,11 @@ public class ImportController extends BaseController {
 							
 						}
 						
-						
+						System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
 						
 					}
 					
-					System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
+					// System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
 					
 				}
 			}
@@ -310,6 +310,7 @@ public class ImportController extends BaseController {
 		song.setName(cleanSongName);
 		song.setAlbum(album);
 		song.setKeywords("");
+		song.setTracknumber(0);
 		song.setDuration(0);
 		song.setStatus(Song.Status.visible);
 		song.setStorageObject(storageObject); 
