@@ -56,28 +56,36 @@ public class BatchJobActor extends AppModel {
 		this.objectId = objectId;
 	}
 
-	private Date getStartedDate() {
+	public Date getStartedDate() {
 		return startedDate;
 	}
 
-	private void setStartedDate(Date startedDate) {
+	public void setStartedDate(Date startedDate) {
 		this.startedDate = startedDate;
 	}
 
-	private Date getEndedDate() {
+	public Date getEndedDate() {
 		return endedDate;
 	}
 
-	private void setEndedDate(Date endedDate) {
+	public void setEndedDate(Date endedDate) {
 		this.endedDate = endedDate;
 	}
 
-	private Integer getResult() {
+	public Integer getResult() {
 		return result;
 	}
 
-	private void setResult(Integer result) {
+	public void setResult(Integer result) {
 		this.result = result;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	
 }

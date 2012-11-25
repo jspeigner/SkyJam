@@ -566,19 +566,17 @@ public class AdminController extends BaseController {
     	return deleteMusicCategory(id);
     	
     }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+	public static Result browseBatchJobs(Integer page, String term){
+		
+    	int pageSize = 15;
+    	
+    	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
+    	
+    	
+    	return ok(views.html.Admin.browseBatchJobs.render(batchJobs, term));
+	}    
     
-    
-    public static Result akkaTest(){
-    	
-    	ActorSystem system = ActorSystem.create("MySystem");
-    	
-    	
-    	ActorRef myActor = system.actorOf(new Props(TestActor.class), "TestActor");
-    	for(int i=0; i<100000; i++){
-    		myActor.tell("Hello "+i);
-    	}
-    	
-    	return ok("OK");
-    }
     
 }

@@ -1,0 +1,40 @@
+@(batchJobs:Page[BatchJob], term:String)@Layout.admin("Browse Batch Jobs") {
+<h1>Batch Jobs</h1>
+<hr>
+	
+	<div class="pull-right">
+	<form class="form-search" method="get" action="@routes.AdminController.browseBatchJobs()">
+  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID or Batch Job name" value="@term">
+  		<button type="submit" class="btn">Search</button>
+	</form>
+	</div>	
+	
+	@if( ( batchJobs != null ) && ( batchJobs.getList.size > 0 )){
+	
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		@for(batchJob <- batchJobs.getList ){
+		<tr>
+			<td>@batchJob.getId</td>
+			<td>@batchJob.getName</td>
+			<td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+		</tr>	
+		}
+		</tbody>
+	</table>
+	
+	<div class="pagination">
+		@tags.adminPagination( routes.AdminController.browseBatchJobs( _, term = term ), batchJobs.getPageIndex, batchJobs.getTotalPageCount )
+	</div>
+	
+	} else {
+	<p>There are no batch jobs created.</p>
+	}
+}
