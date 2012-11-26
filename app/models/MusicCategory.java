@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,8 +20,12 @@ import javax.persistence.Table;
 import models.Playlist.Status;
 import models.behavior.ImageMetadata;
 
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.Page;
 import com.avaje.ebean.validation.Length;
 
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import scala.Tuple2;
@@ -30,15 +35,14 @@ import scala.Tuple2;
 public class MusicCategory extends AppModel {
 	
 	@Length(max=200)
+	@Constraints.Required
 	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name="parent_id")
 	private MusicCategory parent;
-	
-	protected Integer parentId;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private StorageObject imageStorageObject;
 	
 	public enum Type
@@ -59,17 +63,12 @@ public class MusicCategory extends AppModel {
 	*/
 	
 	public static Model.Finder<Integer,MusicCategory> find = new Finder<Integer, MusicCategory>(Integer.class, MusicCategory.class);
-	
-	public Integer getParentId()
-	{
-		return parentId;
-	}
 
-	protected StorageObject getImageStorageObject() {
+	public StorageObject getImageStorageObject() {
 		return imageStorageObject;
 	}
 
-	protected void setImageStorageObject(StorageObject imageStorageObject) {
+	public void setImageStorageObject(StorageObject imageStorageObject) {
 		this.imageStorageObject = imageStorageObject;
 	}
 	
@@ -168,6 +167,16 @@ public class MusicCategory extends AppModel {
 		return getActivitiesList(activities, activityNameSeparator);
 	}
 	
+	public static List<Tuple2<String, String>> getTypeList(){
+		
+		List<Tuple2<String,String>> types = new ArrayList<Tuple2<String,String>>();
+		types.add(new Tuple2<String, String>(MusicCategory.Type.activity.toString(), "Activity"));
+		types.add(new Tuple2<String, String>(MusicCategory.Type.popular.toString(), "Popular"));
+		
+		return types;
+	}
+	
+	
 	public static List<Tuple2<String, String>> getActivitiesList() {
 		return getActivitiesList(" - ");
 	}
@@ -179,4 +188,73 @@ public class MusicCategory extends AppModel {
 	public void setType(Type type) {
 		this.type = type;
 	}
+	
+	public static Page<MusicCategory> getPageWithSearch(int page, int pageSize, String term){
+		return getPageWithSearch(page, pageSize, term, null);
+	}
+	
+	public static Page<MusicCategory> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
+		
+    	if( ( term != null ) && ( !term.isEmpty())){
+    		try {  
+    		      Integer id = Integer.parseInt( term );  
+    		      
+    		      Expression expr = Expr.eq("id", id);
+    		      
+  	    		
+	  	    		if( additionalConditions != null ){
+	  	    			expr = Expr.and( additionalConditions , expr );
+	  	    		}    		      
+    		      
+    		      return MusicCategory.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      
+    		} catch( Exception e ) {
+    			
+    	    		String likeQueryString =  "%" + term.trim() + "%";
+    	    		
+    	    		Expression expr = Expr.ilike("name", likeQueryString);	
+    	    		
+    	    		if( additionalConditions != null ){
+    	    			expr = Expr.and( additionalConditions , expr );
+    	    		}
+    	    		
+    	    		return MusicCategory.find.where( expr ).findPagingList(pageSize).getPage(page);
+    		}
+    		
+
+    	} else {
+    		return ( ( additionalConditions == null ) ? MusicCategory.find : MusicCategory.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
+    	}		
+		
+	}
+	
+	public int getPlaylistsCount(){
+		return Playlist.findCountByMusicCategoryId(getId());
+	}
+	
+	public void delete(){
+		
+		List<MusicCategory> children = getChildren();
+		if( children != null ){
+			
+			MusicCategory parent = getParent();
+			// link children categories to the parent
+			for (int i = 0; i < children.size(); i++) {
+				children.get(i).setParent(parent);
+				children.get(i).update();
+			}
+		}
+		
+		List<Playlist> playlists = Playlist.find.where().eq("musicCategories", this).findList();
+		if(playlists!=null){
+			for(Playlist p : playlists){
+				p.getMusicCategories().remove(this);
+				p.update();
+			}
+		}
+		
+		
+		super.delete();
+	}
+	
 }

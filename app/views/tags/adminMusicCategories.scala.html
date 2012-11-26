@@ -1,0 +1,27 @@
+@(categories:List[MusicCategory])
+
+@if(categories != null && ( categories.size > 0 )){
+<div class="music-categories">
+	@for(category <- categories){
+		<div class="media music-category" data-id="@category.getId">
+		  <a class="pull-left span1 thumbnail" href="@routes.AdminController.editMusicCategory(category.getId)">
+		    <img class="media-object" src="@category.getImageUrl?_=@util.Random.nextInt">
+		  </a>
+		  <div class="media-body">
+			<div class="music-category-info">
+			    <h4 class="media-heading">
+			    	<a href="@routes.AdminController.editMusicCategory(category.getId)">@category.getName</a>
+			    	<span class="options hide">
+			    		<a href="@routes.AdminController.editMusicCategory(category.getId)" title="Edit a Category"><i class="icon-edit"></i></a>
+			    		<a href="@routes.AdminController.addMusicCategory(category.getId, category.getType.toString)" title="Add New Sub Category"><i class="icon-plus-sign"></i></a>  
+			    		<a href="@routes.AdminController.deleteMusicCategory(category.getId)" title="Delete"><i class="icon-remove-sign"></i></a>
+			    	</span>
+			    </h4>
+			    <p>Playlists : @category.getPlaylistsCount</p>
+		    </div>
+		    @tags.adminMusicCategories( category.getChildren )
+		  </div>
+		</div>
+	}
+</div>
+} 

@@ -1,0 +1,35 @@
+@(category:MusicCategory, form: Form[MusicCategory], types: List[Tuple2[String,String]] )@import helper.twitterBootstrap2._
+@Layout.admin("Edit Music Category") {
+	<h1>Edit Music Category</h1>
+	<hr>
+	<div>
+		<ul class="nav nav-pills">
+		  <li><a href="@routes.AdminController.browseMusicCategories(category.getType.toString)">Back to the list</a></li>
+		  @if( ( category.getParent != null ) && ( category.getParent.getId > 0 ) ){
+		  <li><a href="@routes.AdminController.editMusicCategory(category.getParent.getId)">Parent Category - @category.getParent.getName</a></li>
+		  }
+		  
+		</ul>	
+	</div>	
+	<hr>
+	
+	@helper.form(action = routes.AdminController.editMusicCategorySubmit(category.getId), 'class -> "form-horizontal well", 'id -> "music-category-edit", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+
+			@helper.select(form("type"), types, '_label -> "Category Type")
+		
+			@helper.inputFile(form("image"), '_label -> "New Image", '_help -> ( "image will be resized to " + models.MusicCategory.imageMetadata.width.toString + "x" + models.MusicCategory.imageMetadata.height.toString + " px" ) )
+			<div class="control-group">
+			    <label class="control-label">Existing Image</label>
+			    <div class="controls">
+					<div style="width: @((models.MusicCategory.imageMetadata.width/2).toString)px"><img src="@category.getImageUrl?_=@util.Random.nextInt" alt="@category.getName"></div>
+				</div>
+			</div>
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Update" />
+			</div>		
+		
+	}
+}

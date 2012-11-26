@@ -81,7 +81,7 @@ public class User extends AppModel implements RoleHolder
 	@Formats.DateTime(pattern="yyyy-MM-dd")
 	private Date lastLoginDate;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	private StorageObject imageStorageObject;
 	
 	@Nullable

@@ -27,12 +27,12 @@ public class ApplicationController extends BaseController {
   
   public static Result index() 
   {
-	  return category(0);
+	  return category(null);
   }
   
   public static Result category(Integer parentCategoryId)
   {
-	  if( Playlist.findCountByMusicCategoryId(parentCategoryId) > 0 )
+	  if( ( parentCategoryId != null ) && ( Playlist.findCountByMusicCategoryId(parentCategoryId) > 0 ) )
 	  {
 		  // redirect on step 3 - playlists
 		  // return redirect( controllers.routes.ApplicationController.playlistByCategory(parentCategoryId) );
@@ -40,10 +40,10 @@ public class ApplicationController extends BaseController {
 		  return playlistByCategory(parentCategoryId);
 	  }
 	  
-	  MusicCategory parentCategory = parentCategoryId <= 0 ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
+	  MusicCategory parentCategory = parentCategoryId == null ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
 	  
 	  int parentCategoriesCount = 4;
-	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent_id", parentCategoryId).eq("type", MusicCategory.Type.activity).setMaxRows(parentCategoriesCount).findSet();
+	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent", parentCategory).eq("type", MusicCategory.Type.activity).setMaxRows(parentCategoriesCount).findSet();
 	  
 	  if( categories.size() == 0 )
 	  {

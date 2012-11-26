@@ -69,10 +69,27 @@ POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java
 GET			/admin/genres/browse			controllers.AdminController.browseGenres(page:java.lang.Integer ?= 0, term:String ?= "")
 GET			/admin/genre/edit/:id			controllers.AdminController.editGenre(id: java.lang.Integer)
 POST		/admin/genre/edit/:id			controllers.AdminController.editGenreSubmit(id: java.lang.Integer)
+GET			/admin/genre/add				controllers.AdminController.addGenre()
+POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
+
+GET			/admin/music_categories/browse/:categoryType	controllers.AdminController.browseMusicCategories( categoryType:String )
+GET			/admin/music_category/edit/:id	controllers.AdminController.editMusicCategory( id: java.lang.Integer )
+POST		/admin/music_category/edit/:id	controllers.AdminController.editMusicCategorySubmit( id: java.lang.Integer )
+GET			/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer, categoryType:String )
+POST		/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategorySubmit( parentId: java.lang.Integer, categoryType:String )
+GET			/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCategory(id:java.lang.Integer)
+POST		/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCategorySubmit(id:java.lang.Integer)
+
+GET			/admin/batch_jobs/browse			controllers.AdminController.browseBatchJobs(page:java.lang.Integer ?= 0, term:String ?= "" )
+GET			/admin/batch_jobs/add				controllers.AdminController.addBatchJob()
+POST		/admin/batch_jobs/add				controllers.AdminController.addBatchJobSubmit()
+GET			/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJob(id: java.lang.Integer)
+POST		/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJobSubmit(id: java.lang.Integer)
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )
-GET			/admin/akka_test				controllers.AdminController.akkaTest()
+GET			/test/akka				controllers.ImportController.akkaTest()
+GET			/test/actor				controllers.ImportController.actorBatchTest()
 
 GET     /login                      				controllers.UserController.login()
 POST    /login                      				controllers.UserController.authenticate()

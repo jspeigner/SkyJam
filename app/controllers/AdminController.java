@@ -2,8 +2,10 @@ package controllers;
 
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.jaudiotagger.tag.Tag;
 
 
@@ -368,25 +370,277 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editGenre(Integer genreId){
     	
-    	return ok("");
+    	Genre genre = Genre.find.byId(genreId);
+    	if( genre == null){
+    		return notFound("Genre was not found");
+    	}
+    	
+    	Form<Genre> form = form(Genre.class).fill(genre);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Genre.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Genre was successfully updated");
+        		
+        		genre = form.get();
+        		genre.update(genreId);
+        		return redirect(routes.AdminController.editGenre(genreId));
+    			
+    		}
+    		
+    	}    	
+    	
+    	return ok(views.html.Admin.editGenre.render(genre, form));
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editGenreSubmit(Integer genreId){
-    	return ok("");
+    	return editGenre(genreId);
     }
     
-    public static Result akkaTest(){
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addGenre(){
+    	Form<Genre> form = form(Genre.class);
     	
-    	ActorSystem system = ActorSystem.create("MySystem");
+    	System.out.println((request().method()));
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Genre.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Genre was successfully created");
+        		
+        		Genre genre = form.get();
+        		genre.save();
+        		
+        		return redirect(routes.AdminController.editGenre(genre.getId()));
+    			
+    		}
+    		
+    	}    	
     	
     	
-    	ActorRef myActor = system.actorOf(new Props(TestActor.class), "TestActor");
-    	for(int i=0; i<100000; i++){
-    		myActor.tell("Hello "+i);
+    	return ok(views.html.Admin.addGenre.render(form));
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addGenreSubmit(){
+    	return addGenre();
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteGenre(Integer genreId){
+    	
+    	Genre genre = Genre.find.byId(genreId);
+    	if( genre != null){
+    		return notFound("Genre was not found");
     	}
     	
-    	return ok("OK");
+    	flash("success", "Genre was successfully deleted");
+    	
+    	genre.delete();
+    	
+    	return redirect(routes.AdminController.browseGenres(0, null));
     }
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result browseMusicCategories(String type){
+    	
+    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent", null).eq("type", type).findList();
+    	
+    	return ok(views.html.Admin.browseMusicCategories.render(musicCategories, type));
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editMusicCategory(Integer id){
+    	
+    	MusicCategory category = MusicCategory.find.byId(id);
+    	if( category == null){
+    		return notFound("Music Category was not found");
+    	}
+    	
+    	Form<MusicCategory> form = form(MusicCategory.class).fill(category);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(MusicCategory.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Music Category was successfully updated");
+        		
+        		category = form.get();
+        		category.setId(id);
+        		
+        		processImageUpload(category, "setImageStorageObject", MusicCategory.imageMetadata );
+        		
+        		category.update();
+        		
+        		return redirect(routes.AdminController.editMusicCategory(id));
+    			
+    		}
+    		
+    	}     	
+    	
+    	return ok(views.html.Admin.editMusicCategory.render(category, form, MusicCategory.getTypeList()));
+
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editMusicCategorySubmit(Integer id){
+    	
+    	return editMusicCategory(id);
+    }
+    	
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addMusicCategory(Integer parentId, String type){
+    	
+    	Form<MusicCategory> form = form(MusicCategory.class);
+    	MusicCategory parent = parentId > 0 ? MusicCategory.find.byId(parentId) : null;
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form.bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Music Category was successfully updated");
+        		
+        		MusicCategory category = form.get();
+        		category.setParent(MusicCategory.find.byId(parentId));
+        		
+        		processImageUpload( category, "setImageStorageObject", MusicCategory.imageMetadata );
+        		
+        		category.save();
+        		
+        		return redirect(routes.AdminController.editMusicCategory(category.getId()));
+    			
+    		}
+    		
+    	} else {
+    		// HashMap<String,String> data = new HashMap<String,String>();
+    		// data.put("type", type);
+    		// form = form.bind( data, "type" );
+    		form.data().put("type", type);
+    	}
+    	
+    	return ok(views.html.Admin.addMusicCategory.render(form, parent, MusicCategory.getTypeList(), type));
+
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addMusicCategorySubmit(Integer parentId, String type){
+    	
+    	return addMusicCategory(parentId, type);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMusicCategory(Integer id){
+    	
+    	MusicCategory category = MusicCategory.find.byId(id);
+    	if( category == null){
+    		return notFound("Music Category was not found");
+    	}    	
+    	String type = category.getType().toString();
+    	
+    	if(request().method().equals("POST")){
+    		
+    		category.delete();
+    		
+    		flash("Music Category was removed successfully");
+    		
+    		return redirect( routes.AdminController.browseMusicCategories( type ) );
+    	}
+    	
+    	return ok( views.html.Admin.deleteMusicCategory.render(category) );
+    }
+    
+    public static Result deleteMusicCategorySubmit(Integer id){
+    	
+    	return deleteMusicCategory(id);
+    	
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+	public static Result browseBatchJobs(Integer page, String term){
+		
+    	int pageSize = 15;
+    	
+    	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
+    	
+    	return ok(views.html.Admin.browseBatchJobs.render(batchJobs, term));
+	}
+    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addBatchJob(){
+    	
+    	Form<BatchJob> form = form(BatchJob.class);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(BatchJob.class).bindFromRequest();
+    		
+    		System.out.println( form );
+    		
+    		if(!form.hasErrors()){
+	    		flash("success", "Batch job was created successfully");
+	    		
+	    		BatchJob batchJob = form.get();
+	    		batchJob.setCreatedDate(new Date());
+	    		batchJob.save();
+	    		
+	    		
+	    		
+	    		return redirect( routes.AdminController.editBatchJob( batchJob.getId() ));
+    		}
+    		
+    	}
+    	
+    	return ok( views.html.Admin.addBatchJob.render(form, BatchJob.getActorList() ) );
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addBatchJobSubmit(){
+    	return addBatchJob();
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editBatchJob(Integer id ){
+    	
+    	BatchJob batchJob = BatchJob.find.byId(id);
+    	if( batchJob == null){
+    		return notFound("Batch Job was not found");
+    	}
+    	
+    	Form<BatchJob> form = form(BatchJob.class).fill(batchJob);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(BatchJob.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Batch Job was successfully updated");
+        		
+        		batchJob = form.get();
+        		batchJob.update();
+        		
+        		return redirect(routes.AdminController.editBatchJob(id));
+    			
+    		}
+    	}
+    	
+    	return ok(views.html.Admin.editBatchJob.render(form, batchJob, BatchJob.getActorList()));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editBatchJobSubmit(Integer id){
+    	return editBatchJob(id);
+    }
 }

@@ -1,0 +1,15 @@
+@(form: Form[Genre])@import helper.twitterBootstrap2._
+@Layout.admin("Add Genre") {
+	<h1>Add Genre</h1>
+	<hr>
+	
+	@helper.form(action = routes.AdminController.addGenreSubmit(), 'class -> "form-horizontal well", 'id -> "genre-add", 'enctype ->"multipart/form-data" ) {
+			
+			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
+		
+			<div class="form-actions">
+				<input class="btn btn-success" type="submit" value="Add" />
+			</div>		
+		
+	}
+}

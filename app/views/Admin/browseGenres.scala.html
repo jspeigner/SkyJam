@@ -1,13 +1,17 @@
 @(genres:Page[Genre], term:String)@Layout.admin("Browse Genres") {
-<h1>Artists</h1>
+<h1>Genres</h1>
 <hr>
-	
+	<div class="pull-left">
+		<a href="@routes.AdminController.addGenre()" class="btn">Add</a>
+	</div>
 	<div class="pull-right">
-	<form class="form-search" method="get" action="@routes.AdminController.browseArtists()">
-  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID or Artist name" value="@term">
-  		<button type="submit" class="btn">Search</button>
-	</form>
+		<form class="form-search" method="get" action="@routes.AdminController.browseGenres()">
+	  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search by ID or Genre name" value="@term">
+	  		<button type="submit" class="btn">Search</button>
+		</form>
 	</div>	
+	
+	<div class="clearfix"></div>
 	
 	@if( ( genres != null ) && ( genres.getList.size > 0 )){
 	
@@ -35,6 +39,6 @@
 	</div>
 	
 	} else {
-	<p>There are no users found.</p>
+	<p>There are no genres found.</p>
 	}
 }

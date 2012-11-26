@@ -1,0 +1,34 @@
+@(topLevelMusicCategories:List[MusicCategory], categoryType:String)@Layout.admin("Browse Music Categories") {
+<script type="text/javascript">
+$(function(){
+
+
+	$(".music-category-info").mouseenter(function(){
+		
+		$(".options", this).removeClass("hide");
+		
+	}).mouseleave(function(){
+		$(".options", this).addClass("hide");
+	});
+
+});
+//-->
+</script>
+<h1>Music Categories</h1>
+<hr>
+<ul class="nav nav-pills">
+	<li class="@if(categoryType.equals(MusicCategory.Type.activity.toString)){ active }"><a href="@routes.AdminController.browseMusicCategories(MusicCategory.Type.activity.toString)">Activities</a></li>
+	<li class="@if(categoryType.equals(MusicCategory.Type.popular.toString)){ active }"><a href="@routes.AdminController.browseMusicCategories(MusicCategory.Type.popular.toString)">Popular</a></li>
+</ul>
+<hr>
+
+	
+	@if( ( topLevelMusicCategories != null ) && ( topLevelMusicCategories.size > 0 )){
+	
+		@tags.adminMusicCategories(topLevelMusicCategories)
+	
+	
+	} else {
+	<p>There are no categories found.</p>
+	}
+}

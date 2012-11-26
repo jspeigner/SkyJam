@@ -1,5 +1,5 @@
 @(category:MusicCategory, playlists:Set[Playlist])@Layout.default(
-	title = "Playlists for " + category.getName,
+	title = if( category != null )  ( "Playlists for " + category.getName ) else "",
 	metaKeywords =  ( if( playlists.size > 0 ){ "Playlists, " +playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "" } ) ,
 	metaDescription = ( if( playlists.size > 0 ){ "Playlists : "+playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "There are no playlists found" } ) 
 	
@@ -31,7 +31,7 @@
 
 </div>
 
-		@if( ( ( category.getParent ) != null ) && ( category.getParent().getId() != 0 ) ){
+		@if( ( ( category.getParent ) != null ) && ( category.getParent.getId != 0 ) ){
 			<p>
 				<a href="@routes.ApplicationController.category(category.getParent().getId())">
 					Back to the <i>@category.getParent().getName()</i>

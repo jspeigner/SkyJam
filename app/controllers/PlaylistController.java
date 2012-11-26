@@ -104,7 +104,7 @@ public class PlaylistController extends BaseController
 			  cat = MusicCategory.find.where().eq("id", musicCategoryId).eq("type", MusicCategory.Type.popular).findUnique();
 			  
 			  // top level category
-			  if( cat.getParentId() == 0 )
+			  if( cat.getParent().getId() == 0 )
 			  {
 				  List<MusicCategory> subCategories = cat.getChildren(); 
 				  
