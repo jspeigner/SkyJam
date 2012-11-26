@@ -514,7 +514,7 @@ public class AdminController extends BaseController {
         		MusicCategory category = form.get();
         		category.setParent(MusicCategory.find.byId(parentId));
         		
-        		processImageUpload(category, "setImageStorageObject", MusicCategory.imageMetadata );
+        		processImageUpload( category, "setImageStorageObject", MusicCategory.imageMetadata );
         		
         		category.save();
         		
@@ -541,7 +541,6 @@ public class AdminController extends BaseController {
     
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result deleteMusicCategory(Integer id){
-    	
     	
     	MusicCategory category = MusicCategory.find.byId(id);
     	if( category == null){
@@ -574,9 +573,74 @@ public class AdminController extends BaseController {
     	
     	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
     	
-    	
     	return ok(views.html.Admin.browseBatchJobs.render(batchJobs, term));
-	}    
+	}
     
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addBatchJob(){
+    	
+    	Form<BatchJob> form = form(BatchJob.class);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(BatchJob.class).bindFromRequest();
+    		
+    		System.out.println( form );
+    		
+    		if(!form.hasErrors()){
+	    		flash("success", "Batch job was created successfully");
+	    		
+	    		BatchJob batchJob = form.get();
+	    		batchJob.setCreatedDate(new Date());
+	    		batchJob.save();
+	    		
+	    		
+	    		
+	    		return redirect( routes.AdminController.editBatchJob( batchJob.getId() ));
+    		}
+    		
+    	}
+    	
+    	return ok( views.html.Admin.addBatchJob.render(form, BatchJob.getActorList() ) );
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result addBatchJobSubmit(){
+    	return addBatchJob();
+    }
+
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editBatchJob(Integer id ){
+    	
+    	BatchJob batchJob = BatchJob.find.byId(id);
+    	if( batchJob == null){
+    		return notFound("Batch Job was not found");
+    	}
+    	
+    	Form<BatchJob> form = form(BatchJob.class).fill(batchJob);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(BatchJob.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Batch Job was successfully updated");
+        		
+        		batchJob = form.get();
+        		batchJob.update();
+        		
+        		return redirect(routes.AdminController.editBatchJob(id));
+    			
+    		}
+    	}
+    	
+    	return ok(views.html.Admin.editBatchJob.render(form, batchJob, BatchJob.getActorList()));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editBatchJobSubmit(Integer id){
+    	return editBatchJob(id);
+    }
 }

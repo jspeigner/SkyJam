@@ -2,7 +2,12 @@ package models;
 
 
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -16,6 +21,7 @@ import com.avaje.ebean.Page;
 
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
+import scala.Tuple2;
 
 @Entity
 @Table(name="batch_jobs")
@@ -125,6 +131,15 @@ public class BatchJob extends AppModel {
 	}	
 	
 	public void run() {
+		
+	}
+	
+	public static List<Tuple2<String, String>> getActorList(){
+		
+		List<Tuple2<String, String>> list = new ArrayList<Tuple2<String,String>>();
+		list.add(new Tuple2<String, String>("AmazonS3ImportActor", "Import music from S3 account"));
+		
+		return list;
 		
 	}
 }
