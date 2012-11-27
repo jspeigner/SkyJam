@@ -21,7 +21,9 @@ $(function(){
 	<li class="@if(categoryType.equals(MusicCategory.Type.popular.toString)){ active }"><a href="@routes.AdminController.browseMusicCategories(MusicCategory.Type.popular.toString)">Popular</a></li>
 </ul>
 <hr>
-
+	<div style="margin-left:34px">
+		<a class="btn btn-small" href="@routes.AdminController.addMusicCategory(0, categoryType:String)"><i class="icon-plus"></i> Add...</a>
+	</div>
 	
 	@if( ( topLevelMusicCategories != null ) && ( topLevelMusicCategories.size > 0 )){
 	

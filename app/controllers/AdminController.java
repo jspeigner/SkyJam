@@ -552,7 +552,7 @@ public class AdminController extends BaseController {
     		
     		category.delete();
     		
-    		flash("Music Category was removed successfully");
+    		flash( "success", "Music Category was removed successfully");
     		
     		return redirect( routes.AdminController.browseMusicCategories( type ) );
     	}
