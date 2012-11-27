@@ -162,7 +162,7 @@ public class MusicCategory extends AppModel {
 	@SuppressWarnings("unchecked")
 	public static List<Tuple2<String, String>> getActivitiesList(String activityNameSeparator) {
 		
-		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent_id", 0).setMapKey("id").findMap();
+		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent", null).setMapKey("id").findMap();
 		
 		return getActivitiesList(activities, activityNameSeparator);
 	}
