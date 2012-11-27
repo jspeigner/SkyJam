@@ -341,8 +341,7 @@ public class PlaylistController extends BaseController
 	  }
 	  
 	  @Restrict("user")
-	  public static Result createSubmit()
-	  {
+	  public static Result createSubmit(){
 		  
 		  User user = UserController.getAuthUser();
 		  Form<Playlist> form = form(Playlist.class).bindFromRequest("name", "description");
