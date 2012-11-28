@@ -1,4 +1,4 @@
-@(category:MusicCategory, playlists:Set[Playlist])@Layout.default(
+@(category:MusicCategory, playlists:List[Playlist])@Layout.default(
 	title = if( category != null )  ( "Playlists for " + category.getName ) else "",
 	metaKeywords =  ( if( playlists.size > 0 ){ "Playlists, " +playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "" } ) ,
 	metaDescription = ( if( playlists.size > 0 ){ "Playlists : "+playlists.map( playlist => playlist.getName() ).mkString(", ") } else { "There are no playlists found" } ) 

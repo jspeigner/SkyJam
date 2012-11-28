@@ -7,21 +7,24 @@
 <div id="playlists-browse-all">
 	<h1>Browse Playlist Categories</h1>
 	<hr />
-	
 	<ul class="nav nav-pills">
 		@for(category <- topLevelCategories){
 		  <li class="@(if(category.isParentOf(currentCategory))"active")"><a href="@routes.PlaylistController.browseCategory(category.getId)">@category.getName</a></li>
 		}
 	</ul>
 	<hr />
+	
 	<div class="categories row-fluid">
 		<div class="span3">
+			
 			<ul class="nav nav-list">
 				@for(category <- siblingCategories){
 				<li class="@(if(category.getId == currentCategory.getId)"active")"><a href="@routes.PlaylistController.browseCategory(category.getId)"><i class="icon-chevron-right @(if(category.getId == currentCategory.getId)"icon-white")"></i> @category.getName</a></li>
 				}
 			</ul>
+			
 		</div>
+		
 		<div class="playlists span9 clearfix">
 			@if( ( playlists != null ) && ( playlists.getList.size > 0 )){
 				<ul>
@@ -65,6 +68,8 @@
 				<p>There are no playlists found in the category</p>
 			}
 		</div>
+		
 	</div>
+	
 </div>
 }

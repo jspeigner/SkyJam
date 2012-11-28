@@ -5,6 +5,7 @@ import global.utils.Utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 
 import models.AppModel;
@@ -42,8 +43,7 @@ public class ApplicationController extends BaseController {
 	  
 	  MusicCategory parentCategory = parentCategoryId == null ? null : MusicCategory.find.where().eq("id", parentCategoryId).findUnique();
 	  
-	  int parentCategoriesCount = 4;
-	  Set<MusicCategory> categories = MusicCategory.find.where().eq("parent", parentCategory).eq("type", MusicCategory.Type.activity).setMaxRows(parentCategoriesCount).findSet();
+	  List<MusicCategory> categories = MusicCategory.find.where().eq("parent", parentCategory).eq("type", MusicCategory.Type.activity).findList();
 	  
 	  if( categories.size() == 0 )
 	  {
@@ -61,8 +61,8 @@ public class ApplicationController extends BaseController {
 	  MusicCategory category = MusicCategory.find.where().eq("id", categoryId).findUnique();
 	  
 	  int maxPlaylistsCount = 4;
+	  List<Playlist> playlists = Playlist.find.where().eq("musicCategories.id", categoryId).eq("status", Playlist.Status.Public).setMaxRows(maxPlaylistsCount).findList();
 	  
-	  Set<Playlist> playlists = Playlist.find.where().eq("musicCategories.id", categoryId).eq("status", Playlist.Status.Public).setMaxRows(maxPlaylistsCount).findSet();
 	  
 	  return ok( views.html.Application.playlistByCategory.render(category, playlists) );
   }
