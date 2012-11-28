@@ -1,0 +1,14 @@
+@(batchJob:BatchJob)@Layout.admin("Delete Batch Job") {
+
+<h1>Are you sure to delete the Batch Job ?</h1>
+<form class="well" method="post" action="@routes.AdminController.deleteBatchJobSubmit(batchJob.getId)" >
+	<h2><b>#@batchJob.getId</b> - <a target="_blank" href="@routes.AdminController.editBatchJob(batchJob.getId)">@batchJob.getName</a></h2>
+	<p>It cannot be undone. </p>
+	<p>The underlying processing will be terminated.</p>
+
+	<div class="form-actions">
+		<input type="submit" value="Delete" class="btn btn-danger">
+	</div>
+
+</form>
+}

@@ -653,4 +653,32 @@ public class AdminController extends BaseController {
     public static Result editBatchJobSubmit(Integer id){
     	return editBatchJob(id);
     }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteBatchJob(Integer id){
+    	
+    	BatchJob batchJob = BatchJob.find.byId(id);
+    	if( batchJob == null){
+    		return notFound("Batch Job was not found");
+    	}    	
+    	
+    	if(request().method().equals("POST")){
+    		
+    		batchJob.delete();
+    		
+    		flash( "success", "Batch Job was removed successfully");
+    		
+    		return redirect( routes.AdminController.browseBatchJobs(0,"") );
+    	}
+    	
+    	return ok( views.html.Admin.deleteBatchJob.render(batchJob) );    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteBatchJobSubmit(Integer id){
+    	return deleteBatchJob(id);
+    }    
+    
 }
+
+

@@ -168,7 +168,10 @@ public class BatchJob extends AppModel {
 		
 		ActorSystem actorSystem = getActorSystem();
 		if( actorSystem != null){
-			actorSystem.stop(getActorRef());
+			ActorRef a = getActorRef();
+			if(a!=null){
+				actorSystem.stop(a);
+			}
 		}
 		
 		

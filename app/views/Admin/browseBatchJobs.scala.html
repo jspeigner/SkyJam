@@ -32,7 +32,7 @@
 				<td>@batchJob.getName</td>
 				<td>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(batchJob.getCreatedDate) )</td>
 				<td>@batchJob.getActorCount&nbsp;/&nbsp;@batchJob.getActorCountByStatus(BatchJobActor.Status.completed)&nbsp;/&nbsp;@batchJob.getActorCountByStatus(BatchJobActor.Status.failed)</td>
-				<td><a href="@routes.AdminController.editBatchJob(batchJob.getId)">Edit</a> | <a href="#">Delete</a></td>
+				<td><a href="@routes.AdminController.editBatchJob(batchJob.getId)">Edit</a> | <a href="@routes.AdminController.deleteBatchJob(batchJob.getId)">Delete</a></td>
 			</tr>	
 			}
 			</tbody>
