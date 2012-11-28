@@ -1,4 +1,4 @@
-@(parentCategory:MusicCategory, categories:Set[MusicCategory])@Layout.default(
+@(parentCategory:MusicCategory, categories:List[MusicCategory])@Layout.default(
 	title = "Home" 
 ){
     
@@ -10,7 +10,7 @@
 
 <div id="activityBar" class="row-fluid">
 	<ul>
-	@for( category <- categories ){
+	@for( category <- util.Random.shuffle( categories.toSeq ).take(4) ){
 		<li class="span3">
 		<a href="@routes.ApplicationController.category(category.getId())"><img src="@category.getImageUrl()" alt="@category.getName()"  width="@MusicCategory.imageMetadata.width" height="@MusicCategory.imageMetadata.height"></a>
 		<a href="@routes.ApplicationController.category(category.getId())">@category.getName()</a></li>
