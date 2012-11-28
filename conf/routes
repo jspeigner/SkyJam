@@ -85,6 +85,7 @@ GET			/admin/batch_jobs/add				controllers.AdminController.addBatchJob()
 POST		/admin/batch_jobs/add				controllers.AdminController.addBatchJobSubmit()
 GET			/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJob(id: java.lang.Integer)
 POST		/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJobSubmit(id: java.lang.Integer)
+GET			/admin/batch_jobs/info				controllers.AdminController.batchJobsInfo()
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )

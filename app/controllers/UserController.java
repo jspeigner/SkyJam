@@ -1,9 +1,5 @@
 package controllers;
 
-import global.utils.Utils;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +21,6 @@ import play.api.libs.Crypto;
 import play.data.*;
 import play.data.validation.*;
 import play.data.validation.Constraints.*;
-import views.html.Album.view;
 import models.*;
 
 

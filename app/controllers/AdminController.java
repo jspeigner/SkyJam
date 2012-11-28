@@ -2,10 +2,8 @@ package controllers;
 
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.jaudiotagger.tag.Tag;
 
 
@@ -14,13 +12,8 @@ import com.avaje.ebean.Expr;
 import com.avaje.ebean.Page;
 import com.echonest.api.v4.EchoNestException;
 
-
 import models.*;
 import controllers.UserController.Login;
-import actors.TestActor;
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
@@ -523,9 +516,6 @@ public class AdminController extends BaseController {
     		}
     		
     	} else {
-    		// HashMap<String,String> data = new HashMap<String,String>();
-    		// data.put("type", type);
-    		// form = form.bind( data, "type" );
     		form.data().put("type", type);
     	}
     	
@@ -585,8 +575,7 @@ public class AdminController extends BaseController {
     	if(request().method().equals("POST")){
     		
     		form = form(BatchJob.class).bindFromRequest();
-    		
-    		System.out.println( form );
+    		DynamicForm dForm = form().bindFromRequest();
     		
     		if(!form.hasErrors()){
 	    		flash("success", "Batch job was created successfully");
@@ -595,7 +584,21 @@ public class AdminController extends BaseController {
 	    		batchJob.setCreatedDate(new Date());
 	    		batchJob.save();
 	    		
+        		int startObjectId = 1;
+        		int endObjectId = 1;
+        		
+        		try {
+        			startObjectId = Integer.parseInt( dForm.get("minBatchJobObjectId") );
+        		} catch (Exception e) { }
+        		
+        		try {
+        			endObjectId = Integer.parseInt( dForm.get("maxBatchJobObjectId") );
+        		} catch (Exception e) { }
+        		
+        			
+        		batchJob.createActors(startObjectId, endObjectId);	    		
 	    		
+        		batchJob.run();
 	    		
 	    		return redirect( routes.AdminController.editBatchJob( batchJob.getId() ));
     		}
@@ -624,12 +627,13 @@ public class AdminController extends BaseController {
     		
     		form = form(BatchJob.class).bindFromRequest();
     		
+    		
     		if(!form.hasErrors()){
     			
         		flash("success", "Batch Job was successfully updated");
         		
         		batchJob = form.get();
-        		batchJob.update();
+        		batchJob.update(id);
         		
         		return redirect(routes.AdminController.editBatchJob(id));
     			
@@ -637,6 +641,12 @@ public class AdminController extends BaseController {
     	}
     	
     	return ok(views.html.Admin.editBatchJob.render(form, batchJob, BatchJob.getActorList()));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result batchJobsInfo(){
+    	return ok(views.html.Admin.batchJobsInfo.render());
+    	
     }
     
     @Restrict(UserRole.ROLE_ADMIN)

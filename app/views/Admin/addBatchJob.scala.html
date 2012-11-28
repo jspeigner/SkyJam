@@ -7,7 +7,17 @@
 			
 			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
 		
-			@helper.select(form("actorClass"), actorClasses, '_showConstraints -> false, '_label -> "Type", 'class -> "span4")
+			@helper.select(form("actorClass"), actorClasses, '_showConstraints -> false, '_label -> "Type", 'class -> "span4" )
+		
+			<div class="control-group">
+				<label class="control-label">ID range</label>
+				<div class="controls" >
+					<input type="text" class="span2" name="minBatchJobObjectId" placeholder="first object id" value="@form("minBatchJobObjectId").value"> &mdash; 
+					<input type="text" class="span2" name="maxBatchJobObjectId" placeholder="last object id" value="@form("maxBatchJobObjectId").value">
+				</div>
+			</div>		
+			
+			<div class="control-group"><div class="controls" ><small>read <a href="@routes.AdminController.batchJobsInfo()">more</a> about batch jobs</small></div></div>
 		
 			<div class="form-actions">
 				<input class="btn btn-success" type="submit" value="Add" />

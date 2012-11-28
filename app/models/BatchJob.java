@@ -14,11 +14,19 @@ import javax.persistence.Table;
 
 import models.BatchJobActor.Status;
 
+import actors.TestActor;
+import akka.actor.Actor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
+import com.avaje.ebean.validation.Length;
 
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.db.ebean.Model.Finder;
 import scala.Tuple2;
@@ -29,6 +37,8 @@ public class BatchJob extends AppModel {
 
 	private Date createdDate;
 	
+	@Length(max=200,min=1)
+	@Constraints.Required	
 	private String name;
 	
 	private String actorClass;
@@ -59,6 +69,16 @@ public class BatchJob extends AppModel {
 		this.actorClass = actorClass;
 	}
 	
+	public Integer getMinBatchJobObjectId(){
+		BatchJobActor b = BatchJobActor.find.where().eq("batchJob", this).order("object_id ASC").setMaxRows(1).findUnique();
+		return b != null ? b.getObjectId() : null;
+	}
+	
+	public Integer getMaxBatchJobObjectId(){
+		BatchJobActor b = BatchJobActor.find.where().eq("batchJob", this).order("object_id DESC").setMaxRows(1).findUnique();
+		return b != null ? b.getObjectId() : null;		
+	}
+	 
 	public void createActors(int objectStartId, int objectEndId ) {
 		
 		Ebean.beginTransaction();  
@@ -132,14 +152,90 @@ public class BatchJob extends AppModel {
 	
 	public void run() {
 		
+		ActorRef actor = getActorRef();
+		if( actor != null ){
+			List<BatchJobActor> batchJobActors = BatchJobActor.find.where().eq("batchJob", this).findList();
+			for( BatchJobActor batchJobActor : batchJobActors){
+				
+				actor.tell( batchJobActor.getId() );
+				
+			}
+		}
+		
+	}
+	
+	public void delete(){
+		
+		ActorSystem actorSystem = getActorSystem();
+		if( actorSystem != null){
+			actorSystem.stop(getActorRef());
+		}
+		
+		
+		Ebean.beginTransaction();  
+		
+		try {
+
+			List<BatchJobActor> actors = BatchJobActor.find.where().eq("batchJob", this).findList();
+			if(actors != null){
+				Ebean.delete(actors);
+			}
+
+			Ebean.commitTransaction();
+		} finally {
+			Ebean.endTransaction();
+		}	
+		
+		super.delete();
 	}
 	
 	public static List<Tuple2<String, String>> getActorList(){
 		
 		List<Tuple2<String, String>> list = new ArrayList<Tuple2<String,String>>();
 		list.add(new Tuple2<String, String>("AmazonS3ImportActor", "Import music from S3 account"));
+		list.add(new Tuple2<String, String>("TestActor", "Test actor"));
 		
 		return list;
+		
+	}
+	
+	protected ActorSystem getActorSystem(){
+		return ActorSystem.create("BatchJob" + this.getId() );
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected ActorRef getActorRef(){
+		String actorClass = this.getActorClass();
+		
+		ActorSystem system = getActorSystem();
+		if( system != null ){
+			
+			
+			
+			try {
+				Class c = Class.forName("actors."+actorClass);
+				
+				System.out.println( c );
+				
+				
+				if( Actor.class.isAssignableFrom(c) ){
+					
+					
+					
+					ActorRef myActor = system.actorOf(new Props(c), actorClass);
+				
+					return myActor;
+				}
+				
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		
+			
+		}
+		
+		return null;
 		
 	}
 }
