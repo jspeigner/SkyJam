@@ -107,7 +107,7 @@ public class PlaylistController extends BaseController
 			  if( ( cat != null ) && ( cat.getParent() == null ) ) {
 				  List<MusicCategory> subCategories = cat.getChildren(); 
 				  
-				  cat = ( subCategories != null && subCategories.size() > 0) ? subCategories.get(0) : null;				  
+				  cat = ( ( subCategories != null ) && ( subCategories.size() > 0 ) ) ? subCategories.get(0) : null;				  
 			  }
 		  }
 		  
@@ -118,6 +118,7 @@ public class PlaylistController extends BaseController
 			  Page<Playlist> playlists = Playlist.pageByCategory(page, playlistsPerPage, cat, "loadedTimes", "desc");
 			  
 			  return ok(views.html.Playlist.browseCategory.render(topLevelCategories, siblingCategories, cat, playlists));
+			  
 		  }
 		  else
 		  {

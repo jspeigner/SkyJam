@@ -84,31 +84,21 @@ public class MusicCategory extends AppModel {
 	
 	public boolean isParentOf(MusicCategory m)
 	{
-		if(m != null )
-		{
-			if( m.getParent().getId() == this.getId() )
-			{
-				return true;
-			}
-			else
-			{
-				// recursive search
-				List<MusicCategory> children = MusicCategory.find.where().eq("parent", m).findList();
-				for( MusicCategory child : children )
-				{
-					if( child.isParentOf(m))
-					{
-						return true;
-					}
+		
+		int selfId = this.getId();
+		MusicCategory current = m;
+		while( current != null  ){
+			if( current.getParent() != null){
+				if( current.getParent().getId() == selfId){
+					return true;
 				}
-				
-				return false;
 			}
+			
+			current = current.getParent();
 		}
-		else
-		{
-			return false;
-		}
+		
+		
+		return false;
 	}
 
 	public String getName() {
