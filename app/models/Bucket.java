@@ -209,8 +209,6 @@ public class Bucket extends AppModel {
 			        	cleanSongName = songName.substring(0, p);
 			        }
 					
-					
-					
 					StorageObject s = StorageObject.find.where().eq("name", name).eq("bucket", this).findUnique();
 					String logAction = "";
 					if( s!= null){
@@ -234,7 +232,7 @@ public class Bucket extends AppModel {
 						
 					}
 					
-					// System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
+					System.out.println( logAction + " - " + artistName + " -> " + albumName + " -> " + cleanSongName );
 					
 				}
 			}

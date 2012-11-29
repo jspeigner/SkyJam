@@ -3,29 +3,60 @@
 	<h1>Edit Batch Job</h1>
 	<hr>
 	
-	@helper.form(action = routes.AdminController.editBatchJobSubmit(batchJob.getId), 'class -> "form-horizontal well", 'id -> "batch-job-edit", 'enctype ->"multipart/form-data" ) {
+	<div class="row-fluid">
+		<div class="span8">
+			@helper.form(action = routes.AdminController.editBatchJobSubmit(batchJob.getId), 'class -> "form-horizontal well", 'id -> "batch-job-edit", 'enctype ->"multipart/form-data" ) {
+					
+					@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span6")
+				
+					<div class="control-group">
+						<label class="control-label">Type</label>
+						<div class="controls" style="margin-top:6px; font-weight: bold;">@actorClasses.find( e => e._1.equals( batchJob.getActorClass.toString )).getOrElse( ( "", batchJob.getActorClass ) )._2</div>
+					</div>
+		
+					<div class="control-group">
+						<label class="control-label">Created</label>
+						<div class="controls" style="margin-top:6px; font-weight: bold;">@( new java.text.SimpleDateFormat( "MMMM d, yyyy" ).format(batchJob.getCreatedDate) )</div>
+					</div>
+		
+					
+					<div class="control-group">
+						<label class="control-label">ID range</label>
+						<div class="controls" style="margin-top:6px; font-weight: bold;">@batchJob.getMinBatchJobObjectId - @batchJob.getMaxBatchJobObjectId</div>
+					</div>
+				
+					<div class="form-actions">
+						<input class="btn btn-success" type="submit" value="Save" />
+					</div>		
+				
+			}
+		</div>
+		<div class="span4">
+			<div class="well">
+				<dl>
+					<dt>Status</dt>
+					<dd>@if( batchJob.isCompleted ){
+						<span class="label label-success">COMLETED</span> 
+					 } else { 
+					 	<span class="label label-info">RUNNING</span>
+					 }</dd>
+				</dl>
 			
-			@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span4")
-		
-			<div class="control-group">
-				<label class="control-label">Type</label>
-				<div class="controls" style="margin-top:6px; font-weight: bold;">@actorClasses.find( e => e._1.equals( batchJob.getActorClass.toString )).getOrElse( ( "", batchJob.getActorClass ) )._2</div>
+				<dl>
+					<dt>Total Steps</dt>
+					<dd>@batchJob.getActorCount</dd>
+					
+				</dl>
+				<dl>
+					<dt>Completed Steps</dt>
+					<dd>@batchJob.getActorCountByStatus(BatchJobActor.Status.completed)</dd>
+				</dl>
+				<dl>
+					<dt>Failed Steps</dt>
+					<dd>@batchJob.getActorCountByStatus(BatchJobActor.Status.failed)</dd>
+				</dl>								
 			</div>
-
-			<div class="control-group">
-				<label class="control-label">Created</label>
-				<div class="controls" style="margin-top:6px; font-weight: bold;">@( new java.text.SimpleDateFormat( "MMMM d, yyyy" ).format(batchJob.getCreatedDate) )</div>
-			</div>
-
-			
-			<div class="control-group">
-				<label class="control-label">ID range</label>
-				<div class="controls" style="margin-top:6px; font-weight: bold;">@batchJob.getMinBatchJobObjectId - @batchJob.getMaxBatchJobObjectId</div>
-			</div>
-		
-			<div class="form-actions">
-				<input class="btn btn-success" type="submit" value="Save" />
-			</div>		
-		
-	}
+		</div>
+	
+	</div>
 }

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -42,6 +43,9 @@ public class BatchJob extends AppModel {
 	private String name;
 	
 	private String actorClass;
+	
+	@Column(nullable=true)
+	private String result;
 	
 	public static Model.Finder<Integer,BatchJob> find = new Finder<Integer, BatchJob>(Integer.class, BatchJob.class);
 
@@ -223,8 +227,6 @@ public class BatchJob extends AppModel {
 				
 				if( Actor.class.isAssignableFrom(c) ){
 					
-					
-					
 					ActorRef myActor = system.actorOf(new Props(c), actorClass);
 				
 					return myActor;
@@ -240,5 +242,27 @@ public class BatchJob extends AppModel {
 		
 		return null;
 		
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String results) {
+		this.result = results;
+	}
+	
+	public boolean isCompleted(){
+		return BatchJobActor
+					.find
+					.where()
+					.and( 
+							Expr.eq("batchJob", this), 
+							Expr.or( 
+									Expr.eq("status", BatchJobActor.Status.not_started) , 
+									Expr.eq("status", BatchJobActor.Status.running
+							)
+					)
+				).findRowCount() == 0;
 	}
 }
