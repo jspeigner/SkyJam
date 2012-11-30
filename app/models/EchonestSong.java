@@ -1,9 +1,15 @@
 package models;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.annotation.Nullable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import com.echonest.api.v4.EchoNestException;
 
@@ -11,30 +17,36 @@ import com.echonest.api.v4.EchoNestException;
 @Table(name="echonest_songs")
 public class EchonestSong extends AppModel {
 
-	@Nullable
+	
+	@Column(nullable=true)
 	private String echonestSongId;
-	@Nullable
+	@Column(nullable=true)
 	private String title;
-	@Nullable
+	@Column(nullable=true)
 	private String artistName;
-	@Nullable
+	@Column(nullable=true)
 	private Double duration;
-	@Nullable
+	@Column(nullable=true)
 	private Double tempo;
-	@Nullable
+	@Column(nullable=true)
 	private String artistLocation;
-	@Nullable
+	@Column(nullable=true)
 	private String coverArt;
-	@Nullable
+	@Column(nullable=true)
 	private String releaseName;
-	@Nullable
+	@Column(nullable=true)
 	private Integer mode;
-	@Nullable
+	@Column(nullable=true)
 	private Double songHotttnesss;
-	@Nullable
+	@Column(nullable=true)
 	private Double artistHotttnesss;
-	@Nullable
+	@Column(nullable=true)
 	private String audio;
+	
+	@Transient
+	public static int r;
+	
+	private Date createdDate;
 	
 	public String getEchonestSongId() {
 		return echonestSongId;
@@ -115,21 +127,20 @@ public class EchonestSong extends AppModel {
 		try {
 			setMode(echonestSong.getMode());
 		} catch (EchoNestException e) {
-			// TODO Auto-generated catch block
 			// e.printStackTrace();
 			setMode(0);
 		}
 		try {
 			setSongHotttnesss(echonestSong.getSongHotttnesss());
 		} catch (EchoNestException e) {
-			// TODO Auto-generated catch block
+
 			// e.printStackTrace();
 			setSongHotttnesss(0.0);
 		}
 		try {
 			setArtistHotttnesss(echonestSong.getArtistHotttnesss());
 		} catch (EchoNestException e) {
-			// TODO Auto-generated catch block
+
 			// e.printStackTrace();
 			setArtistHotttnesss(0.0);
 		}
@@ -161,6 +172,12 @@ public class EchonestSong extends AppModel {
 	}
 	public void setAudio(String audio) {
 		this.audio = audio;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 	
