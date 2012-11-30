@@ -561,6 +561,8 @@ public class AdminController extends BaseController {
 		
     	int pageSize = 15;
     	
+    	System.out.println( EchonestSong.r++ );
+    	
     	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
     	
     	return ok(views.html.Admin.browseBatchJobs.render(batchJobs, term));

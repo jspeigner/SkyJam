@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 
 import org.jaudiotagger.tag.FieldKey;
@@ -18,7 +20,8 @@ public class SongMetadata extends AppModel {
 	private String mood;
 	private Double bpm;
 	private Integer year;
-
+	private Date createdDate;
+	
 	public void init(Tag tags){
 		setAlbum(tags.getFirst(FieldKey.ALBUM));
 		setArtist(tags.getFirst(FieldKey.ARTIST));
@@ -111,6 +114,14 @@ public class SongMetadata extends AppModel {
 
 	public void setYear(Integer year) {
 		this.year = year;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 }

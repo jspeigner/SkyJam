@@ -200,6 +200,7 @@ public class BatchJob extends AppModel {
 		
 		List<Tuple2<String, String>> list = new ArrayList<Tuple2<String,String>>();
 		list.add(new Tuple2<String, String>("AmazonS3ImportActor", "Import music from S3 account"));
+		list.add(new Tuple2<String, String>("SongMetadataActor", "Read Song Metadata"));
 		list.add(new Tuple2<String, String>("TestActor", "Test actor"));
 		
 		return list;
@@ -221,9 +222,6 @@ public class BatchJob extends AppModel {
 			
 			try {
 				Class c = Class.forName("actors."+actorClass);
-				
-				System.out.println( c );
-				
 				
 				if( Actor.class.isAssignableFrom(c) ){
 					

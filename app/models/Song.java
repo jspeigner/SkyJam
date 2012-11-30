@@ -10,6 +10,7 @@ import org.jaudiotagger.tag.Tag;
 
 import models.Playlist.Status;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
@@ -24,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -234,7 +236,7 @@ public class Song extends AppModel {
 						
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						// e.printStackTrace();
 					}
     			}
     			
@@ -247,8 +249,7 @@ public class Song extends AppModel {
 		return tags;
 	}
 
-	private File readStorageObjectInFile(StorageObject s) throws IOException,
-			FileNotFoundException {
+	private File readStorageObjectInFile(StorageObject s) throws IOException, FileNotFoundException {
 		File tempFile;
 		InputStream in = s.getInputStream();
 		tempFile = File.createTempFile("song_id_"+this.getId()+"_", "." + FilenameUtils.getExtension(s.getName()) );
@@ -298,21 +299,66 @@ public class Song extends AppModel {
         
         p.setResults(results);
         
+        Song.echonestCallDelay();
+        
 		return en.searchSongs(p);
 			
 		
 	}
 	
+	public static com.echonest.api.v4.Song getEchonestSong(String artistName, String songName)  throws EchoNestException {
+		 List<com.echonest.api.v4.Song> list = getEconestSongsByName(artistName, songName, 1);
+		 return list.size() > 0 ? list.get(0) : null;
+	}
+	
+	public static List<com.echonest.api.v4.Song> getEconestSongsByName(String artistName, String songName, int results) throws EchoNestException {
+		
+    	EchoNestAPI en = new EchoNestAPI( Play.application().configuration().getString("echonest.api_key") );
+    	
+    	
+    	
+    	SongParams p = new SongParams();
+    	
+    	p.setArtist(artistName);
+    	
+    	// System.out.printf("[%s]\n", fullName);
+    	
+        p.includeTracks();               // the album art is in the track data
+        p.setLimit(true);                // only return songs that have track data
+        p.addIDSpace("7digital-US");     // include 7digital specific track data
+    	
+    	
+    	p.setTitle(songName);
+        
+        p.setResults(results);
+        
+        Song.echonestCallDelay();
+        
+		return en.searchSongs(p);		
+	}
+	
+	synchronized static protected void echonestCallDelay(){
+		int threadDelay = Play.application().configuration().getInt("echonest.requestDelay");
+        try {
+        	
+			Thread.sleep(threadDelay*1000);
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}		
+	}
+	
 	public void saveEchonestSong(com.echonest.api.v4.Song echonestSong){
 		EchonestSong eSong = getEchonestSong();
-		if(eSong == null){
-			eSong = new EchonestSong();
-			eSong.init(echonestSong);
-			eSong.save();
-		} else {
-			eSong.init(echonestSong);
-			eSong.update();
-		}
+		if(eSong != null){
+			eSong.delete();
+		} 
+			
+		eSong = new EchonestSong();
+		eSong.init(echonestSong);
+		eSong.setCreatedDate(new Date());
+		eSong.save();
 		
 		
 		
@@ -322,15 +368,14 @@ public class Song extends AppModel {
 	
 	public void saveSongMetadata( Tag tags ){
 		SongMetadata m = getSongMetadata();
-		if(m == null){
-			m = new SongMetadata();
-			m.init(tags);
-			m.save();
-		} else {
-			m.init(tags);
-			m.update();
-		}
-		
+		if(m != null){
+			m.delete();
+		} 
+
+		m = new SongMetadata();
+		m.init(tags);
+		m.setCreatedDate(new Date());
+		m.save();
 		
 		setSongMetadata(m);
 		update();

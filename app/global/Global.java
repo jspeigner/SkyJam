@@ -46,4 +46,6 @@ public class Global extends GlobalSettings {
         return Results.notFound( views.html.Errors.handlerNotFound.render() );
     }
 	
+	
+	
 }
