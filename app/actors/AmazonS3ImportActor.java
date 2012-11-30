@@ -28,7 +28,7 @@ public class AmazonS3ImportActor extends BaseActor {
 	protected boolean importSongsFromAmazonAccount(Integer amazonAccountId){
 		AmazonAccount amazonAccount = AmazonAccount.find.byId(amazonAccountId);
 		if( amazonAccount != null ){
-			List<models.Bucket> buckets = models.Bucket.find.where().eq("amazon_account_id", amazonAccount.getId()).findList(); 
+			List<models.Bucket> buckets = models.Bucket.find.where().eq("amazonAccount", amazonAccount).findList(); 
 			
 			for(models.Bucket bucket : buckets){
 				bucket.importMusicFromBucket();

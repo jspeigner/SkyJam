@@ -21,6 +21,7 @@
 					<th>ID</th>
 					<th>Name</th>
 					<th>Created</th>
+					<th>Status</th>
 					<th>Total&nbsp;/&nbsp;Completed&nbsp;/&nbsp;Failed</th>
 					<th>Actions</th>
 				</tr>
@@ -31,8 +32,13 @@
 				<td>@batchJob.getId</td>
 				<td>@batchJob.getName</td>
 				<td>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(batchJob.getCreatedDate) )</td>
+				<td>@if( batchJob.isCompleted ){
+						<span class="label label-success">COMLETED</span> 
+					 } else { 
+					 	<span class="label label-info">RUNNING</span>
+				}</td>
 				<td>@batchJob.getActorCount&nbsp;/&nbsp;@batchJob.getActorCountByStatus(BatchJobActor.Status.completed)&nbsp;/&nbsp;@batchJob.getActorCountByStatus(BatchJobActor.Status.failed)</td>
-				<td><a href="@routes.AdminController.editBatchJob(batchJob.getId)">Edit</a> | <a href="#">Delete</a></td>
+				<td><a href="@routes.AdminController.editBatchJob(batchJob.getId)">Edit</a> | <a href="@routes.AdminController.deleteBatchJob(batchJob.getId)">Delete</a></td>
 			</tr>	
 			}
 			</tbody>

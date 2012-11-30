@@ -81,10 +81,14 @@ GET			/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCa
 POST		/admin/music_category/delete/:id	controllers.AdminController.deleteMusicCategorySubmit(id:java.lang.Integer)
 
 GET			/admin/batch_jobs/browse			controllers.AdminController.browseBatchJobs(page:java.lang.Integer ?= 0, term:String ?= "" )
-GET			/admin/batch_jobs/add				controllers.AdminController.addBatchJob()
-POST		/admin/batch_jobs/add				controllers.AdminController.addBatchJobSubmit()
-GET			/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJob(id: java.lang.Integer)
-POST		/admin/batch_jobs/edit/:id			controllers.AdminController.editBatchJobSubmit(id: java.lang.Integer)
+GET			/admin/batch_job/add				controllers.AdminController.addBatchJob()
+POST		/admin/batch_job/add				controllers.AdminController.addBatchJobSubmit()
+GET			/admin/batch_job/edit/:id			controllers.AdminController.editBatchJob(id: java.lang.Integer)
+POST		/admin/batch_job/edit/:id			controllers.AdminController.editBatchJobSubmit(id: java.lang.Integer)
+GET			/admin/batch_jobs/info				controllers.AdminController.batchJobsInfo()
+GET			/admin/batch_job/delete/:id			controllers.AdminController.deleteBatchJob(id:java.lang.Integer)
+POST		/admin/batch_job/delete/:id			controllers.AdminController.deleteBatchJobSubmit(id:java.lang.Integer)
+
 
 GET			/admin/song/metadata/:id		controllers.AdminController.readSongMetadata(id: java.lang.Integer)
 GET			/admin/song/get_echonest_info/:id controllers.AdminController.getEchonestInfo(id: java.lang.Integer )
