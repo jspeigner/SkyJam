@@ -398,7 +398,7 @@ public class AdminController extends BaseController {
     public static Result addGenre(){
     	Form<Genre> form = form(Genre.class);
     	
-    	System.out.println((request().method()));
+    	
     	
     	if(request().method().equals("POST")){
     		
@@ -561,7 +561,7 @@ public class AdminController extends BaseController {
 		
     	int pageSize = 15;
     	
-    	System.out.println( EchonestSong.r++ );
+    	
     	
     	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
     	

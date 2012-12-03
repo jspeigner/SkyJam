@@ -9,11 +9,9 @@ import java.util.List;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import com.avaje.ebean.Ebean;
 import com.echonest.api.v4.EchoNestException;
 
 import models.Album;
-import models.BatchJobActor;
 import models.Song;
 import models.SongMetadata;
 
@@ -41,7 +39,7 @@ public class SongMetadataActor extends BaseActor {
 
 		}
 		
-	}	
+	}
 	
 	
 	protected boolean readSongMetadata(Integer songId){

@@ -202,6 +202,8 @@ public class BatchJob extends AppModel {
 		list.add(new Tuple2<String, String>("AmazonS3ImportActor", "Import music from S3 account"));
 		list.add(new Tuple2<String, String>("SongMetadataActor", "Read Song Metadata"));
 		list.add(new Tuple2<String, String>("TestActor", "Test actor"));
+		list.add(new Tuple2<String, String>("EchonestUpdateAlbumArt", "Update Album Art Image from echonest data"));
+		
 		
 		return list;
 		
