@@ -9,6 +9,7 @@ import org.jaudiotagger.tag.Tag;
 
 
 import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.echonest.api.v4.EchoNestException;
 
@@ -680,6 +681,44 @@ public class AdminController extends BaseController {
     public static Result deleteBatchJobSubmit(Integer id){
     	return deleteBatchJob(id);
     }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+	public static Result browsePlaylists(Integer page, String term){
+		
+    	int pageSize = 15;
+    	
+    	Expression expr = Expr.ne("status", Playlist.Status.Deleted);
+    	Page<Playlist> playlists = Playlist.getPageWithSearch(page, pageSize, term, expr );
+    	
+    	return ok(views.html.Admin.browsePlaylists.render(playlists, term));
+	}    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deletePlaylist(Integer id){
+    	
+    	Playlist playlist = Playlist.find.byId(id);
+    	if( playlist == null){
+    		return notFound("Playlist was not found");
+    	}    	
+    	
+    	if(request().method().equals("POST")){
+    		
+    		playlist.setStatus(Playlist.Status.Deleted);
+    		playlist.update(id);
+    		
+    		flash( "success", "Playlist was removed successfully");
+    		
+    		return redirect( routes.AdminController.browsePlaylists(0,"") );
+    	}
+    	
+    	return ok( views.html.Admin.deletePlaylist.render(playlist) );    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deletePlaylistSubmit(Integer id){
+    	return deletePlaylist(id);
+    }    
+    
     
 }
 

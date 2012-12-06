@@ -264,38 +264,9 @@ function Application(config)
 		return false;
 	};
 	
-	this.loadLiveFyreComments = function(element){
-		
-		element = element ? element : 'livefyre-comments';
-		
-		// TODO it's a hack
-		delete window.FyreLoader; 
-		
-		(function () {
-		    var articleId = fyre.conv.load.makeArticleId(null);
-		    fyre.conv.load({}, [{
-		        el: element,
-		        network: "livefyre.com",
-		        siteId: "315942",
-		        articleId: articleId,
-		        signed: false,
-		        collectionMeta: {
-		            articleId: articleId,
-		            url: fyre.conv.load.makeCollectionUrl(),
-		        }
-		    }], 
-		    function() {
-		    	// on load
-		    	
-		    });
-		}());
-
-		
-	};
-	
 	this.onPageLoaded = function(){
 		
-		// self.loadLiveFyreComments("livefyre-comments");
+
 		try {
 			if(typeof FB != "undefined"){
 				FB.XFBML.parse(document.body);

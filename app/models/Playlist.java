@@ -105,6 +105,44 @@ public class Playlist extends AppModel {
 		return getPlaylistSongs(-1);
 	}
 	
+	public static Page<Playlist> getPageWithSearch(int page, int pageSize, String term){
+		return getPageWithSearch(page, pageSize, term, null);
+	}
+	
+	public static Page<Playlist> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
+    	
+    	if( ( term!=null ) && ( !term.isEmpty())){
+    		try {  
+    		      Integer id = Integer.parseInt( term );  
+    		      
+    		      Expression expr = Expr.eq("id", id);
+    		      
+  	    		
+	  	    		if( additionalConditions != null ){
+	  	    			expr = Expr.and( additionalConditions , expr );
+	  	    		}    		      
+    		      
+    		      return Playlist.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      
+    		} catch( Exception e ) {
+    			
+    	    		String likeQueryString =  "%" + term.trim() + "%";
+    	    		
+    	    		Expression expr = Expr.ilike("name", likeQueryString);	
+    	    		
+    	    		if( additionalConditions != null ){
+    	    			expr = Expr.and( additionalConditions , expr );
+    	    		}
+    	    		
+    	    		return Playlist.find.where( expr ).findPagingList(pageSize).getPage(page);
+    		}
+    		
+
+    	} else {
+    		return ( ( additionalConditions == null ) ? Playlist.find : Playlist.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
+    	}
+	}	
+	
 	public List<PlaylistSong> getPlaylistSongs(int limit)
 	{
 		return limit <= 0 ? playlistSongs : playlistSongs.subList(0, limit);

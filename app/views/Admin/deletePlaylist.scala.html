@@ -1,0 +1,14 @@
+@(playlist:Playlist)@Layout.admin("Delete Playlist") {
+
+<h1>Are you sure to delete the Playlist ?</h1>
+<form class="well" method="post" action="@routes.AdminController.deletePlaylistSubmit(playlist.getId)" >
+	<h2><b>#@playlist.getId</b> - <a target="_blank" href="#">@playlist.getName</a></h2>
+	<p>It cannot be undone. </p>
+	<p>The underlying processing will be terminated.</p>
+
+	<div class="form-actions">
+		<input type="submit" value="Delete" class="btn btn-danger">
+	</div>
+
+</form>
+}
