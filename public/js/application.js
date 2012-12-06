@@ -296,6 +296,16 @@ function Application(config)
 	this.onPageLoaded = function(){
 		
 		// self.loadLiveFyreComments("livefyre-comments");
+		try {
+			if(typeof FB != "undefined"){
+				FB.XFBML.parse(document.body);
+			}
+			
+		} catch (e) {
+			// TODO: handle exception
+		}
+		
+		 
 		
 		$(document).trigger( Application.events.PAGE_LOAD );
 	};
