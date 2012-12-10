@@ -29,7 +29,7 @@
 				<td>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(playlist.getCreatedDate) )</td>
 				<td>@playlist.getStatus</td>
 				<td><a href="@routes.AdminController.editUser(playlist.getUser.getId)">@playlist.getUser.getUsername</a></td>
-				<td><a href="#">Edit</a> | <a href="@routes.AdminController.deletePlaylist(playlist.getId)">Delete</a></td>
+				<td><a href="@routes.AdminController.editPlaylist(playlist.getId)">Edit</a> | <a href="@routes.AdminController.deletePlaylist(playlist.getId)">Delete</a></td>
 			</tr>
 			}
 			</tbody>

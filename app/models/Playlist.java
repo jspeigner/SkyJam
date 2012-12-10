@@ -3,8 +3,12 @@ package models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -312,6 +316,16 @@ public class Playlist extends AppModel {
 	public List<MusicCategory> getMusicCategories() {
 		return musicCategories;
 	}
+	
+	public Set<String> getMusicCategoryIds() {
+		List<MusicCategory> list = getMusicCategories();
+		Set<String> ids = new HashSet<String>();
+		for(MusicCategory category : list){
+			ids.add(category.getId().toString());
+		}
+		
+		return ids;
+	}
 
 	public void setMusicCategories(List<MusicCategory> musicCategories) {
 		this.musicCategories = musicCategories;
@@ -338,7 +352,7 @@ public class Playlist extends AppModel {
 	
 	public boolean isSavedByUser(User user)
 	{
-		return (user==null) || ( UserSavedPlaylist.find.where().eq("user", user).eq("playlist", this ).findRowCount() > 0 ); 
+		return ( user == null ) || ( UserSavedPlaylist.find.where().eq("user", user).eq("playlist", this ).findRowCount() > 0 ); 
 	}
 
 	/*
@@ -498,6 +512,10 @@ public class Playlist extends AppModel {
 		return true;
 	}
 	
+	public void saveMusicCategories( List<MusicCategory> musicCategories){
+		
+	}
+	
 	public boolean setActivity(String activityId){
 		if( activityId != null){
 			try{
@@ -554,6 +572,78 @@ public class Playlist extends AppModel {
 	public static Page<Playlist> getUserPlaylistsPage(User user, Integer page, Integer pageSize) {
 		
 		return Playlist.find.where().eq("user", user).ne("status", Playlist.Status.Deleted ).orderBy("createdDate DESC").findPagingList(pageSize).getPage(page);
+	}
+
+	public void updateCategoriesFromMap(Map<String, String> data) {
+		// TODO Auto-generated method stub
+		Iterator<Entry<String, String>> it = data.entrySet().iterator();
+		
+		List<Integer> categories = new ArrayList<Integer>();
+		
+	    while (it.hasNext()) {
+	        Entry<String, String> pairs = it.next();
+	        // System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        
+	        if( pairs.getKey().indexOf("musicCategoryId") > -1 ){
+	        	try {
+	        		Integer id = Integer.valueOf( pairs.getValue() );
+	        		categories.add(id);
+	        		
+	        	} catch(Exception e){
+	        		
+	        	}
+	        }
+	        
+	        it.remove(); // avoids a ConcurrentModificationException
+	        
+	        
+	    }
+	    
+	    updateCategories(categories);
+		
+	}
+	
+	public void updateCategories(List<Integer> categories){
+		
+		List<MusicCategory> existingCategories = getMusicCategories();
+		Map<Integer,MusicCategory> categoryMap = new HashMap<Integer,MusicCategory>();
+		
+		for(MusicCategory m: existingCategories){
+			categoryMap.put(m.getId(), m);
+		}
+		
+		List<Integer> addCategories = new ArrayList<Integer>();
+ 		
+		for(Integer id : categories){
+			if( categoryMap.containsKey(id) ){
+				categoryMap.remove(id);
+			} else {
+				addCategories.add(id);
+			}
+		}
+		
+		
+		
+		// remove categories
+		for( Integer removeId : categoryMap.keySet()){
+			MusicCategory m = categoryMap.get(removeId);
+			int index = existingCategories.indexOf(m);
+			if( index > -1 ){
+				existingCategories.remove(index);
+			}
+		}
+		
+		// add categories
+		for( Integer addId : addCategories ){
+			MusicCategory m = MusicCategory.find.byId(addId);
+			if( m!=null){
+				existingCategories.add(m);
+			}
+		}
+		
+		// System.out.println( categoryMap );
+		
+		update();
 	}
 	
 }

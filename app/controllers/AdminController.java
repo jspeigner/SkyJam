@@ -3,6 +3,7 @@ package controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.jaudiotagger.tag.Tag;
 
@@ -19,6 +20,7 @@ import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
+import scala.Tuple2;
 
 public class AdminController extends BaseController {
 
@@ -719,6 +721,51 @@ public class AdminController extends BaseController {
     	return deletePlaylist(id);
     }    
     
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editPlaylist(Integer id ){
+    	
+    	Playlist playlist = Playlist.find.byId(id);
+    	if( playlist == null){
+    		return notFound("Playlist was not found");
+    	}
+    	
+    	Form<Playlist> form = form(Playlist.class).fill(playlist);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Playlist.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Playlist was successfully updated");
+        		
+        		Playlist formPlaylist = form.get();
+        		formPlaylist.update(id);
+        		
+        		playlist.updateCategoriesFromMap( form().bindFromRequest().data() );
+        		
+        		
+        		
+        		
+        		return redirect(routes.AdminController.editPlaylist(id));
+    			
+    		}
+    	}
+    	
+    	List<PlaylistSong> songs = playlist.getPlaylistSongs();
+    	List<Tuple2<String, String>> genres = Genre.getList();
+    	List<Tuple2<String, String>> activities = MusicCategory.getTreeList(" - ", MusicCategory.Type.activity);
+    	List<Tuple2<String, String>> popularCategories = MusicCategory.getTreeList(" - ", MusicCategory.Type.popular);
+    	
+    	Set<String> musicCategories = playlist.getMusicCategoryIds();
+    	
+    	return ok(views.html.Admin.editPlaylist.render(playlist, form, songs, genres, activities, popularCategories, musicCategories));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editPlaylistSubmit(Integer id){
+    	return editPlaylist(id);
+    }    
     
 }
 

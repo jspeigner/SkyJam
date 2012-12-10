@@ -51,8 +51,6 @@ public class SongMetadataActor extends BaseActor {
 		  
 		if( song != null ){
 			
-				System.out.println("Reading Song - #" + songId );
-			
 				if( song.getEchonestSong() == null ){
 
 					com.echonest.api.v4.Song echonestSong = readEchonestSong(song);
@@ -168,9 +166,6 @@ public class SongMetadataActor extends BaseActor {
 			if( album.getAlbumArtStorageObject() != null ){
 				
 				String albumArtUrl = echonestSong.getString("tracks[0].release_image");
-				
-				
-				
 				
 				if( ( albumArtUrl != null ) && ( !albumArtUrl.isEmpty() )){ 
 				

@@ -1,0 +1,98 @@
+@(
+	playlist:Playlist, 
+	form: Form[Playlist], 
+	playlistSongs: List[PlaylistSong], 
+	genres : List[(String,String)],
+	activities : List[(String,String)], 
+	popularCategories : List[(String,String)],
+	musicCategories : Set[String]
+	 
+)@import helper.twitterBootstrap2._
+@Layout.admin("Edit Playlist") {
+	<h1>Edit Playlist</h1>
+	<hr>
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+	  <li class=""><a href="#songs" data-toggle="tab">Songs</a></li>
+	  <li class=""><a href="#categories" data-toggle="tab">Categories</a></li>
+	</ul>
+	
+	@helper.form(action = routes.AdminController.editPlaylistSubmit(playlist.getId), 'class -> "form-horizontal", 'id -> "playlist-edit", 'enctype ->"multipart/form-data" ) {	
+	<div class="tab-content">
+			<div class="tab-pane active" id="details">	
+				<div class="row-fluid">
+					<div class="span8 well">
+						
+								
+								@helper.inputText(form("name" ), '_showConstraints -> false, '_label -> "Name", 'class -> "span11")
+								
+								@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Description", 'class -> "span11", 'rows -> 3)
+							
+								@helper.select( form("genre.id"), genres, '_label -> "Genre", 'class -> "span11")
+							
+								<div class="form-actions">
+									<input class="btn btn-success" type="submit" value="Update" />
+								</div>		
+							
+								
+					</div>
+					<div class="span4 well">
+						<dl>
+							<dt>Created by</dt>
+							<dd><a href="@routes.AdminController.editUser(playlist.getUser.getId)">@playlist.getUser.getUsername</a></dd>
+						</dl>				
+						<dl>
+							<dt>Created on</dt>
+							<dd>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(playlist.getCreatedDate) )</dd>
+						</dl>			
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane hide" id="songs">
+			<ul>
+			@for(playlistSong <- playlistSongs){
+				<li>
+					<a href="@routes.AdminController.editArtist(playlistSong.getSong.getAlbum.getArtist.getId)">@playlistSong.getSong.getAlbum.getArtist.getName</a> -
+					<a href="@routes.AdminController.editAlbum(playlistSong.getSong.getAlbum.getId)">@playlistSong.getSong.getAlbum.getName</a> -  
+					<a href="@routes.AdminController.editSong(playlistSong.getSong.getId)">@playlistSong.getSong.getName</a>
+				</li>
+			}
+			</ul>
+			</div>
+			<div class="tab-pane hide" id="categories">
+				
+				
+				<div class="row-fluid">
+					<div class="span6">
+						<h3>Activities</h3>
+					
+						@for( activity <- activities ){
+							<label class="checkbox">
+							  <input type="checkbox" name="musicCategoryId[@activity._1]" @if(musicCategories.contains(activity._1)){ checked="checked" } value="@activity._1">@activity._2
+							</label>					
+						}
+					</div>
+					
+					<div class="span6">
+						<h3>Popular</h3>
+						
+						@for( popularCategory <- popularCategories ){
+							<label class="checkbox">
+								<input type="checkbox" name="musicCategoryId[@popularCategory._1]" @if(musicCategories.contains(popularCategory._1)){ checked="checked" } value="@popularCategory._1">@popularCategory._2
+							</label>
+						}
+					</div>		
+				
+				</div>
+				<div class="form-actions">
+					<input class="btn btn-success" type="submit" value="Update" />
+				</div>		
+				
+				
+
+				
+			</div>
+	</div>
+	}
+
+}

@@ -69,6 +69,9 @@ POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java
 GET			/admin/playlists/browse			controllers.AdminController.browsePlaylists(page:java.lang.Integer ?= 0, term:String ?= "")
 GET			/admin/playlists/delete/:id		controllers.AdminController.deletePlaylist(id:java.lang.Integer)
 POST		/admin/playlists/delete/:id		controllers.AdminController.deletePlaylistSubmit(id:java.lang.Integer)
+GET			/admin/playlist/edit/:id		controllers.AdminController.editPlaylist(id:java.lang.Integer)
+POST		/admin/playlist/edit/:id		controllers.AdminController.editPlaylistSubmit(id:java.lang.Integer)
+
 
 
 GET			/admin/genres/browse			controllers.AdminController.browseGenres(page:java.lang.Integer ?= 0, term:String ?= "")

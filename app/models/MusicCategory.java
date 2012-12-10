@@ -117,8 +117,12 @@ public class MusicCategory extends AppModel {
 		this.parent = parent;
 	}
 
+	public static List<Tuple2<String, String>> getActivitiesList( Map<Integer, MusicCategory> activities, String activityNameSeparator   ) {
+		return getTreeList(activities, activityNameSeparator, Type.activity);
+	}
+	
 	@SuppressWarnings("unchecked")
-	public static List<Tuple2<String, String>> getActivitiesList( Map<Integer, MusicCategory> activities, String activityNameSeparator  ) {
+	public static List<Tuple2<String, String>> getTreeList( Map<Integer, MusicCategory> activities, String activityNameSeparator, Type type  ) {
 		
 		
 		List<Tuple2<String, String>> results = new ArrayList<Tuple2<String,String>>();
@@ -127,9 +131,9 @@ public class MusicCategory extends AppModel {
 
 			MusicCategory activity = activities.get(id);
 			
-			Map<Integer, MusicCategory> subActivities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent", activity).setMapKey("id").findMap();
+			Map<Integer, MusicCategory> subActivities = (Map<Integer, MusicCategory>) find.where().eq("type", type).eq("parent", activity).setMapKey("id").findMap();
 			if( subActivities.size() > 0 ){
-				List<Tuple2<String, String>> subResults = getActivitiesList(subActivities, activityNameSeparator);
+				List<Tuple2<String, String>> subResults = getTreeList(subActivities, activityNameSeparator, type);
 				if( (subResults != null) && ( subResults.size() > 0 )){
 					for( Tuple2<String,String> tuple : subResults ){
 						
@@ -150,12 +154,22 @@ public class MusicCategory extends AppModel {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static List<Tuple2<String, String>> getTreeList( String activityNameSeparator, Type type ) {
+		
+		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", type).eq("parent", null).setMapKey("id").findMap();
+		
+		return getTreeList(activities, activityNameSeparator, type);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static List<Tuple2<String, String>> getActivitiesList(String activityNameSeparator) {
 		
 		Map<Integer, MusicCategory> activities = (Map<Integer, MusicCategory>) find.where().eq("type", Type.activity).eq("parent", null).setMapKey("id").findMap();
 		
 		return getActivitiesList(activities, activityNameSeparator);
 	}
+	
+	
 	
 	public static List<Tuple2<String, String>> getTypeList(){
 		
