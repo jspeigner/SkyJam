@@ -43,9 +43,6 @@ public class EchonestSong extends AppModel {
 	@Column(nullable=true)
 	private String audio;
 	
-	@Transient
-	public static int r;
-	
 	private Date createdDate;
 	
 	public String getEchonestSongId() {

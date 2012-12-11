@@ -9,11 +9,9 @@ import java.util.List;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import com.avaje.ebean.Ebean;
 import com.echonest.api.v4.EchoNestException;
 
 import models.Album;
-import models.BatchJobActor;
 import models.Song;
 import models.SongMetadata;
 
@@ -41,7 +39,7 @@ public class SongMetadataActor extends BaseActor {
 
 		}
 		
-	}	
+	}
 	
 	
 	protected boolean readSongMetadata(Integer songId){
@@ -52,8 +50,6 @@ public class SongMetadataActor extends BaseActor {
 		
 		  
 		if( song != null ){
-			
-				System.out.println("Reading Song - #" + songId );
 			
 				if( song.getEchonestSong() == null ){
 
@@ -170,9 +166,6 @@ public class SongMetadataActor extends BaseActor {
 			if( album.getAlbumArtStorageObject() != null ){
 				
 				String albumArtUrl = echonestSong.getString("tracks[0].release_image");
-				
-				
-				
 				
 				if( ( albumArtUrl != null ) && ( !albumArtUrl.isEmpty() )){ 
 				

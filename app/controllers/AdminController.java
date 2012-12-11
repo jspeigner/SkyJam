@@ -3,12 +3,14 @@ package controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.jaudiotagger.tag.Tag;
 
 
 
 import com.avaje.ebean.Expr;
+import com.avaje.ebean.Expression;
 import com.avaje.ebean.Page;
 import com.echonest.api.v4.EchoNestException;
 
@@ -18,6 +20,7 @@ import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
+import scala.Tuple2;
 
 public class AdminController extends BaseController {
 
@@ -398,7 +401,7 @@ public class AdminController extends BaseController {
     public static Result addGenre(){
     	Form<Genre> form = form(Genre.class);
     	
-    	System.out.println((request().method()));
+    	
     	
     	if(request().method().equals("POST")){
     		
@@ -561,7 +564,7 @@ public class AdminController extends BaseController {
 		
     	int pageSize = 15;
     	
-    	System.out.println( EchonestSong.r++ );
+    	
     	
     	Page<BatchJob> batchJobs = BatchJob.getPageWithSearch(page, pageSize, term );
     	
@@ -679,6 +682,89 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result deleteBatchJobSubmit(Integer id){
     	return deleteBatchJob(id);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+	public static Result browsePlaylists(Integer page, String term){
+		
+    	int pageSize = 15;
+    	
+    	Expression expr = Expr.ne("status", Playlist.Status.Deleted);
+    	Page<Playlist> playlists = Playlist.getPageWithSearch(page, pageSize, term, expr );
+    	
+    	return ok(views.html.Admin.browsePlaylists.render(playlists, term));
+	}    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deletePlaylist(Integer id){
+    	
+    	Playlist playlist = Playlist.find.byId(id);
+    	if( playlist == null){
+    		return notFound("Playlist was not found");
+    	}    	
+    	
+    	if(request().method().equals("POST")){
+    		
+    		playlist.setStatus(Playlist.Status.Deleted);
+    		playlist.update(id);
+    		
+    		flash( "success", "Playlist was removed successfully");
+    		
+    		return redirect( routes.AdminController.browsePlaylists(0,"") );
+    	}
+    	
+    	return ok( views.html.Admin.deletePlaylist.render(playlist) );    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deletePlaylistSubmit(Integer id){
+    	return deletePlaylist(id);
+    }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editPlaylist(Integer id ){
+    	
+    	Playlist playlist = Playlist.find.byId(id);
+    	if( playlist == null){
+    		return notFound("Playlist was not found");
+    	}
+    	
+    	Form<Playlist> form = form(Playlist.class).fill(playlist);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		form = form(Playlist.class).bindFromRequest();
+    		
+    		if(!form.hasErrors()){
+    			
+        		flash("success", "Playlist was successfully updated");
+        		
+        		Playlist formPlaylist = form.get();
+        		formPlaylist.update(id);
+        		
+        		playlist.updateCategoriesFromMap( form().bindFromRequest().data() );
+        		
+        		
+        		
+        		
+        		return redirect(routes.AdminController.editPlaylist(id));
+    			
+    		}
+    	}
+    	
+    	List<PlaylistSong> songs = playlist.getPlaylistSongs();
+    	List<Tuple2<String, String>> genres = Genre.getList();
+    	List<Tuple2<String, String>> activities = MusicCategory.getTreeList(" - ", MusicCategory.Type.activity);
+    	List<Tuple2<String, String>> popularCategories = MusicCategory.getTreeList(" - ", MusicCategory.Type.popular);
+    	
+    	Set<String> musicCategories = playlist.getMusicCategoryIds();
+    	
+    	return ok(views.html.Admin.editPlaylist.render(playlist, form, songs, genres, activities, popularCategories, musicCategories));
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result editPlaylistSubmit(Integer id){
+    	return editPlaylist(id);
     }    
     
 }

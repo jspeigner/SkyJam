@@ -1,6 +1,9 @@
 package models;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 
 import javax.persistence.Table;
@@ -11,6 +14,7 @@ import com.avaje.ebean.validation.Length;
 
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import scala.Tuple2;
 
 @Entity
 @Table(name="genres")
@@ -69,4 +73,13 @@ public class Genre extends AppModel {
 		
 	}	
 	
+	public static List<Tuple2<String,String>> getList(){
+		List<Tuple2<String,String>> result = new ArrayList<Tuple2<String,String>>();
+		List<Genre> genres = Genre.find.orderBy("name asc").findList();
+		for( Genre genre : genres){
+			result.add(new Tuple2<String, String>( genre.getId().toString() , genre.getName()));
+		}
+		
+		return result;
+	}
 }

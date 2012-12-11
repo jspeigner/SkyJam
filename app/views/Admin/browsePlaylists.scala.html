@@ -1,0 +1,45 @@
+@(playlists : Page[Playlist], term:String)@Layout.admin("Browse Playlists") {
+<h1>Browse Playlists</h1>
+<hr>
+	<div class="pull-right">
+		<form class="form-search" method="get" action="@routes.AdminController.browsePlaylists()">
+	  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID or Playlist name" value="@term">
+	  		<button type="submit" class="btn">Search</button>
+		</form>
+	</div>	
+	
+	@if( ( playlists != null ) && ( playlists.getList.size > 0 )){
+	
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Created</th>
+					<th>Status</th>
+					<th>User</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for( playlist <- playlists.getList ){
+			<tr>
+				<td>@playlist.getId</td>
+				<td>@playlist.getName</td>
+				<td>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(playlist.getCreatedDate) )</td>
+				<td>@playlist.getStatus</td>
+				<td><a href="@routes.AdminController.editUser(playlist.getUser.getId)">@playlist.getUser.getUsername</a></td>
+				<td><a href="@routes.AdminController.editPlaylist(playlist.getId)">Edit</a> | <a href="@routes.AdminController.deletePlaylist(playlist.getId)">Delete</a></td>
+			</tr>
+			}
+			</tbody>
+		</table>
+		
+		<div class="pagination">
+			@tags.adminPagination( routes.AdminController.browsePlaylists( _, term = term ), playlists.getPageIndex, playlists.getTotalPageCount )
+		</div>
+	
+	} else {
+	<p>There are noplaylists created.</p>
+	}
+}

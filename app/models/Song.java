@@ -84,17 +84,33 @@ public class Song extends AppModel {
 	public static List<Song> searchWideByName(String query, int maxResults) 
 	{
 		
-		String likeQueryString =  "%" + query + "%";
+		String likeQueryString =  "%" + query.trim() + "%";
+		
+		Expression expr;
+		
+		if( query.contains("-")){
+			String[] parts = query.split("-",2);
+			
+			String artistName = "%" + parts[0].trim() + "%";
+			String songName = "%" + parts[1].trim() + "%";
+			
+    		expr = Expr.and(
+    				Expr.like("name", songName ), 
+					Expr.like("album.artist.name", artistName)									
+	    	);    					
+			
+		} else {
+    		expr = 	Expr.or(
+					Expr.ilike("name", likeQueryString), 
+					Expr.ilike("album.artist.name", likeQueryString)									
+			);   					
+		}
+		
 		
 		Expression e2 = Expr.and(
 				Expr.eq("status", Status.visible),
-				Expr.or(
-						Expr.ilike("name", likeQueryString), 
-						Expr.or(
-								Expr.ilike("album.name", likeQueryString), 
-								Expr.ilike("album.artist.name", likeQueryString)									
-						)
-				)	
+				expr
+	
 		);
 		
 		return Song.find.where(e2).setMaxRows(maxResults).findList();
@@ -181,15 +197,30 @@ public class Song extends AppModel {
     		      
     		} catch( Exception e ) {
     			
-    	    		String likeQueryString =  "%" + term.trim() + "%";
+    				// check for "artist - song" data format
+    				String termString = term.trim();
+
+    				Expression expr;
+    				
+    				if( termString.contains("-")){
+    					String[] parts = termString.split("-",2);
+    					
+    					String artistName = "%" + parts[0].trim() + "%";
+    					String songName = "%" + parts[1].trim() + "%";
+    					
+        	    		expr = Expr.and(
+        	    				Expr.like("name", songName), 
+           						Expr.like("album.artist.name", artistName)									
+            	    	);    					
+    					
+    				} else {
+        	    		expr = Expr.or(
+        	    				Expr.like("name", termString), 
+           						Expr.like("album.artist.name", termString)									
+            	    	);	    					
+    				}
     	    		
-    	    		Expression expr = Expr.or(
-	    				Expr.ilike("name", likeQueryString), 
-	    					Expr.or(
-	    						Expr.ilike("album.name", likeQueryString), 
-	    						Expr.ilike("album.artist.name", likeQueryString)									
-	    					)
-    	    		);	
+
     	    		
     	    		if( additionalConditions != null ){
     	    			expr = Expr.and( additionalConditions , expr );
