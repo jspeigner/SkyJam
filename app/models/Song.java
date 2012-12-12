@@ -219,8 +219,8 @@ public class Song extends AppModel {
     					
     				} else {
         	    		expr = Expr.or(
-        	    				Expr.like("name", termString), 
-           						Expr.like("album.artist.name", termString)									
+        	    				Expr.like("name","%" +  termString + "%"), 
+           						Expr.like("album.artist.name", "%" +  termString + "%" )									
             	    	);	    					
     				}
     	    		
