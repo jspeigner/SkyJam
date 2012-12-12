@@ -7,10 +7,7 @@
 	<div id="playlist-page">
 	 
 		<div class="row-fluid">
-			<div class="span2">
-				<!-- a first album image -->
-				<img src="@playlist.getPlaylistSongs.head.getSong.getAlbum.getAlbumArtUrl" alt="album" > 
-			</div>
+			<div class="span2">@tags.playlistThumbnail(playlist)</div>
 			<div class="span8"> 
 				<h2>@playlist.getName</h2>
 				<p>@playlist.getDescription</p>

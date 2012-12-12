@@ -1,0 +1,2 @@
+@(playlist:Playlist)@if( ( playlist != null ) && ( playlist.getPlaylistSongs.size() > 0 ) ){
+<img src="@playlist.getPlaylistSongs.find( playlistSong => playlistSong.getSong.getAlbum.getAlbumArtStorageObject != null  ).getOrElse( playlist.getPlaylistSongs.head ).getSong.getAlbum.getAlbumArtUrl" alt="Playlist - @playlist.getName" title="@playlist.getName" >}

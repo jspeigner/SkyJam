@@ -54,22 +54,14 @@
 					<ul>
 					@for(savedPlaylist <- savedPlaylists ){
 						<li class="clearfix">
-						
 							<div class="row-fluid">
-								<div class="span2">
-									<!-- a first album image -->
-									@if( savedPlaylist.getPlaylist.getPlaylistSongs.size() > 0 ){
-										<img src="@savedPlaylist.getPlaylist.getPlaylistSongs.get(0).getSong.getAlbum.getAlbumArtUrl" alt="@savedPlaylist.getPlaylist.getPlaylistSongs.get(0).getSong.getAlbum.getName" >
-									}									
-									
+								<div class="span2">@tags.playlistThumbnail(savedPlaylist.getPlaylist)
 									<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@savedPlaylist.getPlaylist.getId"><i class="icon-play"></i> Play</a> 
 								</div>
 								<div class="span10"> 
 									<h4><a href="@routes.PlaylistController.playlist(savedPlaylist.getPlaylist.getId, null)">@savedPlaylist.getPlaylist.getName</a></h4>
-									<p><small>With Artists: @savedPlaylist.getPlaylist().getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
-									
+									<p><small>With Artists: @savedPlaylist.getPlaylist.getArtists.map( artist => artist.getName ).mkString(", ")</small></p>
 								</div>
-								
 							</div>						
 							<hr>
 						</li>
@@ -92,17 +84,12 @@
 						<li class="clearfix">
 						
 							<div class="row-fluid">
-								<div class="span2">
-									<!-- a first album image -->
-									@if( playlist.getPlaylistSongs.size() > 0 ){
-										<img src="@playlist.getPlaylistSongs.get(0).getSong.getAlbum.getAlbumArtUrl" alt="@playlist.getPlaylistSongs.get(0).getSong.getAlbum.getName" >
-									}
-									
+								<div class="span2">@tags.playlistThumbnail(playlist)
 									<a href="javascript://" class="btn play player-controls-play btn-small" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a> 
 								</div>
 								<div class="span10"> 
 									<h4><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a></h4>
-									<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+									<p><small>With Artists: @playlist.getArtists.map( artist => artist.getName ).mkString(", ")</small></p>
 									
 								</div>
 								

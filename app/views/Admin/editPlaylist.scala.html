@@ -37,6 +37,7 @@
 								
 					</div>
 					<div class="span4 well">
+						@tags.playlistThumbnail(playlist)
 						<dl>
 							<dt>Created by</dt>
 							<dd><a href="@routes.AdminController.editUser(playlist.getUser.getId)">@playlist.getUser.getUsername</a></dd>
