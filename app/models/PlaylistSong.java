@@ -23,7 +23,7 @@ public class PlaylistSong extends AppModel {
 	@ManyToOne
 	private Playlist playlist;
 	
-	@OneToOne
+	@ManyToOne
 	private Song song;
 	
 	@Formats.DateTime(pattern="yyyy-MM-dd")

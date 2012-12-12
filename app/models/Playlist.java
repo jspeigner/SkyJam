@@ -646,4 +646,13 @@ public class Playlist extends AppModel {
 		update();
 	}
 	
+	public List<Artist> getArtists(){
+		
+		
+		
+		
+		return Artist.find.where().eq("albums.songs.playlistSongs.playlist", this ).findList();
+		
+	}
+	
 }

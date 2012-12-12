@@ -2,11 +2,13 @@ package models;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import javax.persistence.Table;
@@ -43,6 +45,9 @@ public class Album extends AppModel {
 	private String keywords;
 	
 	private String description;
+	
+	@OneToMany(targetEntity=Song.class)
+	private List<Song> songs;	
 	
 	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 240, ImageMetadata.IMAGE_TYPE_PNG, "files/album/image/%d.png", "files/album/image/default.png" );
 	
@@ -179,6 +184,14 @@ public class Album extends AppModel {
 		
 		return s != null;
 			
+	}
+
+	public List<Song> getAlbums() {
+		return songs;
+	}
+
+	public void setAlbums(List<Song> albums) {
+		this.songs = albums;
 	}	
 	
 }

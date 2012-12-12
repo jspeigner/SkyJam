@@ -12,7 +12,8 @@
 		jsonPlaylist.put("description", playlist.getDescription() )
 		jsonPlaylist.put("id", playlist.getId().toString())
 		
-		val artists = playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct;
+		val artists = playlist.getArtists().map( artist => artist.getName )
+
 		jsonPlaylist.put("artists",  artists)
 		
 		
