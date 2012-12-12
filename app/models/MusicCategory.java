@@ -67,6 +67,17 @@ public class MusicCategory extends AppModel {
 	public StorageObject getImageStorageObject() {
 		return imageStorageObject;
 	}
+	
+	public static MusicCategory getFirstWithPlaylists(List<MusicCategory> categories){
+		
+		for(MusicCategory category: categories){
+			if( category.getPlaylistsCount() > 0 ){
+				return category;
+			}
+		}
+		
+		return null;
+	}
 
 	public void setImageStorageObject(StorageObject imageStorageObject) {
 		this.imageStorageObject = imageStorageObject;

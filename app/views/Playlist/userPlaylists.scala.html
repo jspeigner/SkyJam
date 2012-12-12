@@ -11,21 +11,34 @@
 		<ul>
 			@for(playlist <- playlists.getList ){
 			<li class="clearfix">
-				<h3>@playlist.getName 
-				@if( playlist.getPlaylistSongs.size > 0 ){
-				<a href="javascript://" class="btn btn-small play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
-				} 
-				<a class="btn btn-small" href="@routes.PlaylistController.edit( playlist.getId )"><i class="icon-edit"></i> Edit</a>
-				</h3>
+			
+				<div class="row-fluid">
 				
-				<p><small>Created on @{ new java.text.SimpleDateFormat("d MMM, yy").format(playlist.getCreatedDate) }</small>
+					<div class="span2">@tags.playlistThumbnail(playlist)</div>
+					<div class="span10">
+					
+						<h3>@playlist.getName 
+						<div class="pull-right">
+						@if( playlist.getPlaylistSongs.size > 0 ){
+						<a href="javascript://" class="btn btn-small play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
+						} 
+						<a class="btn btn-small" href="@routes.PlaylistController.edit( playlist.getId )"><i class="icon-edit"></i> Edit</a>
+						</div>
+						</h3>
+						
+						<p><small>Created on @{ new java.text.SimpleDateFormat("d MMM, yy").format(playlist.getCreatedDate) }</small>
+						
+						@if( playlist.getStatus == models.Playlist.Status.Public ){
+						<span class="label label-success">Public</span>
+						} 				
+						
+						</p>
+						<p>@playlist.getDescription</p>					
+					</div>
 				
-				@if( playlist.getStatus == models.Playlist.Status.Public ){
-				<span class="label label-success">Public</span>
-				} 				
-				
-				</p>
-				<p>@playlist.getDescription</p>
+				</div>
+			
+
 			</li>
 			}
 						

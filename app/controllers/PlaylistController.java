@@ -96,7 +96,7 @@ public class PlaylistController extends BaseController
 			  
 			  List<MusicCategory> subCategories = topLevelCategories.get(0).getChildren(); 
 			  
-			  cat = ( subCategories != null && subCategories.size() > 0) ? subCategories.get(0) : null;
+			  cat = ( subCategories != null && subCategories.size() > 0) ? MusicCategory.getFirstWithPlaylists(  subCategories ) : null;
 		  }
 		  else
 		  {
@@ -107,7 +107,7 @@ public class PlaylistController extends BaseController
 			  if( ( cat != null ) && ( cat.getParent() == null ) ) {
 				  List<MusicCategory> subCategories = cat.getChildren(); 
 				  
-				  cat = ( ( subCategories != null ) && ( subCategories.size() > 0 ) ) ? subCategories.get(0) : null;				  
+				  cat = ( ( subCategories != null ) && ( subCategories.size() > 0 ) ) ?  MusicCategory.getFirstWithPlaylists( subCategories ) : null;				  
 			  }
 		  }
 		  
