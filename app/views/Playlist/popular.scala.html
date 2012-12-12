@@ -1,7 +1,7 @@
 @( currentCategory:String, playlists:List[Playlist], categories: List[Tuple2[String,String]] )@Layout.default(
 	title = "Popular playlists",
-	metaKeywords = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
-	metaDescription = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  
+	metaKeywords = "Playlists " + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
+	metaDescription = "Playlists " + playlists.map( playlist => playlist.getName ).mkString(", ")  
 	 
 ) {
 	<h1>Popular Playlists</h1>
