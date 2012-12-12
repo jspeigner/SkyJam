@@ -1,7 +1,7 @@
 @( currentCategory:String, playlists:List[Playlist], categories: List[Tuple2[String,String]] )@Layout.default(
 	title = "Popular playlists",
-	metaKeywords = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
-	metaDescription = "Playlists" + playlists.map( playlist => playlist.getName ).mkString(", ")  
+	metaKeywords = "Playlists " + playlists.map( playlist => playlist.getName ).mkString(", ")  ,
+	metaDescription = "Playlists " + playlists.map( playlist => playlist.getName ).mkString(", ")  
 	 
 ) {
 	<h1>Popular Playlists</h1>
@@ -21,18 +21,18 @@
 						<div class="row-fluid">
 							<div class="span2">
 								<!-- a first album image -->
-								<img src="@playlist.getPlaylistSongs.head.getSong.getAlbum.getAlbumArtUrl" alt="album" > 
+								<img src="playlist.getPlaylistSongs.head.getSong.getAlbum.getAlbumArtUrl" alt="album" > 
 							</div>
 							<div class="span10"> 
 								<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a><a href="javascript://" class="btn play player-controls-play pull-right" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a></h2>
 								<p>@playlist.getDescription</p>
-								<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong.getAlbum.getArtist.getName ).distinct.mkString(", ")</small></p>
+								<p><small>With Artists: @playlist.getArtists().map( artist => artist.getName ).mkString(", ")</small></p>
 								
 							</div>
 							
 						</div>						
 						<hr>
-					</li>			
+					</li>
 				}
 			</ul>
 		</div>

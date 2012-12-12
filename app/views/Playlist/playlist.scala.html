@@ -14,7 +14,7 @@
 			<div class="span8"> 
 				<h2>@playlist.getName</h2>
 				<p>@playlist.getDescription</p>
-				<p><small>With Artists: @playlist.getPlaylistSongs().map( pSong => pSong.getSong().getAlbum().getArtist().getName() ).distinct.mkString(", ")</small></p>
+				<p><small>With Artists: @playlist.getArtists().map( artist => artist.getName ).mkString(", ")</small></p>
 			</div>
 		</div>	
 		
@@ -23,7 +23,7 @@
 			<a href="javascript://" class="btn play player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a>
 			
 			<a href="javascript://" class="btn save player-controls-save-as-favorite @(if(playlist.isSavedByUser()){"hide"})" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Save Playlist</a>
-			<!-- <a href="javascript://" class="btn save player-controls-delete-from-favorite @(if(!playlist.isSavedByUser()){"hide"})" data-playlist-id="@playlist.getId"><i class="icon-plus-sign"></i> Delete From Saved</a>  -->
+			
 		</div>
 		
 		@if( category != null ){

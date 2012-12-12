@@ -68,6 +68,10 @@ public class Song extends AppModel {
 	@OneToOne(cascade=CascadeType.REMOVE)
 	private SongMetadata songMetadata;	
 	
+	
+	@OneToMany
+	private List<PlaylistSong> playlistSongs;	
+	
 	/*
 	@ManyToMany
 	@JoinTable(name = "songs_music_categories", joinColumns = { @JoinColumn(name="song_id") }, inverseJoinColumns = { @JoinColumn(name="music_category_id") } )
@@ -427,6 +431,14 @@ public class Song extends AppModel {
 
 	public void setSongMetadata(SongMetadata songMetadata) {
 		this.songMetadata = songMetadata;
+	}
+
+	public List<PlaylistSong> getPlaylistSongs() {
+		return playlistSongs;
+	}
+
+	public void setPlaylistSongs(List<PlaylistSong> playlistSongs) {
+		this.playlistSongs = playlistSongs;
 	}
 	
 }

@@ -522,6 +522,7 @@ public class PlaylistController extends BaseController
 		  
 		  
 		  return ok(views.html.Playlist.popular.render(type,playlists,categories));
+		  
 	  }
 	  
 	  @Restrict("user")
