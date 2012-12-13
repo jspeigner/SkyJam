@@ -765,6 +765,33 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editPlaylistSubmit(Integer id){
     	return editPlaylist(id);
+    } 
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result sendMultipleUserInvitations(String idList){
+    	return null;
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMultipleUsers(String idList){
+
+    	List<Integer> ids = global.utils.Utils.extractIntsFromString(idList);
+    	if(ids != null){
+    		
+    		List<User> users = User.find.where().in("id", ids).findList();
+    		
+    		return ok(views.html.Admin.deleteMultipleUsers.render(users));
+    	} else {
+    		
+    		return notFound("User list is empty");
+    	}
+    	
+    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMultipleUsersSubmit(String idList){
+    	return deleteMultipleUsers(idList);
     }    
     
 }
