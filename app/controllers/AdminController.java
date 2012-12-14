@@ -769,7 +769,27 @@ public class AdminController extends BaseController {
     
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result sendMultipleUserInvitations(String idList){
-    	return null;
+    	
+    	List<Integer> ids = global.utils.Utils.extractIntsFromString(idList);
+    	if(ids != null){
+    		
+    		List<User> users = User.find.where().in("id", ids).findList();
+        		
+    		flash("success", "Invitations were sent successfully");
+    		
+    		for(User user : users){
+    	    	UserInvitationCode uic = UserInvitationCode.createNewCode(user);
+    	    	
+    	    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    			
+    		}
+    		
+    		return redirect(routes.AdminController.browseUsers(0,""));
+
+    	} else {
+    		
+    		return notFound("User list is empty");
+    	}
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
@@ -779,6 +799,19 @@ public class AdminController extends BaseController {
     	if(ids != null){
     		
     		List<User> users = User.find.where().in("id", ids).findList();
+    		
+        	if(request().method().equals("POST")){
+        		
+        		flash("success", "Users were removed successfully");
+        		
+        		for(User user : users){
+        			user.delete();
+        		}
+        		
+        		return redirect(routes.AdminController.browseUsers(0,""));
+        	}
+    		
+    		
     		
     		return ok(views.html.Admin.deleteMultipleUsers.render(users));
     	} else {

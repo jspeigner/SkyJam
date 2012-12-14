@@ -30,8 +30,13 @@ $( function(){
 			ids.push($(this).val());
 		});
 		
+		if(ids.length){
+			window.location.href = parts[0] + "?idList=" + ids.join(",");	
+		} else {
+			alert("Please select several users first");
+		}
 		
-		window.location.href = parts[0] + "?idList=" + ids.join(",");
+		
 		
 		return false;
 		
