@@ -35,7 +35,7 @@
 	</table>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseGenres( _, term = term ), genres.getPageIndex, genres.getTotalPageCount )
+		@tags.adminPagination( routes.AdminController.browseGenres( _, term = term ), genres.getPageIndex, genres.getTotalPageCount, genres.getTotalRowCount )
 	</div>
 	
 	} else {

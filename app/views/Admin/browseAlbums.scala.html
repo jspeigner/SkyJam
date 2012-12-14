@@ -37,7 +37,7 @@
 	</table>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseAlbums( _, term = term, artistId = ( if( artist == null) 0 else artist.getId ) ), albums.getPageIndex, albums.getTotalPageCount )
+		@tags.adminPagination( routes.AdminController.browseAlbums( _, term = term, artistId = ( if( artist == null) 0 else artist.getId ) ), albums.getPageIndex, albums.getTotalPageCount, albums.getTotalRowCount )
 	</div>
 	
 	} else {
