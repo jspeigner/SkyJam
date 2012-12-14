@@ -100,7 +100,7 @@ $( function(){
 	</div>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount )
+		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount, users.getTotalRowCount )
 	</div>
 	
 	} else {
