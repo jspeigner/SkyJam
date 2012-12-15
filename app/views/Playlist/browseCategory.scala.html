@@ -30,7 +30,6 @@
 				<ul>
 					@for(playlist <- playlists.getList ){
 						<li class="clearfix">
-						
 							<div class="row-fluid">
 								<div class="span2">@tags.playlistThumbnail(playlist)</div>
 								<div class="span10"> 
@@ -39,7 +38,6 @@
 									<p><small>With Artists: @playlist.getArtists().map( artist => artist.getName ).mkString(", ")</small></p>
 									
 								</div>
-								
 							</div>						
 							<hr>
 						</li>
