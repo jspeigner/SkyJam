@@ -129,10 +129,6 @@ GET		/album/:id									controllers.AlbumController.view(id:java.lang.Integer)
 
 GET 	/albums/browse/:artistId					controllers.AlbumController.browseByArtist(artistId:java.lang.Integer)
 
-#GET		/homepage_register						controllers.UserController.homepageRegister()
-#POST 	/homepage_register 							controllers.UserController.homepageRegisterSubmit()
-#GET 	/homepage_register_success 					controllers.UserController.homepageRegisterSuccess()
-
 GET		/user/view/:id								controllers.UserController.publicProfile(id:java.lang.Integer)
 
 GET		/contact_us									controllers.PageController.contactUs()
@@ -146,6 +142,9 @@ POST	/profile									controllers.UserController.profileUpdate()
 
 GET		/profile/:id								controllers.UserController.publicProfile(id:java.lang.Integer)
 
+GET		/VIPRegistration 							controllers.UserController.hiddenRegister()
+POST	/VIPRegistration 							controllers.UserController.hiddenRegisterSubmit()
+GET		/VIPRegistration/facebook					controllers.UserController.hiddenRegisterWithFacebook()
 
 GET		/											controllers.UserController.homepageRegister()
 POST 	/ 											controllers.UserController.homepageRegisterSubmit()

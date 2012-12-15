@@ -238,10 +238,71 @@ public class UserController extends BaseController {
     	return user != null ?  ok(views.html.User.homepageRegisterSuccess.render(user)) : badRequest("User not found");
     }
     
+    public static Result hiddenRegister()
+    {
+    	Form<User> userForm = form(User.class);
+    	
+    	if( request().method().equals("POST") ){
+    		
+        	DynamicForm form = form().bindFromRequest();
+        	
+        	userForm = extractUserFields(form);
+        	
+        	if(userForm.hasErrors()) {
+        		
+        		return ok (views.html.User.hiddenRegister.render(userForm));
+        	} else {
+        		User user = initUserFromForm(userForm);
+        		
+        		try {
+    	    		user.save();
+    	    		Ebean.saveManyToManyAssociations(user,"roles");
+
+        			// populate the image from FB	    		
+    	    		if( user.getFacebookUserId() != null ) {
+    	    			user.updateImageFromURL( Facebook.getUserImageUrl(user.getFacebookUserId(), Facebook.UserImageType.LARGE) );
+    	    		}
+    	    		
+        		} catch(Exception e) 
+        		{
+        			// email is not unique
+        			userForm.reject("Exception "+e.toString());
+        			
+        			return ok(views.html.User.hiddenRegister.render(userForm));
+        			
+        		}
+        		
+        		
+        		setAuthUser(user);
+        		
+        		return pjaxRedirect( routes.UserController.registerSuccess() );
+        	}    		
+    	}
+    	
+    	return ok(views.html.User.hiddenRegister.render(userForm));
+    }    
+    
+    public static Result hiddenRegisterSubmit()
+    {
+    	
+    	
+    	
+    	return hiddenRegister();
+    }    
+    
+    
     public static Result register(String invitationCode)
     {
     	Form<User> userForm = form(User.class);
     	userForm.data().put("invitation_code", invitationCode);
+    	
+    	if(request().method().equals("POST")){
+    		
+    		DynamicForm form = form().bindFromRequest();
+    		
+        	userForm = extractUserFields(form);
+
+    	}
     	
     	return ok(views.html.User.register.render(userForm));
     }
@@ -258,16 +319,71 @@ public class UserController extends BaseController {
     	
     	UserInvitationCode invitation = null;
     	
-    	if( form.field("signed_request").value() != null ){
-    		Map<String,String> signedRequestData = User.getSignedRequestRegisterParams( form.field("signed_request").value() );
-    		
-    		userForm = form(User.class).bind(signedRequestData, "username","email","password","facebookUserId");
-    	} else {
-    		userForm = form(User.class).bindFromRequest("username","email","password");
-    	}
-
+    	userForm = extractUserFields(form);
     	
-    	if( ( form.field("invitation_code").value() != null ) ){
+    	invitation = getInvitationCode(userForm, form, invitation);
+    	
+    	if(userForm.hasErrors()) {
+    		
+    		return ok (views.html.User.register.render(userForm));
+    	}
+    	else
+    	{
+    		User user = initUserFromForm(userForm);
+    		
+    		try
+    		{
+	    		user.save();
+	    		Ebean.saveManyToManyAssociations(user,"roles");
+	    		
+	    		invitation.markUsedByUser(user);
+
+    			// populate the image from FB	    		
+	    		if( user.getFacebookUserId() != null )
+	    		{
+	    			user.updateImageFromURL( Facebook.getUserImageUrl(user.getFacebookUserId(), Facebook.UserImageType.LARGE) );
+	    		}
+	    		
+    		}
+    		catch(Exception e)
+    		{
+    			// email is not unique
+    			userForm.reject("Exception "+e.toString());
+    			
+    			return ok(views.html.User.register.render(userForm));
+    			
+    		}
+    		
+    		
+    		setAuthUser(user);
+    		
+    		
+    		// return redirect( routes.UserController.homepageRegisterSuccess() );
+    		
+    		return pjaxRedirect( routes.UserController.registerSuccess() );
+    	}
+    }
+
+	private static User initUserFromForm(Form<User> userForm) {
+		User user = userForm.get();
+		
+		// remove the existing user waiting for invitation
+		List<User> existingUsers = User.find.where().eq("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).eq("email", user.getEmail() ).findList();
+		if(( existingUsers != null ) && ( existingUsers.size() > 0 ) ){
+			Ebean.delete(existingUsers);
+		}
+		
+		
+		user.setRegisteredDate(new Date());
+		user.setLastLoginDate(null);
+		user.roles = new ArrayList<UserRole>();
+		user.roles.add(UserRole.findByName( UserRole.ROLE_USER));
+		return user;
+	}
+
+	private static UserInvitationCode getInvitationCode(Form<User> userForm,
+			DynamicForm form, UserInvitationCode invitation) {
+		if( ( form.field("invitation_code").value() != null ) ){
     		
     		String formInvitationCode = form.field("invitation_code").value();
     		userForm.data().put("invitation_code", formInvitationCode );
@@ -282,61 +398,22 @@ public class UserController extends BaseController {
     		// invitation code field is missing
     		userForm.reject(new ValidationError( "invitation_code", "Invitation code is wrong", null) );
     	}
-    	
-    	if(userForm.hasErrors()) {
+		return invitation;
+	}
+
+	private static Form<User> extractUserFields(DynamicForm form) {
+		Form<User> userForm;
+		if( form.field("signed_request").value() != null ){
+    		Map<String,String> signedRequestData = User.getSignedRequestRegisterParams( form.field("signed_request").value() );
     		
-    		return ok (views.html.User.register.render(userForm));
+    		userForm = form(User.class).bind(signedRequestData, "username","email","password","facebookUserId");
+    	} else {
+    		userForm = form(User.class).bindFromRequest("username","email","password");
     	}
-    	else
-    	{
-    		User user = userForm.get();
-    		
-    		// remove the existing user waiting for invitation
-    		List<User> existingUsers = User.find.where().eq("roles", UserRole.findByName(UserRole.ROLE_AWAITING) ).eq("email", user.getEmail() ).findList();
-    		if(( existingUsers != null ) && ( existingUsers.size() > 0 ) ){
-    			Ebean.delete(existingUsers);
-    		}
-    		
-    		
-    		user.setRegisteredDate(new Date());
-    		user.setLastLoginDate(null);
-    		user.roles = new ArrayList<UserRole>();
-    		user.roles.add(UserRole.findByName( UserRole.ROLE_USER));
-    		
-    		try
-    		{
-	    		user.save();
-	    		Ebean.saveManyToManyAssociations(user,"roles");
-	    		
-	    		invitation.markUsedByUser(user);
-	    		
-	    		if( user.getFacebookUserId() != null )
-	    		{
-	    			// populate the image from FB	    			
-	    			user.updateImageFromURL( Facebook.getUserImageUrl(user.getFacebookUserId(), Facebook.UserImageType.LARGE) );
-	    		}
-	    		
-    		}
-    		catch(Exception e)
-    		{
-    			// email is not unique
-    			userForm.reject("Exception "+e.toString());
-    			
-    			
-    			
-    			return ok(views.html.User.register.render(userForm));
-    			
-    		}
-    		
-    		
-    		setAuthUser(user);
-    		
-    		
-    		// return redirect( routes.UserController.homepageRegisterSuccess() );
-    		
-    		return pjaxRedirect( routes.UserController.registerSuccess() );
-    	}
-    }    
+		return userForm;
+	}    
+    
+    
 
     public static Result registerSuccess()
     {
@@ -352,6 +429,12 @@ public class UserController extends BaseController {
     	return ok(views.html.User.registerWithFacebook.render(facebookAppId, invitationCode));
     }
     
+    public static Result hiddenRegisterWithFacebook()
+    {
+    	String facebookAppId = Play.application().configuration().getString("application.facebook_app_id");
+    	return ok(views.html.User.hiddenRegisterWithFacebook.render(facebookAppId));
+    	
+    }
 
     
     public static Result publicProfile(Integer id)
