@@ -349,7 +349,7 @@ PlayerControl = can.Control({
 		  
 	  }
 	  
-	  var fullSongName = this.currentSong.Song.Album.Artist.name + " - " + this.currentSong.Song.Album.name + " - " + this.currentSong.Song.name;
+	  var fullSongName = this.currentSong.Song.Album.Artist.name + " - " + this.currentSong.Song.name;
 	  $(".name .song", this.element).text( fullSongName );
 	  
 	  this.refreshUserButtons();
