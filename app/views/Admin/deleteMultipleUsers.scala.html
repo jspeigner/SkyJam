@@ -1,0 +1,17 @@
+@(users:List[User])@Layout.admin("Delete Users") {
+
+<h1>Are you sure to delete users ?</h1>
+<p>It cannot be undone</p>
+<form class="well" method="post" action="@routes.AdminController.deleteMultipleUsers(users.map( _.getId.toString ).mkString(","))" >
+	<ul>
+	@for(user <- users){
+		<li><b>#@user.getId - <a target="_blank" href="@routes.AdminController.editUser(user.getId)">@user.getUsername</a></li>
+	}
+	</ul>
+
+	<div class="form-actions">
+		<input type="submit" value="Delete All" class="btn btn-danger">
+	</div>
+
+</form>
+}

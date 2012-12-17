@@ -1,0 +1,34 @@
+@(form: Form[User])@import helper.twitterBootstrap2._
+@Layout.default("Register"){
+		
+	@helper.form(action = routes.UserController.hiddenRegisterSubmit(), 'class -> "form-horizontal well center", 'id -> "homepage-register") {
+		
+		<h1>Sign Up</h1>
+		
+        @if(form.hasGlobalErrors) { 
+            <div  class="alert alert-error">
+                @form.globalError.message
+            </div>
+        }
+		
+		
+		<p>You already know us for streaming the best radio on the internet, and now we've
+		expanded our site with a community of real people - just like you - to
+		help you get even better music playlists.</p>
+		
+		
+		<hr>		
+		
+		@helper.inputText(form("email" ), '_showConstraints -> false, '_label -> "Email")	
+		
+		@helper.inputText(form("username" ), '_showConstraints -> false, '_label -> "Username")
+		
+		@helper.inputPassword(form("password" ), '_showConstraints -> false, '_label -> "Password")
+				
+		<div class="form-actions">
+			<input class="btn btn-success" type="submit" value="Register" /> OR <a class="btn btn-primary" href="@routes.UserController.hiddenRegisterWithFacebook()">Register with Facebook</a>
+		</div>
+    
+	}
+	
+}

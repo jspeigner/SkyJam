@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
+
 @Entity
 public class SongMetadata extends AppModel {
 
@@ -21,6 +24,8 @@ public class SongMetadata extends AppModel {
 	private Double bpm;
 	private Integer year;
 	private Date createdDate;
+	
+	public static Model.Finder<Integer,SongMetadata> find = new Finder<Integer, SongMetadata>(Integer.class, SongMetadata.class);
 	
 	public void init(Tag tags){
 		setAlbum(tags.getFirst(FieldKey.ALBUM));

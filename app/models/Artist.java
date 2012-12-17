@@ -1,7 +1,6 @@
 package models;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -13,10 +12,7 @@ import com.avaje.ebean.validation.Length;
 import java.util.List;
 
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
-
 import play.data.validation.*;
-import play.data.validation.Constraints.MaxLength;
 
 
 @Entity

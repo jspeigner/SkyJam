@@ -10,7 +10,7 @@
 @if( playlists.size() > 0 ){
 	<ul>
 	@for( playlist <- playlists ){
-		<li class="span@( ( 12 / playlists.size() ).toInt )">
+		<li class="span3">
 			<h2><a href="@routes.PlaylistController.playlist(playlist.getId(), category.getId())">@playlist.getName</a></h2>
 			<p>@playlist.getDescription</p>
 			<div><a href="#" class="btn btn-large player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i>Play</a></div>

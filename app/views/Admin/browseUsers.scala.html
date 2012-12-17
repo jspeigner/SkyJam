@@ -1,4 +1,51 @@
 @(users:Page[User], term:String)@Layout.admin("Browse Users") {
+<script type="text/javascript">
+$( function(){
+	
+	$("table.users thead input:checkbox").change( function(){
+		var x = $(this).prop("checked") ;
+		$("table.users tbody input:checkbox").prop("checked", x);
+		if(x){
+			$("table.users tbody tr").addClass("selected");	
+		} else {
+			$("table.users tbody tr").removeClass("selected");
+		}
+	});
+	
+	$("table.users tbody input:checkbox").change( function(){
+		
+		if( $(this).prop("checked") ){
+			$(this).parents("tr").addClass("selected");	
+		} else {
+			$(this).parents("tr").removeClass("selected");	
+		}
+		
+		
+	});
+	
+	$(".group-actions a").click( function(){
+		var parts = $(this).attr("href").split("?");
+		var ids = [];
+		$("table.users tbody input:checkbox:checked").each(function(){
+			ids.push($(this).val());
+		});
+		
+		if(ids.length){
+			window.location.href = parts[0] + "?idList=" + ids.join(",");	
+		} else {
+			alert("Please select several users first");
+		}
+		
+		
+		
+		return false;
+		
+	});
+	
+});
+
+
+</script>
 	<h1>Users</h1>
 	<hr>
 	
@@ -11,9 +58,10 @@
 	
 	@if( ( users != null ) && ( users.getList.size > 0 )){
 	
-	<table class="table table-bordered table-striped">
+	<table class="table table-bordered table-striped users">
 		<thead>
 			<tr>
+				<th><input type="checkbox"></th>
 				<th>ID</th>
 				<th>Username</th>
 				<th>Email</th>
@@ -23,7 +71,8 @@
 		</thead>
 		<tbody>
 		@for(user <- users.getList ){
-		<tr>
+		<tr data-user-id="@user.getId">
+			<td><input type="checkbox" value="@user.getId"></td>
 			<td>@user.getId</td>
 			<td><!-- <img src="@user.getImageUrl" alt="@user.getUsername"> --> @user.getUsername</td>
 			<td>@user.getEmail</td>
@@ -42,9 +91,16 @@
 		}
 		</tbody>
 	</table>
+	<div class="group-actions">
+		<ul class="breadcrumb">
+		  <li class="active"><i>With selected: </i><span class="divider"> </span></li>
+		  <li><a href="@routes.AdminController.sendMultipleUserInvitations("")">Send Invitations</a> <span class="divider">|</span></li>
+		  <li><a href="@routes.AdminController.deleteMultipleUsers("")">Delete</a></li>
+		</ul>	
+	</div>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount )
+		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount, users.getTotalRowCount )
 	</div>
 	
 	} else {

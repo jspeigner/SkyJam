@@ -1,9 +1,11 @@
 package controllers;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import org.jaudiotagger.tag.Tag;
 
@@ -16,14 +18,48 @@ import com.echonest.api.v4.EchoNestException;
 
 import models.*;
 import controllers.UserController.Login;
+import akka.dispatch.Future;
 import be.objectify.deadbolt.actions.Restrict;
+import play.libs.Akka;
+import play.libs.F.Promise;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.data.DynamicForm;
 import play.data.Form;
 import scala.Tuple2;
+import scala.actors.threadpool.Arrays;
 
 public class AdminController extends BaseController {
 
+	
+	
+	protected static class UserInvitationsMailer implements Callable<Integer> {
+			
+		private List<User> users;
+		private Http.Context context;
+		
+		public UserInvitationsMailer(List<User> users, Http.Context context) {
+			this.users = users;
+			this.context = context;
+		}
+		
+		@Override
+		public Integer call() throws Exception {
+
+			Http.Context.current.set(context);
+			
+    		int i = 0;
+    		for(User user : users){
+    	    	UserInvitationCode uic = UserInvitationCode.createNewCode(user);
+    	    	
+    	    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	    	System.out.println("Inviation send to "+ user.getEmail());
+    			i++;
+    		}		
+    		return i;
+		}
+		
+	}
 	
 	@Restrict(UserRole.ROLE_ADMIN)
 	public static Result dashboard(){
@@ -318,9 +354,18 @@ public class AdminController extends BaseController {
     		return notFound("User not found");
     	}
     	
-    	UserInvitationCode uic = UserInvitationCode.createNewCode(user);
     	
-    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	@SuppressWarnings("unchecked")
+		UserInvitationsMailer m = new UserInvitationsMailer( Arrays.asList( new User[]{ user } ) , Http.Context.current.get() );
+    	try {
+			m.call();
+		} catch (Exception e) {
+
+		}
+    	
+    	// UserInvitationCode uic = UserInvitationCode.createNewCode(user);
+    	
+    	// email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
     	
     	flash("success", "Invitation has been sent");
     	
@@ -765,6 +810,67 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result editPlaylistSubmit(Integer id){
     	return editPlaylist(id);
+    } 
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result sendMultipleUserInvitations(String idList){
+    	
+    	List<Integer> ids = global.utils.Utils.extractIntsFromString(idList);
+    	if(ids != null){
+    		
+    		List<User> users = User.find.where().in("id", ids).findList();
+        		
+    		flash("success", "Invitations were sent successfully");
+    		
+    		UserInvitationsMailer m = new UserInvitationsMailer(users, Http.Context.current.get() );
+    		try {
+				m.call();
+			} catch (Exception e) {
+
+				// e.printStackTrace();
+			}
+    		
+    		
+    		
+    		return redirect(routes.AdminController.browseUsers(0,""));
+
+    	} else {
+    		
+    		return notFound("User list is empty");
+    	}
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMultipleUsers(String idList){
+
+    	List<Integer> ids = global.utils.Utils.extractIntsFromString(idList);
+    	if(ids != null){
+    		
+    		List<User> users = User.find.where().in("id", ids).findList();
+    		
+        	if(request().method().equals("POST")){
+        		
+        		flash("success", "Users were removed successfully");
+        		
+        		for(User user : users){
+        			user.delete();
+        		}
+        		
+        		return redirect(routes.AdminController.browseUsers(0,""));
+        	}
+    		
+    		return ok(views.html.Admin.deleteMultipleUsers.render(users));
+    	} else {
+    		
+    		return notFound("User list is empty");
+    	}
+    	
+    	
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result deleteMultipleUsersSubmit(String idList){
+    	return deleteMultipleUsers(idList);
     }    
     
 }
