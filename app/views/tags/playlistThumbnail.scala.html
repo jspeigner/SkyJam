@@ -1,2 +1,13 @@
-@(playlist:Playlist)@if( ( playlist != null ) && ( playlist.getPlaylistSongs.size() > 0 ) ){
-<img src="@playlist.getPlaylistSongs.find( playlistSong => playlistSong.getSong.getAlbum.getAlbumArtStorageObject != null  ).getOrElse( playlist.getPlaylistSongs.head ).getSong.getAlbum.getAlbumArtUrl" alt="Playlist - @playlist.getName" title="@playlist.getName" >}
+@(playlist:Playlist, albumsCount:Int = 4 )@if( playlist.getPlaylistSongs.size() > 0 ){
+<div class="playlist-thumbnail row-fluid clearfix">
+@for( album <- ( playlist.getPlaylistSongs.filter( playlistSong => playlistSong.getSong.getAlbum.getAlbumArtStorageObject != null ).map( _.getSong.getAlbum ).groupBy( _.getId ).map( (x) => x._2.head  ) ++ scala.collection.immutable.List.fill(albumsCount)(null) ).slice(0,albumsCount) ){
+	@if(album != null){
+		<div class="album"><img src="@album.getAlbumArtUrl" alt="@album.getName"></div>
+	} else {
+		
+	}
+	
+}
+
+</div>
+}
