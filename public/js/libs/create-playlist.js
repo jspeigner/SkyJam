@@ -50,13 +50,17 @@ CreatePlaylistControl = can.Control({
 		var self = this;
 		
 		var albumArtUrls = {};
+		var albumArtList = [];
 		
 		$(".playlist-songs-container ul li", this.element).each( function(){
 			
 			var data = $(this).data("playlistSong");
 			
-			if( data.song && data.song.album ){
-				albumArtUrls[ data.song.album.id ] = data.song.album;
+			if( data.song && data.song.album && ( data.song.album.albumArtStorageObjectExists ) ){
+				if( !albumArtUrls[ data.song.album.id ] ){
+					albumArtUrls[ data.song.album.id ] = data.song.album;
+					albumArtList.push( data.song.album.id );
+				}
 			}
 			
 		});
@@ -67,22 +71,12 @@ CreatePlaylistControl = can.Control({
 		
 		$(".albumPreview td", this.element).html("");
 		
-		for( albumId in albums){
-			if( currentIndex < maxIndex){
-				
-				var albumArtImage = $("<img>").attr( { alt : albums[albumId].name , src: albums[albumId].albumArtUrl  });
-				
-				$(".albumPreview .album"+currentIndex, this.element).html("").append(albumArtImage);
-				
-				currentIndex++;
-			} else {
-				break;
-			}
+		for( currentIndex = 0; ( currentIndex < maxIndex ) && ( currentIndex < albumArtList.length ); currentIndex ++ ){
+			var albumId = albumArtList[currentIndex];
+			var albumArtImage = $("<img>").attr( { alt : albumArtUrls[albumId].name , src: albumArtUrls[albumId].albumArtUrl  });
 			
+			$(".albumPreview .album"+currentIndex, this.element).html("").append(albumArtImage);			
 		}
-		
-
-			
 
 	},
 	

@@ -7,15 +7,16 @@
 	for(song <- songs)
 	{
 		val jsonSong = scala.collection.immutable.Map( 
-			"name" -> song.getName(), 
-			"id" -> song.getId().toString(),
+			"name" -> song.getName, 
+			"id" -> song.getId().toString,
 			"album" -> scala.collection.immutable.Map(
-				"name" 			-> song.getAlbum().getName(),
-				"id"			-> song.getAlbum().getId(),
-				"albumArtUrl"	-> song.getAlbum().getAlbumArtUrl(),
+				"name" 			-> song.getAlbum.getName,
+				"id"			-> song.getAlbum.getId,
+				"albumArtUrl"	-> song.getAlbum.getAlbumArtUrl,
+				"albumArtStorageObjectExists" -> ( song.getAlbum.getAlbumArtStorageObject != null ),
 				"artist"	-> scala.collection.immutable.Map(
-					"id"			-> song.getAlbum().getArtist().getId(),
-					"name"			-> song.getAlbum().getArtist().getName()
+					"id"			-> song.getAlbum.getArtist.getId,
+					"name"			-> song.getAlbum.getArtist.getName
 					
 				)
 			)

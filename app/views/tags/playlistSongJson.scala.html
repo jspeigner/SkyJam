@@ -16,6 +16,7 @@
 					"name" 			-> playlistSong.getSong.getAlbum.getName,
 					"id"			-> playlistSong.getSong.getAlbum.getId,
 					"albumArtUrl"	-> playlistSong.getSong.getAlbum.getAlbumArtUrl,
+					"albumArtStorageObjectExists" -> ( playlistSong.getSong.getAlbum.getAlbumArtStorageObject != null ),
 					"artist"	-> scala.collection.immutable.Map(
 						"id"			-> playlistSong.getSong.getAlbum.getArtist.getId,
 						"name"			-> playlistSong.getSong.getAlbum.getArtist.getName
