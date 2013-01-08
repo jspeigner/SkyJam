@@ -655,4 +655,25 @@ public class Playlist extends AppModel {
 		
 	}
 	
+	public List<Album> getPreviewAlbums(int limit ){
+		@SuppressWarnings("unchecked")
+		Map<Integer, Album> a = (Map<Integer, Album>) Album.find.where().eq("songs.playlistSongs.playlist", this).ne("albumArtStorageObject", null).findMap();
+		
+		List<Album> b = new ArrayList<Album>(limit);
+		List<PlaylistSong> playlistSongs = PlaylistSong.find.where().eq("playlist", this).order("position ASC").findList();
+		if( playlistSongs != null ){
+			for(PlaylistSong p : playlistSongs){
+				if( ( p.getSong() != null ) && ( p.getSong().getAlbum() != null ) && a.containsKey(p.getSong().getAlbum().getId())){
+					b.add(p.getSong().getAlbum());
+					a.remove(p.getSong().getAlbum().getId());
+					if( b.size() >= limit ){
+						break;
+					}
+				}
+			}
+		}
+		
+		return b;
+	}
+	
 }
