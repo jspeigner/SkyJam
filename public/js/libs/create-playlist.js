@@ -92,7 +92,7 @@ CreatePlaylistControl = can.Control({
 		
 		if( searchString != "" )
 		{
-		
+			$(".song-search", this.element).addClass("loading");
 			$.get( application.config.urls.searchSongs , { term: searchString }, function(result){
 				self.onSongSearchComplete(result);
 			});
@@ -132,6 +132,8 @@ CreatePlaylistControl = can.Control({
 	onSongSearchComplete: function(resultSongs){
 		
 		$(".songs-search-results-container", this.element ).html( can.view("#create-playlist-search-song-list", { songs: resultSongs }) );
+		
+		$(".song-search", this.element).removeClass("loading");
 		
 		this.searchSongList = resultSongs;
 	},
@@ -200,8 +202,7 @@ $(document).on( Application.events.PAGE_LOAD, function(){
 	
 	var createPlaylistId = "#create-playlist"; 
 	
-	if($(createPlaylistId).length)
-	{
+	if($(createPlaylistId).length){
 		var  createPlaylistControl = new CreatePlaylistControl( createPlaylistId, {} );
 	}
 	
