@@ -14,14 +14,14 @@
 		</ul>
 		
 		<hr>
-		<div class="playlists clearfix">
+		<div class="playlists popular-playlists clearfix">
 			<ul>
 				@for(playlist <- playlists){
 					<li class="clearfix">
 						<div class="row-fluid">
 							<div class="span2">@tags.playlistThumbnail(playlist)</div>
 							<div class="span10">
-								<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a><a href="javascript://" class="btn play player-controls-play pull-right" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a></h2>
+								<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a></h2>
 								<p>@playlist.getDescription</p>
 								<p><small>With Artists: @playlist.getArtists().map( artist => artist.getName ).mkString(", ")</small></p>
 								
