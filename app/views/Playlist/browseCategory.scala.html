@@ -36,7 +36,6 @@
 									<h2><a href="@routes.PlaylistController.playlist(playlist.getId, null)">@playlist.getName</a><a href="javascript://" class="btn play player-controls-play pull-right" data-playlist-id="@playlist.getId"><i class="icon-play"></i> Play</a></h2>
 									<p>@playlist.getDescription</p>
 									<p><small>With Artists: @playlist.getArtists().map( artist => artist.getName ).mkString(", ")</small></p>
-									
 								</div>
 							</div>						
 							<hr>
