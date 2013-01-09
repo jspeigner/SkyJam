@@ -1,7 +1,7 @@
 @(playlist:Playlist, albumsCount:Int = 4 )@if( playlist.getPlaylistSongs.size() > 0 ){
 <div class="playlist-thumbnail row-fluid clearfix">
 	@for( album <- playlist.getPreviewAlbums(albumsCount) ){
-		<div class="album"><img src="@album.getAlbumArtUrl" alt="@album.getName"></div>
+		<div class="album"><img src="@album.getAlbumArtUrl" alt="@album.getArtist.getName - @album.getName" title="@album.getArtist.getName - @album.getName"></div>
 	}
 </div>
 }
