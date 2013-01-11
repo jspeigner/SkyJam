@@ -166,13 +166,14 @@ public class AdminController extends BaseController {
     }
 
     @Restrict(UserRole.ROLE_ADMIN)    
-    public static Result browseSongs(Integer page, String term, Integer albumId){
+    public static Result browseSongs(Integer page, String term, Integer albumId, String order){
 
+    	order = order.isEmpty() ? "id asc" : order;
     	int pageSize = 15;
     	Album album = albumId > 0 ? Album.find.byId(albumId) : null;
-    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term, album == null ? null : Expr.eq("album", album)  );
+    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term, ( album == null ? null : Expr.eq("album", album)), order  );
     	
-    	return ok(views.html.Admin.browseSongs.render(songs, term, album));
+    	return ok(views.html.Admin.browseSongs.render(songs, term, album, order));
     }
 
     

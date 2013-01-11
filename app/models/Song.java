@@ -181,10 +181,15 @@ public class Song extends AppModel {
 	}	
 	
 	public static Page<Song> getPageWithSearch(int page, int pageSize, String term){
-		return getPageWithSearch(page, pageSize, term, null);
+		return getPageWithSearch(page, pageSize, term, "");
 	}
 	
-	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, String order){
+		return getPageWithSearch(page, pageSize, term, null, order);
+	}
+	
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions, String order){
+		com.avaje.ebean.Query<Song> q = null;
     	
     	if( ( term!=null ) && ( !term.isEmpty())){
     		try {  
@@ -197,7 +202,7 @@ public class Song extends AppModel {
 	  	    			expr = Expr.and( additionalConditions , expr );
 	  	    		}    		      
     		      
-    		      return Song.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      q = Song.find.where(expr);
     		      
     		} catch( Exception e ) {
     			
@@ -230,13 +235,18 @@ public class Song extends AppModel {
     	    			expr = Expr.and( additionalConditions , expr );
     	    		}
     	    		
-    	    		return Song.find.where( expr ).findPagingList(pageSize).getPage(page);
+    	    		q = Song.find.where( expr );
     		}
     		
 
     	} else {
-    		return ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
+    		q = ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) );
     	}
+    	if( !order.isEmpty() ){
+    		q = q.order(order);
+    	}
+    	
+    	return q != null ? q.findPagingList(pageSize).getPage(page) : null;
 	}
 
 	public Integer getTracknumber() {

@@ -1,0 +1,19 @@
+@( action: (String) => Call, title:String, order:String, currentOrder:String = "" )
+@{
+	val currentOrderParts = currentOrder.split(" ",2)
+	val orderParts = order.split(" ",2)
+	
+	val newOrderDirection = if( orderParts.length > 1 ){
+		orderParts(1)
+	} else if( currentOrderParts(0) equals orderParts(0) ){
+		if( ( currentOrderParts.length == 1 ) || ( currentOrderParts(1) equals "desc" ) ){
+			"asc"
+		} else "desc"
+	} else "asc"
+	 
+	val currentOrderDirection = if( currentOrderParts(0) equals orderParts(0) ) currentOrderParts(1) else ""  
+
+	val arrowIcon = if( currentOrderDirection.isEmpty ) "" else ( "<i class=\""+( if( currentOrderDirection equals "desc" ) "icon-arrow-up" else "icon-arrow-down"  )+"\"></i>" )
+	 
+	Html("<a href=\""+ action( orderParts(0)+" " + newOrderDirection ) +"\" class=\"pagination-sort-link " + currentOrderDirection + "\">"+title+" "  + arrowIcon + "</a>")
+}

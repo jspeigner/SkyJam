@@ -1,4 +1,4 @@
-@(songs:Page[Song], term:String, album:Album = null)@Layout.admin("Browse Songs") {
+@(songs:Page[Song], term:String, album:Album = null, order:String = "id asc")@Layout.admin("Browse Songs") {
 <h1>Songs</h1>
 @if(album != null ){
 	<h3>@album.getArtist.getName - @album.getName</h3>
@@ -18,10 +18,10 @@
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Album</th>
-				<th>Artist</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "ID", "id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Name", "name", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Album", "album.name", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Artist", "album.artist.name", order)</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
