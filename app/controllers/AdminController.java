@@ -492,7 +492,7 @@ public class AdminController extends BaseController {
     @Restrict(UserRole.ROLE_ADMIN)
     public static Result browseMusicCategories(String type){
     	
-    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent", null).eq("type", type).findList();
+    	List<MusicCategory> musicCategories = MusicCategory.find.where().eq("parent", null).eq("type", type).order("position asc").findList();
     	
     	return ok(views.html.Admin.browseMusicCategories.render(musicCategories, type));
     }
@@ -872,6 +872,24 @@ public class AdminController extends BaseController {
     public static Result deleteMultipleUsersSubmit(String idList){
     	return deleteMultipleUsers(idList);
     }    
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result updateMusicCategoryOrder(){
+    	return null;
+    }
+    
+    @Restrict(UserRole.ROLE_ADMIN)
+    public static Result updateMusicCategoryOrder(Integer parentId, String children){
+    	
+    	String[] childrenIds = children.split(",");
+    	
+    	
+    	
+    	MusicCategory.updateMusicCategoryOrder(parentId, childrenIds);
+    	
+    	
+    	return ok("");
+    }
     
 }
 

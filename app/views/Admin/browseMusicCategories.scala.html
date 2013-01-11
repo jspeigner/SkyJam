@@ -1,7 +1,7 @@
 @(topLevelMusicCategories:List[MusicCategory], categoryType:String)@Layout.admin("Browse Music Categories") {
 <script type="text/javascript">
+var orderUpdateUrl = "@routes.AdminController.updateMusicCategoryOrder()";
 $(function(){
-
 
 	$(".music-category-info").mouseenter(function(){
 		
@@ -11,8 +11,53 @@ $(function(){
 		$(".options", this).addClass("hide");
 	});
 
+	$("#music-categories-0 ul").sortable({
+      delay: 100,
+      connectWith: "#music-categories-0 ul",
+      placeholder: "ui-state-highlight",
+      handle : '.thumbnail'
+    }).on("sortupdate", function(event, ui){
+    	updatePositions();
+    });
+	$(".music-categories-container > li").disableSelection();
 });
-//-->
+ 
+function updatePositions(){
+	var data = serializeCategories( $("#music-categories-0 > ul"));
+	// update category orders
+	if( data.length ){
+		updateCategoryOrder(0, data);
+	}
+}
+
+function updateCategoryOrder(parentId, children){
+	if(children.length){
+		var childrenIds = [];
+		for(var i=0; i < children.length ; i++){
+			childrenIds.push(children[i].id);
+			updateCategoryOrder(children[i].id, children[i].children );
+		}
+		$.get(orderUpdateUrl, { parentId: parentId, children : childrenIds.join(",") });
+	}
+}
+
+function serializeCategories(list){
+	var data = [];
+	list.children("li").each( function(){
+		var item = $(this).children(".music-category");
+		if( item.length ){
+			var itemData = {
+				id: item.data("id"),
+				children: serializeCategories( $(this).children(".music-categories").children("ul") )	
+			};
+			data.push( itemData ) ;
+			
+		}
+	});
+	
+	return data;
+}
+
 </script>
 <h1>Music Categories</h1>
 <hr>

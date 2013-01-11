@@ -54,6 +54,8 @@ public class MusicCategory extends AppModel {
 	@Enumerated(EnumType.STRING)
 	private Type type;	
 	
+	private Integer position;
+	
 	
 	public static final ImageMetadata imageMetadata = new ImageMetadata(240, 180, ImageMetadata.IMAGE_TYPE_PNG, "files/music_category/image/%d.png", "files/music_category/image/default.png" );	
 	/*
@@ -90,7 +92,7 @@ public class MusicCategory extends AppModel {
 	
 	public List<MusicCategory> getChildren()
 	{
-		return MusicCategory.find.where().eq("parent", this).findList();
+		return MusicCategory.find.where().eq("parent", this).order("position ASC").findList();
 	}
 	
 	public boolean isParentOf(MusicCategory m)
@@ -270,6 +272,38 @@ public class MusicCategory extends AppModel {
 		
 		
 		super.delete();
+	}
+
+	public static void updateMusicCategoryOrder(Integer parentId, String[] childrenIds) {
+		
+		if( childrenIds.length > 0 ){
+			MusicCategory parent = MusicCategory.find.byId(parentId);
+			
+			for(int i=0; i < childrenIds.length; i++ ){
+				try {
+					int categoryId = Integer.parseInt(childrenIds[i]);
+				
+					MusicCategory m = MusicCategory.find.byId(categoryId);
+					if( m!= null ){
+						m.setParent(parent);
+						m.setPosition(i);
+						m.update();
+					}
+					
+				} catch (Exception e ) {
+					
+				}
+			}
+		}
+		
+	}
+
+	public Integer getPosition() {
+		return position;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
 	}
 	
 }

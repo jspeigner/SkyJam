@@ -78,15 +78,13 @@ public class PlaylistController extends BaseController
 	  public static Result browseCategories()
 	  {
 		  return browseCategory(null, 0);
-		  
-		  // return ok(views.html.Playlist.browseCategories.render(topLevelCategories));
 	  }
 	  
 	  public static Result browseCategory(Integer musicCategoryId, Integer page)
 	  {
 		  int playlistsPerPage = 5;
 		  
-		  List<MusicCategory> topLevelCategories = MusicCategory.find.where().eq("type", MusicCategory.Type.popular ).eq("parent_id", null).findList();
+		  List<MusicCategory> topLevelCategories = MusicCategory.find.where().eq("type", MusicCategory.Type.popular ).eq("parent_id", null).order("position ASC").findList();
 		  
 		  MusicCategory cat = null;
 		  
@@ -113,7 +111,7 @@ public class PlaylistController extends BaseController
 		  
 		  if( cat != null )
 		  {
-			  List<MusicCategory> siblingCategories = MusicCategory.find.where().eq("parent", cat.getParent()).findList();
+			  List<MusicCategory> siblingCategories = MusicCategory.find.where().eq("parent", cat.getParent()).order("position ASC").findList();
 			  
 			  Page<Playlist> playlists = Playlist.pageByCategory(page, playlistsPerPage, cat, "loadedTimes", "desc");
 			  

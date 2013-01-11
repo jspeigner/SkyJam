@@ -84,6 +84,7 @@ GET			/admin/genre/add				controllers.AdminController.addGenre()
 POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
 
 GET			/admin/music_categories/browse/:categoryType			controllers.AdminController.browseMusicCategories( categoryType:String )
+GET			/admin/music_categories/update_order					controllers.AdminController.updateMusicCategoryOrder( parentId:java.lang.Integer ?= 0, children:String ?= ""  )
 GET			/admin/music_category/edit/:id							controllers.AdminController.editMusicCategory( id: java.lang.Integer )
 POST		/admin/music_category/edit/:id							controllers.AdminController.editMusicCategorySubmit( id: java.lang.Integer )
 GET			/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer, categoryType:String )
@@ -99,6 +100,7 @@ POST		/admin/batch_job/edit/:id				controllers.AdminController.editBatchJobSubmi
 GET			/admin/batch_jobs/info					controllers.AdminController.batchJobsInfo()
 GET			/admin/batch_job/delete/:id				controllers.AdminController.deleteBatchJob(id:java.lang.Integer)
 POST		/admin/batch_job/delete/:id				controllers.AdminController.deleteBatchJobSubmit(id:java.lang.Integer)
+
 
 
 GET			/admin/song/metadata/:id				controllers.AdminController.readSongMetadata(id: java.lang.Integer)

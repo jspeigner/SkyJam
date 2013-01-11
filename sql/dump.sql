@@ -30,6 +30,27 @@ CREATE TABLE `artists` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `batch_jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_date` datetime NOT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `actor_class` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `result` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `batch_job_actors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `batch_job_id` int(11) NOT NULL,
+  `object_id` int(11) NOT NULL,
+  `started_date` datetime DEFAULT NULL,
+  `ended_date` datetime DEFAULT NULL,
+  `result` int(11) NOT NULL DEFAULT '0',
+  `status` enum('not_started','running','completed','failed') COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `batch_job_id` (`batch_job_id`,`object_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `buckets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -50,20 +71,41 @@ CREATE TABLE `cloudfront_distributions` (
   KEY `fk_cloudfront_distribution_song_storages1` (`storage_object_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `echonest_songs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `echonest_song_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `artist_name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `duration` float DEFAULT NULL,
+  `tempo` float DEFAULT NULL,
+  `artist_location` text COLLATE utf8_unicode_ci,
+  `cover_art` text COLLATE utf8_unicode_ci,
+  `release_name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mode` int(11) DEFAULT NULL,
+  `song_hotttnesss` double DEFAULT NULL,
+  `artist_hotttnesss` int(11) DEFAULT NULL,
+  `audio` text COLLATE utf8_unicode_ci,
+  `created_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE `genres` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `music_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `parent_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `parent_id` smallint(5) unsigned DEFAULT NULL,
   `image_storage_object_id` int(11) DEFAULT NULL,
   `type` enum('activity','popular') NOT NULL,
+  `order` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`)
+  KEY `parent_id` (`parent_id`),
+  KEY `order` (`order`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 CREATE TABLE `playlists` (
@@ -126,16 +168,35 @@ CREATE TABLE `play_evolutions` (
 CREATE TABLE `songs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
+  `tracknumber` tinyint(4) NOT NULL DEFAULT '0',
   `album_id` int(11) NOT NULL,
   `keywords` text COLLATE utf8_unicode_ci NOT NULL,
   `duration` int(11) NOT NULL,
   `storage_object_id` int(11) NOT NULL,
   `status` enum('visible','hidden') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'visible',
+  `echonest_song_id` int(11) DEFAULT NULL,
+  `song_metadata_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`album_id`),
   KEY `fk_songs_albums1` (`album_id`),
-  KEY `fk_songs_storage_object1` (`storage_object_id`)
+  KEY `fk_songs_storage_object1` (`storage_object_id`),
+  KEY `echonest_song_id` (`echonest_song_id`),
+  KEY `name` (`name`,`album_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `song_metadata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `album` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `artist` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `genre` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `track` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `musicbrainz_track_id` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mood` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bpm` double DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `storage_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -173,8 +234,10 @@ CREATE TABLE `user_invitation_codes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `source_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `code` (`code`)
+  KEY `code` (`code`),
+  KEY `source_user_id` (`source_user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `user_password_resets` (

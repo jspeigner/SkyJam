@@ -8,4 +8,9 @@ header .navbar .brand img { width: 73px; height: 32px; }
 	.pagination .pull-right p { margin:0; line-height: 40px;}
 	
 	#id3-tags ul {list-style: none;}
-	.music-categories { padding:10px 0 10px 0;}
+	.music-categories { padding:0;}
+	.music-categories-container { min-height:1em; margin-left:40px;}
+	.music-categories .music-categories-container li { padding:0 0 0 0;}
+		.music-categories .music-categories-container li .thumbnail { background-color: white; }
+		.music-categories .music-categories-container li .media-object { width: 64px;}
+		.music-categories .music-categories-container .media.music-category { margin-top:10px;}
