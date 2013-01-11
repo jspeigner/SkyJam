@@ -133,7 +133,7 @@ public class SongMetadataActor extends BaseActor {
 		if( ( artistName != null ) && ( songName != null) ){
 			try {
 				
-				com.echonest.api.v4.Song echonestSong = Song.getEchonestSong(artistName, songName);
+				com.echonest.api.v4.Song echonestSong = Song.loadEchonestSong(artistName, songName);
 				if( echonestSong != null){
 					
 					song.saveEchonestSong(echonestSong);

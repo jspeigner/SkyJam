@@ -171,11 +171,12 @@ public class AdminController extends BaseController {
     	order = order.isEmpty() ? "id asc" : order;
     	int pageSize = 15;
     	Album album = albumId > 0 ? Album.find.byId(albumId) : null;
-    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term, ( album == null ? null : Expr.eq("album", album)), order  );
+    	Page<Song> songs = Song.getPageWithSearch(page, pageSize, term, order, ( album == null ? null : Expr.eq("album", album))  );
     	
     	return ok(views.html.Admin.browseSongs.render(songs, term, album, order));
     }
 
+    
     
     @Restrict(UserRole.ROLE_ADMIN)    
     public static Result browseArtists(Integer page, String term){

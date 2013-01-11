@@ -13,7 +13,7 @@
 	 
 	val currentOrderDirection = if( currentOrderParts(0) equals orderParts(0) ) currentOrderParts(1) else ""  
 
-	val arrowIcon = if( currentOrderDirection.isEmpty ) "" else ( "<i class=\""+( if( currentOrderDirection equals "desc" ) "icon-arrow-up" else "icon-arrow-down"  )+"\"></i>" )
+	val arrowIcon = if( currentOrderDirection.isEmpty ) "" else ( " <i class=\""+( if( currentOrderDirection equals "desc" ) "icon-arrow-up" else "icon-arrow-down"  )+"\"></i>" )
 	 
-	Html("<a href=\""+ action( orderParts(0)+" " + newOrderDirection ) +"\" class=\"pagination-sort-link " + currentOrderDirection + "\">"+title+" "  + arrowIcon + "</a>")
+	Html("<a href=\""+ action( orderParts(0)+" " + newOrderDirection ) +"\" class=\"pagination-sort-link " + currentOrderDirection + "\">"+title+ arrowIcon + "</a>")
 }

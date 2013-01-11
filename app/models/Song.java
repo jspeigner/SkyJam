@@ -185,10 +185,10 @@ public class Song extends AppModel {
 	}
 	
 	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, String order){
-		return getPageWithSearch(page, pageSize, term, null, order);
+		return getPageWithSearch(page, pageSize, term, order, null);
 	}
 	
-	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions, String order){
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, String order, Expression additionalConditions){
 		com.avaje.ebean.Query<Song> q = null;
     	
     	if( ( term!=null ) && ( !term.isEmpty())){
@@ -351,12 +351,12 @@ public class Song extends AppModel {
 		
 	}
 	
-	public static com.echonest.api.v4.Song getEchonestSong(String artistName, String songName)  throws EchoNestException {
-		 List<com.echonest.api.v4.Song> list = getEconestSongsByName(artistName, songName, 1);
+	public static com.echonest.api.v4.Song loadEchonestSong(String artistName, String songName)  throws EchoNestException {
+		 List<com.echonest.api.v4.Song> list = loadEconestSongsByName(artistName, songName, 1);
 		 return list.size() > 0 ? list.get(0) : null;
 	}
 	
-	public static List<com.echonest.api.v4.Song> getEconestSongsByName(String artistName, String songName, int results) throws EchoNestException {
+	public static List<com.echonest.api.v4.Song> loadEconestSongsByName(String artistName, String songName, int results) throws EchoNestException {
 		
     	EchoNestAPI en = new EchoNestAPI( Play.application().configuration().getString("echonest.api_key") );
     	

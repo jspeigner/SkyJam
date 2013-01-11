@@ -14,3 +14,5 @@ header .navbar .brand img { width: 73px; height: 32px; }
 		.music-categories .music-categories-container li .thumbnail { background-color: white; }
 		.music-categories .music-categories-container li .media-object { width: 64px;}
 		.music-categories .music-categories-container .media.music-category { margin-top:10px;}
+		
+		table.table th a { white-space: nowrap; text-decoration: none;}
