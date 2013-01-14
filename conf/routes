@@ -55,7 +55,7 @@ POST		/admin/user/send_invitation/:id	controllers.AdminController.sendInvitation
 GET			/admin/user/send_multiple_invitations	controllers.AdminController.sendMultipleUserInvitations(idList: String)
 GET			/admin/user/delete_multiple		controllers.AdminController.deleteMultipleUsers(idList: String)
 POST		/admin/user/delete_multiple		controllers.AdminController.deleteMultipleUsersSubmit(idList: String)
-GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
+GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "", order:String ?= "")
 
 GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:java.lang.Integer ?= 0, term:String ?= "")
 GET			/admin/artist/edit/:id			controllers.AdminController.editArtist(id: java.lang.Integer)

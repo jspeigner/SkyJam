@@ -1,7 +1,6 @@
 package controllers;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,10 +17,7 @@ import com.echonest.api.v4.EchoNestException;
 
 import models.*;
 import controllers.UserController.Login;
-import akka.dispatch.Future;
 import be.objectify.deadbolt.actions.Restrict;
-import play.libs.Akka;
-import play.libs.F.Promise;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.data.DynamicForm;
@@ -113,12 +109,13 @@ public class AdminController extends BaseController {
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
-    public static Result browseUsers(Integer page, String term ){
+    public static Result browseUsers(Integer page, String term, String order ){
     	
     	int pageSize = 15;
-    	Page<User> users = User.getPageWithSearch(page, pageSize, term);
+    	order = order.isEmpty() ? "id asc" : order;
+    	Page<User> users = User.getPageWithSearch(page, pageSize, term, order);
     	
-    	return ok(views.html.Admin.browseUsers.render(users, term));
+    	return ok(views.html.Admin.browseUsers.render(users, term, order));
     }
 
     @Restrict(UserRole.ROLE_ADMIN)    
@@ -209,7 +206,7 @@ public class AdminController extends BaseController {
     		
     		user.delete();
     		
-    		return redirect(routes.AdminController.browseUsers(0,""));
+    		return redirect(routes.AdminController.browseUsers(0,"",""));
     	}
     	
     	return ok(views.html.Admin.deleteUser.render(user));
@@ -834,7 +831,7 @@ public class AdminController extends BaseController {
     		
     		
     		
-    		return redirect(routes.AdminController.browseUsers(0,""));
+    		return redirect(routes.AdminController.browseUsers(0,"",""));
 
     	} else {
     		
@@ -858,7 +855,7 @@ public class AdminController extends BaseController {
         			user.delete();
         		}
         		
-        		return redirect(routes.AdminController.browseUsers(0,""));
+        		return redirect(routes.AdminController.browseUsers(0,"",""));
         	}
     		
     		return ok(views.html.Admin.deleteMultipleUsers.render(users));
