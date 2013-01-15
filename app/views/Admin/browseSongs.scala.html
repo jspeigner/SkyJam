@@ -22,8 +22,8 @@
 				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Name", "name", order)</th>
 				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Album", "album.name", order)</th>
 				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Artist", "album.artist.name", order)</th>
-				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "M", "song_metadata_id", order)</th>
-				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "E", "echonest_song_id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "M*", "song_metadata_id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "E**", "echonest_song_id", order)</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -45,6 +45,9 @@
 	<div class="pagination">
 		@tags.adminPagination( routes.AdminController.browseSongs( _, term = term, albumId =  if( album == null ) 0 else album.getId, order ), songs.getPageIndex, songs.getTotalPageCount, songs.getTotalRowCount )
 	</div>
+	
+	<p>M* - order by existence of Song Metadata ( ID3 / M4A ) </p>
+	<p>E** - order by existence of Echonest Metadata </p>
 	
 	} else {
 	<p>There are no users found.</p>
