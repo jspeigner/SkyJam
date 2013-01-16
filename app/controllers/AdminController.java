@@ -4,7 +4,6 @@ package controllers;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.jaudiotagger.tag.Tag;
 
@@ -17,6 +16,11 @@ import com.echonest.api.v4.EchoNestException;
 
 import models.*;
 import controllers.UserController.Login;
+import controllers.components.UserInvitationsMailer;
+import actors.UserInvitationsMailerActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import be.objectify.deadbolt.actions.Restrict;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -28,34 +32,6 @@ import scala.actors.threadpool.Arrays;
 public class AdminController extends BaseController {
 
 	
-	
-	protected static class UserInvitationsMailer implements Callable<Integer> {
-			
-		private List<User> users;
-		private Http.Context context;
-		
-		public UserInvitationsMailer(List<User> users, Http.Context context) {
-			this.users = users;
-			this.context = context;
-		}
-		
-		@Override
-		public Integer call() throws Exception {
-
-			Http.Context.current.set(context);
-			
-    		int i = 0;
-    		for(User user : users){
-    	    	UserInvitationCode uic = UserInvitationCode.createNewCode(user);
-    	    	
-    	    	email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
-    	    	System.out.println("Inviation send to "+ user.getEmail());
-    			i++;
-    		}		
-    		return i;
-		}
-		
-	}
 	
 	@Restrict(UserRole.ROLE_ADMIN)
 	public static Result dashboard(){
@@ -345,7 +321,8 @@ public class AdminController extends BaseController {
     	return editSong(artistId);
     }    
     
-    @Restrict(UserRole.ROLE_ADMIN)
+    @SuppressWarnings("unchecked")
+	@Restrict(UserRole.ROLE_ADMIN)
     public static Result sendInvitation(Integer userId){
     	
     	User user = User.find.byId(userId);
@@ -353,7 +330,7 @@ public class AdminController extends BaseController {
     		return notFound("User not found");
     	}
     	
-    	
+    	/*
     	@SuppressWarnings("unchecked")
 		UserInvitationsMailer m = new UserInvitationsMailer( Arrays.asList( new User[]{ user } ) , Http.Context.current.get() );
     	try {
@@ -361,10 +338,13 @@ public class AdminController extends BaseController {
 		} catch (Exception e) {
 
 		}
+    	*/
     	
-    	// UserInvitationCode uic = UserInvitationCode.createNewCode(user);
+    	ActorSystem system = ActorSystem.create("UserInvitation");
+    	ActorRef mailer = system.actorOf(new Props(UserInvitationsMailerActor.class), "UserInvitationsMailerActor");
     	
-    	// email(user.getEmail(), "A private invitation to check out the SkyJam.fm", views.html.Email.text.userInvitation.render(user, uic).toString());
+    	mailer.tell(new UserInvitationsMailer( Arrays.asList( new User[]{ user } ) , Http.Context.current.get() ));
+    	
     	
     	flash("success", "Invitation has been sent");
     	
@@ -477,7 +457,7 @@ public class AdminController extends BaseController {
     public static Result deleteGenre(Integer genreId){
     	
     	Genre genre = Genre.find.byId(genreId);
-    	if( genre != null){
+    	if( genre == null){
     		return notFound("Genre was not found");
     	}
     	
@@ -821,6 +801,7 @@ public class AdminController extends BaseController {
         		
     		flash("success", "Invitations were sent successfully");
     		
+    		/*
     		UserInvitationsMailer m = new UserInvitationsMailer(users, Http.Context.current.get() );
     		try {
 				m.call();
@@ -828,6 +809,12 @@ public class AdminController extends BaseController {
 
 				// e.printStackTrace();
 			}
+			*/
+    		
+        	ActorSystem system = ActorSystem.create("UserInvitation");
+        	ActorRef mailer = system.actorOf(new Props(UserInvitationsMailerActor.class), "UserInvitationsMailerActor");
+        	
+        	mailer.tell(new UserInvitationsMailer( users , Http.Context.current.get() ));
     		
     		
     		
@@ -882,10 +869,7 @@ public class AdminController extends BaseController {
     	
     	String[] childrenIds = children.split(",");
     	
-    	
-    	
     	MusicCategory.updateMusicCategoryOrder(parentId, childrenIds);
-    	
     	
     	return ok("");
     }
