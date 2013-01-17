@@ -285,32 +285,27 @@ function Application(config)
 	this.onDomReady = function()
 	{
 		
-		
+		// header playlist search
 		var inputHeaderFormSearch = "header form input:text" ;
+		var field = $(inputHeaderFormSearch); 
 		
-		if( $(inputHeaderFormSearch).length )
+		if( field.length )
 		{
 			var cache = {}, lastXhr;
+			
 			
 			var inputHeaderFormSearchJq = $( inputHeaderFormSearch ).autocomplete({
 				
 				minLength: 0,
 				source: function( request, response ) {
 					
+					field.addClass("loading");
 					var term = request.term;
-					
-					/*
-					if ( term in cache ) {
-						response( cache[ term ] );
-						return;
-					}
-					*/
 
 					lastXhr = $.getJSON( config.urls.headerFormSearch, request, function( data, status, xhr ) {
 						
-						// cache[ term ] = data;
-						
 						if ( xhr === lastXhr ) {
+							field.removeClass("loading");
 							response( data );
 						}
 					});

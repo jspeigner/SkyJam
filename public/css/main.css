@@ -9,10 +9,10 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 -moz-box-shadow: 1px 5px 10px rgba(0,0,0,0.15);
 box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	#body-container #body-content { padding: 0 20px 0 20px; }
-	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
-	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; padding-right:27px; }
 	header .navbar .brand { margin:3px 0 0 5px; padding:0; }
 		header .navbar .brand img { width: auto; height:32px;}
+	form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat 99% center; padding-right:27px; }		
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar { border:none;}
@@ -125,8 +125,8 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	
 #create-playlist {}
 	#create-playlist form.playlist-details .form-actions { padding-bottom: 0; margin-bottom: 0; }	
-	#create-playlist .song-search-form input {  }
-		#create-playlist .song-search-form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat 99% center; padding-right:27px; }
+	#create-playlist .song-search-form input { padding-right:27px; }
+		
 		#create-playlist .songs-search-results-container p { margin: 10px 0 10px 0;}
 		#create-playlist .songs-search-results-container { max-height: 400px; overflow: auto; margin-top: 20px; border: 1px solid gray; border-radius: 10px; padding: 0 10px 0 10px;}
 			#create-playlist .songs-search-results-container p.initial { padding: 10px; font-style: italic; margin:0; color: gray;}
