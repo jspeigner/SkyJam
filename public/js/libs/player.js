@@ -32,7 +32,7 @@ PlayerControlInterface = {
 					var disableVolumeControl = false;
 					if (agentID) {
 						
-				        // disable the volume control. It is not supported on iOS devices
+				        // Volume control is not supported on iOS devices
 						disableVolumeControl = true;
 					}		
 			    	

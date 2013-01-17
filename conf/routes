@@ -155,4 +155,7 @@ GET 	/homepage_register_success 					controllers.UserController.homepageRegister
 GET 	/import/s3_music							controllers.ImportController.importMusicFromS3Account()
 
 # Map static resources from the /public folder to the /assets URL path
+GET		/favicon.ico				controllers.Assets.at(path="/public",file="favicon.ico")
+GET		/channel.html				controllers.Assets.at(path="/public",file="channel.html")
+GET		/robots.txt					controllers.Assets.at(path="/public",file="robots.txt")
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
