@@ -190,22 +190,14 @@ public class Playlist extends AppModel {
 	    		" GROUP BY t0.id " +
 	    		" ORDER BY u2.created_date DESC ";
 	  
-		RawSql rawSql =   
-	    RawSqlBuilder  
-	        // let ebean parse the SQL so that it can  
-	        // add expressions to the WHERE and HAVING   
-	        // clauses  
+		RawSql rawSql = RawSqlBuilder  
 	        .parse(sql)  
-	        // map resultSet columns to bean properties  
 	        .columnMapping("t0.id",  "id")  
-//	        .columnMapping("t0.user_id",  "user")  
 	        .columnMapping("t0.name",  "name")	        
 	        .columnMapping("t0.status",  "status")
 	        .columnMapping("t0.description",  "description")
 	        .columnMapping("t0.created_date",  "createdDate")	        
 	        .columnMapping("t0.loaded_times",  "loadedTimes")	        
-//	        .columnMapping("t0.genre_id",  "genre_id")
-	        
 	        .create();  
 	  
 	  
@@ -238,19 +230,13 @@ public class Playlist extends AppModel {
   
 		RawSql rawSql =   
 	    RawSqlBuilder  
-	        // let ebean parse the SQL so that it can  
-	        // add expressions to the WHERE and HAVING   
-	        // clauses  
 	        .parse(sql)  
-	        // map resultSet columns to bean properties  
 	        .columnMapping("t0.id",  "id")  
-	//        .columnMapping("t0.user_id",  "user")  
 	        .columnMapping("t0.name",  "name")	        
 	        .columnMapping("t0.status",  "status")
 	        .columnMapping("t0.description",  "description")
 	        .columnMapping("t0.created_date",  "createdDate")	        
 	        .columnMapping("t0.loaded_times",  "loadedTimes")	        
-	//        .columnMapping("t0.genre_id",  "genre_id")
 	        .create();  
 	  
 	  
@@ -354,31 +340,6 @@ public class Playlist extends AppModel {
 	{
 		return ( user == null ) || ( UserSavedPlaylist.find.where().eq("user", user).eq("playlist", this ).findRowCount() > 0 ); 
 	}
-
-	/*
-	public Map<String,List<ValidationError>> validate()
-	{
-		Map<String,List<ValidationError>> validationErrors = new HashMap<String,List<ValidationError>>(); 
-		
-		List<ValidationError> globalErrors = new ArrayList<ValidationError>();
-		
-		if( playlistSongs.size() < minSongsInList )
-		{
-			globalErrors.add( new ValidationError("", "Please add more songs. At least " + minSongsInList + " songs are required", new ArrayList()) );
-						
-		}
-
-		if(globalErrors.size()>0){
-			validationErrors.put("", globalErrors);
-		}
-		
-		System.out.println("Songs - " + playlistSongs.size());
-		
-		return validationErrors.size() > 0 ? validationErrors : null;
-	}
-	*/	
-	
-	
 	
 	public static List<PlaylistSong> getSongsFromForm(Map<String, String> data) {
 		
@@ -575,14 +536,13 @@ public class Playlist extends AppModel {
 	}
 
 	public void updateCategoriesFromMap(Map<String, String> data) {
-		// TODO Auto-generated method stub
+
 		Iterator<Entry<String, String>> it = data.entrySet().iterator();
 		
 		List<Integer> categories = new ArrayList<Integer>();
 		
 	    while (it.hasNext()) {
 	        Entry<String, String> pairs = it.next();
-	        // System.out.println(pairs.getKey() + " = " + pairs.getValue());
 	        
 	        if( pairs.getKey().indexOf("musicCategoryId") > -1 ){
 	        	try {
