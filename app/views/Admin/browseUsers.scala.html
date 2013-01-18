@@ -1,4 +1,4 @@
-@(users:Page[User], term:String)@Layout.admin("Browse Users") {
+@(users:Page[User], term:String, order:String = "")@Layout.admin("Browse Users") {
 <script type="text/javascript">
 $( function(){
 	
@@ -50,10 +50,10 @@ $( function(){
 	<hr>
 	
 	<div class="pull-right">
-	<form class="form-search" method="get" action="@routes.AdminController.browseUsers()">
-  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID, Username or Email" value="@term">
-  		<button type="submit" class="btn">Search</button>
-	</form>
+		<form class="form-search" method="get" action="@routes.AdminController.browseUsers()">
+	  		<input type="text" class="input-medium search-query span3" name="term" placeholder="Search for ID, Username or Email" value="@term">
+	  		<button type="submit" class="btn">Search</button>
+		</form>
 	</div>	
 	
 	@if( ( users != null ) && ( users.getList.size > 0 )){
@@ -62,9 +62,10 @@ $( function(){
 		<thead>
 			<tr>
 				<th><input type="checkbox"></th>
-				<th>ID</th>
-				<th>Username</th>
-				<th>Email</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseUsers( page = 0, term = term, _ ), "ID", "id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseUsers( page = 0, term = term, _ ), "Username", "username", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseUsers( page = 0, term = term, _ ), "Email", "email", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseUsers( page = 0, term = term, _ ), "Registered", "registered_date", order)</th>
 				<th>Role</th>
 				<th>Actions</th>
 			</tr>
@@ -76,12 +77,13 @@ $( function(){
 			<td>@user.getId</td>
 			<td><!-- <img src="@user.getImageUrl" alt="@user.getUsername"> --> @user.getUsername</td>
 			<td>@user.getEmail</td>
+			<td>@( new java.text.SimpleDateFormat( "MMM d, yy" ).format(user.getRegisteredDate) )</td>
 			<td>@if(user.getRoles != null){
 					@user.getRoles.map( (role) => role.getRoleName ).mkString(", ")
 					@if(user.getRoles.exists( _.getRoleName.equals(models.UserRole.ROLE_AWAITING) )){
 						@if(user.getSentInvitationsCount > 0){
 						/ invited
-						}				
+						}
 					} 
 				}
 				
@@ -100,7 +102,7 @@ $( function(){
 	</div>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term ), users.getPageIndex, users.getTotalPageCount, users.getTotalRowCount )
+		@tags.adminPagination( routes.AdminController.browseUsers( _, term = term, order ), users.getPageIndex, users.getTotalPageCount, users.getTotalRowCount )
 	</div>
 	
 	} else {

@@ -3,13 +3,11 @@ package models;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -29,7 +27,6 @@ import com.avaje.ebean.validation.Length;
 
 import play.data.format.Formats;
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
 
 @Entity
 @Table(name="storage_objects")
@@ -184,19 +181,9 @@ public class StorageObject extends AppModel {
 			Bucket bucket = getBucket();
 			
 			if( ( bucket != null ) && ( bucket.getAmazonAccount() != null ) ){
-				/*
-				S3Service s3Service = new RestS3Service(bucket.getAmazonAccount().getJets3tAWSCredentials());
-				
-				S3Bucket s3bucket = s3Service.getBucket(bucket.getName());
-				
-				org.jets3t.service.model.S3Object obj = new org.jets3t.service.model.S3Object(getName());
-				*/
-				
 				
 				AmazonS3 s3 = new AmazonS3Client( bucket.getAmazonAccount() );
 				S3Object s3Object = s3.getObject(bucket.getName(), getName() );
-				
-				
 				
 				return s3Object.getObjectContent();
 				
@@ -267,7 +254,7 @@ public class StorageObject extends AppModel {
 			
 		} catch (Exception e) {
 			
-			// TODO: handle exception
+			// TODO: handle the exception
 		}
 		
 		super.delete();

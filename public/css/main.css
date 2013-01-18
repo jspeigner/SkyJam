@@ -9,10 +9,10 @@ footer { margin-top: 45px; padding: 30px 20px 30px 20px; border-top: 1px solid #
 -moz-box-shadow: 1px 5px 10px rgba(0,0,0,0.15);
 box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	#body-container #body-content { padding: 0 20px 0 20px; }
-	header form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat center right; }
-	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+	header  form.navbar-search input.search-query { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; padding-right:27px; }
 	header .navbar .brand { margin:3px 0 0 5px; padding:0; }
 		header .navbar .brand img { width: auto; height:32px;}
+	form input.loading { background: url(../img/ajax-loader-small.gif) no-repeat 99% center; padding-right:27px; }		
 
 #player {margin: 20px 0 20px 0;}
 	#player .navbar { border:none;}
@@ -99,6 +99,7 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 		#playlists-browse-all .categories  ul.nav > li:first-child > a { -webkit-border-radius: 6px 6px 0 0; -moz-border-radius: 6px 6px 0 0; border-radius: 6px 6px 0 0; }
 		#playlists-browse-all .categories  ul.nav > li > a { display: block; margin: 0 0 -1px; padding: 8px 14px; border: 1px solid #E5E5E5; }
 		#playlists-browse-all .categories  ul.nav > li:last-child > a { -webkit-border-radius: 0 0 6px 6px; -moz-border-radius: 0 0 6px 6px; border-radius: 0 0 6px 6px; }
+		#playlists-browse-all h2 {margin-top:0;}
 	
 #playlists-browse-all .categories  .active > a { position: relative;z-index: 2;padding: 9px 15px;border: 0;text-shadow: 0 1px 0 rgba(0, 0, 0, .15);-webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, .1), inset -1px 0 0 rgba(0, 0, 0, .1);-moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);box-shadow: inset 1px 0 0 rgba(0, 0, 0, .1), inset -1px 0 0 rgba(0, 0, 0, .1);}
 #playlists-browse-all .categories  .nav-list > .active > a, #playlists-browse-all .categories  .nav-list > .active > a:hover {color: white;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2); background-color: #08C; }
@@ -107,6 +108,9 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	.playlists ul { margin:0; padding:0; list-style: none; }
 		.playlists ul li {  margin-bottom:1em;}
 		.playlists .pager { margin-top:2em; }
+		
+		.popular-playlists { }
+			.popular-playlists h2 { margin-top:0; }
 	
 #user-profile {}
 	#user-profile .user-image a {margin: 10px 0 0 0; max-width: auto; display: block;}
@@ -121,7 +125,9 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 	
 #create-playlist {}
 	#create-playlist form.playlist-details .form-actions { padding-bottom: 0; margin-bottom: 0; }	
-	#create-playlist .song-search-form input {  }
+	#create-playlist .song-search-form input { padding-right:27px; }
+		
+		#create-playlist .songs-search-results-container p { margin: 10px 0 10px 0;}
 		#create-playlist .songs-search-results-container { max-height: 400px; overflow: auto; margin-top: 20px; border: 1px solid gray; border-radius: 10px; padding: 0 10px 0 10px;}
 			#create-playlist .songs-search-results-container p.initial { padding: 10px; font-style: italic; margin:0; color: gray;}
 		#create-playlist .songs-search-results-container ul { list-style: none; margin:10px 0 0 0; padding:0; }
@@ -157,4 +163,14 @@ box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15); }
 #terms-of-use {}
 	#terms-of-use ul li { line-height: 1.5em; margin-bottom: 0.5em; }
 	
-	
+	.playlist-thumbnail, .playlist-thumbnail-preview { width:100%; background: #0e0e0e; /* Old browsers */
+background: -moz-linear-gradient(top, #0e0e0e 0%, #7d7e7d 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0e0e0e), color-stop(100%,#7d7e7d)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #0e0e0e 0%,#7d7e7d 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #0e0e0e 0%,#7d7e7d 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #0e0e0e 0%,#7d7e7d 100%); /* IE10+ */
+background: linear-gradient(to bottom, #0e0e0e 0%,#7d7e7d 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0e0e0e', endColorstr='#7d7e7d',GradientType=0 ); /* IE6-9 */
+margin: 0 0 10px 0;
+}
+		.playlist-thumbnail .album { width:50%; height:50%;margin:0; padding:0; float:left; }

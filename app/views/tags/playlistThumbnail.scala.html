@@ -1,2 +1,7 @@
-@(playlist:Playlist)@if( ( playlist != null ) && ( playlist.getPlaylistSongs.size() > 0 ) ){
-<img src="@playlist.getPlaylistSongs.find( playlistSong => playlistSong.getSong.getAlbum.getAlbumArtStorageObject != null  ).getOrElse( playlist.getPlaylistSongs.head ).getSong.getAlbum.getAlbumArtUrl" alt="Playlist - @playlist.getName" title="@playlist.getName" >}
+@(playlist:Playlist, albumsCount:Int = 4 )@if( playlist.getPlaylistSongs.size() > 0 ){
+<div class="playlist-thumbnail row-fluid clearfix">
+	@for( album <- playlist.getPreviewAlbums(albumsCount) ){
+		<div class="album"><img src="@album.getAlbumArtUrl" alt="@album.getArtist.getName - @album.getName" title="@album.getArtist.getName - @album.getName"></div>
+	}
+</div>
+}

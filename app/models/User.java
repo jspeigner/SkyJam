@@ -178,31 +178,42 @@ public class User extends AppModel implements RoleHolder
 	}
 
 	public static Page<User> getPageWithSearch(int page, int pageSize){
-		return getPageWithSearch(page, pageSize, null);
+		return getPageWithSearch(page, pageSize, null, "");
 	}
 	
-	public static Page<User> getPageWithSearch(int page, int pageSize, String term){
-    	
+	public static Page<User> getPageWithSearch(int page, int pageSize, String order){
+		return getPageWithSearch(page, pageSize, null);
+	}	
+	
+	public static Page<User> getPageWithSearch(int page, int pageSize, String term, String order){
+		com.avaje.ebean.Query<User> q = null;
+		
     	if( ( term!=null ) && ( !term.isEmpty())){
     		try {  
     		      Integer id = Integer.parseInt( term );  
     		      
-    		      return User.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      q = User.find.where( Expr.eq("id", id) );
     		      
     		} catch( Exception e ) {  
     	    		String likeQueryString =  "%" + term.trim() + "%";
-    	    		return User.find.where( 
+    	    		q = User.find.where( 
     	    			Expr.or(
     						 Expr.ilike("username", likeQueryString),
     						 Expr.ilike("email", likeQueryString)
     					)
-    				).findPagingList(pageSize).getPage(page);
+    				);
     		}    		
     		
 
     	} else {
-    		return User.find.findPagingList(pageSize).getPage(page);
+    		q = User.find;
     	}
+    	
+    	if( !order.isEmpty() ){
+    		q = q.order(order);
+    	}    	
+    	
+    	return q.findPagingList(pageSize).getPage(page);
 	}
 	
     public String toString() {

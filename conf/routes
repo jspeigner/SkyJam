@@ -55,7 +55,7 @@ POST		/admin/user/send_invitation/:id	controllers.AdminController.sendInvitation
 GET			/admin/user/send_multiple_invitations	controllers.AdminController.sendMultipleUserInvitations(idList: String)
 GET			/admin/user/delete_multiple		controllers.AdminController.deleteMultipleUsers(idList: String)
 POST		/admin/user/delete_multiple		controllers.AdminController.deleteMultipleUsersSubmit(idList: String)
-GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "")
+GET			/admin/users/browse				controllers.AdminController.browseUsers(page:java.lang.Integer ?= 0, term:String ?= "", order:String ?= "")
 
 GET			/admin/artists/browse			controllers.AdminController.browseArtists(page:java.lang.Integer ?= 0, term:String ?= "")
 GET			/admin/artist/edit/:id			controllers.AdminController.editArtist(id: java.lang.Integer)
@@ -65,7 +65,7 @@ GET			/admin/albums/browse			controllers.AdminController.browseAlbums(page:java.
 GET			/admin/album/edit/:id			controllers.AdminController.editAlbum(id: java.lang.Integer)
 POST		/admin/album/edit/:id			controllers.AdminController.editAlbumSubmit(id: java.lang.Integer)
 
-GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0)
+GET			/admin/songs/browse				controllers.AdminController.browseSongs(page:java.lang.Integer ?= 0, term:String ?= "", albumId:java.lang.Integer ?= 0, order:String ?= "")
 GET			/admin/song/edit/:id			controllers.AdminController.editSong(id: java.lang.Integer)
 POST		/admin/song/edit/:id			controllers.AdminController.editSongSubmit(id: java.lang.Integer)
 
@@ -84,6 +84,7 @@ GET			/admin/genre/add				controllers.AdminController.addGenre()
 POST		/admin/genre/add				controllers.AdminController.addGenreSubmit()
 
 GET			/admin/music_categories/browse/:categoryType			controllers.AdminController.browseMusicCategories( categoryType:String )
+GET			/admin/music_categories/update_order					controllers.AdminController.updateMusicCategoryOrder( parentId:java.lang.Integer ?= 0, children:String ?= ""  )
 GET			/admin/music_category/edit/:id							controllers.AdminController.editMusicCategory( id: java.lang.Integer )
 POST		/admin/music_category/edit/:id							controllers.AdminController.editMusicCategorySubmit( id: java.lang.Integer )
 GET			/admin/music_category/add/:parentId/:categoryType		controllers.AdminController.addMusicCategory( parentId: java.lang.Integer, categoryType:String )
@@ -99,6 +100,7 @@ POST		/admin/batch_job/edit/:id				controllers.AdminController.editBatchJobSubmi
 GET			/admin/batch_jobs/info					controllers.AdminController.batchJobsInfo()
 GET			/admin/batch_job/delete/:id				controllers.AdminController.deleteBatchJob(id:java.lang.Integer)
 POST		/admin/batch_job/delete/:id				controllers.AdminController.deleteBatchJobSubmit(id:java.lang.Integer)
+
 
 
 GET			/admin/song/metadata/:id				controllers.AdminController.readSongMetadata(id: java.lang.Integer)
@@ -153,4 +155,7 @@ GET 	/homepage_register_success 					controllers.UserController.homepageRegister
 GET 	/import/s3_music							controllers.ImportController.importMusicFromS3Account()
 
 # Map static resources from the /public folder to the /assets URL path
+GET		/favicon.ico				controllers.Assets.at(path="/public",file="favicon.ico")
+GET		/channel.html				controllers.Assets.at(path="/public",file="channel.html")
+GET		/robots.txt					controllers.Assets.at(path="/public",file="robots.txt")
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

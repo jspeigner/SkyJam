@@ -1,4 +1,4 @@
-@(songs:Page[Song], term:String, album:Album = null)@Layout.admin("Browse Songs") {
+@(songs:Page[Song], term:String, album:Album = null, order:String = "id asc")@Layout.admin("Browse Songs") {
 <h1>Songs</h1>
 @if(album != null ){
 	<h3>@album.getArtist.getName - @album.getName</h3>
@@ -18,10 +18,12 @@
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Album</th>
-				<th>Artist</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "ID", "id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Name", "name", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Album", "album.name", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "Artist", "album.artist.name", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "M*", "song_metadata_id", order)</th>
+				<th>@tags.adminPaginationSortLink( routes.AdminController.browseSongs( page = 0, term = term, albumId =  if( album == null ) 0 else album.getId, _  ), "E**", "echonest_song_id", order)</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -32,6 +34,8 @@
 			<td>@song.getName</td>
 			<td>@song.getAlbum.getName</td>
 			<td>@song.getAlbum.getArtist.getName</td>
+			<td>@(if( song.getSongMetadata == null  )"N" else "Y")</td>
+			<td>@(if( song.getEchonestSong == null  )"N" else "Y")</td>
 			<td><a href="@routes.AdminController.editSong(song.getId)">Edit</a> | <a href="#">Delete</a> | <a href="@song.getSongUrl()"><i class="icon-download"></i>&nbsp;S3&nbsp;URL</a></td>
 		</tr>	
 		}
@@ -39,8 +43,11 @@
 	</table>
 	
 	<div class="pagination">
-		@tags.adminPagination( routes.AdminController.browseSongs( _, term = term ), songs.getPageIndex, songs.getTotalPageCount, songs.getTotalRowCount )
+		@tags.adminPagination( routes.AdminController.browseSongs( _, term = term, albumId =  if( album == null ) 0 else album.getId, order ), songs.getPageIndex, songs.getTotalPageCount, songs.getTotalRowCount )
 	</div>
+	
+	<p>M* - order by existence of Song Metadata ( ID3 / M4A ) </p>
+	<p>E** - order by existence of Echonest Metadata </p>
 	
 	} else {
 	<p>There are no users found.</p>

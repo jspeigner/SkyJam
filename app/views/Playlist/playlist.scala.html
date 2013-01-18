@@ -7,7 +7,7 @@
 	<div id="playlist-page">
 	 
 		<div class="row-fluid">
-			<div class="span2">@tags.playlistThumbnail(playlist)</div>
+			<div class="span4">@tags.playlistThumbnail(playlist)</div>
 			<div class="span8"> 
 				<h2>@playlist.getName</h2>
 				<p>@playlist.getDescription</p>
@@ -51,8 +51,6 @@
 		}
 
 		<!-- user comments -->
-		
-
 		<div class="fb-comments" data-href="@routes.PlaylistController.playlist(playlist.getId, null ).absoluteURL(play.mvc.Http.Context.current().request(), global.Global.isSecure())" data-width="1130" data-num-posts="2"></div>		
 
     </div>	

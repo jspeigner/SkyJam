@@ -181,10 +181,15 @@ public class Song extends AppModel {
 	}	
 	
 	public static Page<Song> getPageWithSearch(int page, int pageSize, String term){
-		return getPageWithSearch(page, pageSize, term, null);
+		return getPageWithSearch(page, pageSize, term, "");
 	}
 	
-	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, Expression additionalConditions){
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, String order){
+		return getPageWithSearch(page, pageSize, term, order, null);
+	}
+	
+	public static Page<Song> getPageWithSearch(int page, int pageSize, String term, String order, Expression additionalConditions){
+		com.avaje.ebean.Query<Song> q = null;
     	
     	if( ( term!=null ) && ( !term.isEmpty())){
     		try {  
@@ -197,7 +202,7 @@ public class Song extends AppModel {
 	  	    			expr = Expr.and( additionalConditions , expr );
 	  	    		}    		      
     		      
-    		      return Song.find.where().eq("id", id).findPagingList(pageSize).getPage(page);
+    		      q = Song.find.where(expr);
     		      
     		} catch( Exception e ) {
     			
@@ -230,13 +235,18 @@ public class Song extends AppModel {
     	    			expr = Expr.and( additionalConditions , expr );
     	    		}
     	    		
-    	    		return Song.find.where( expr ).findPagingList(pageSize).getPage(page);
+    	    		q = Song.find.where( expr );
     		}
     		
 
     	} else {
-    		return ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) ).findPagingList(pageSize).getPage(page);
+    		q = ( ( additionalConditions == null ) ? Song.find : Song.find.where(additionalConditions) );
     	}
+    	if( !order.isEmpty() ){
+    		q = q.order(order);
+    	}
+    	
+    	return q != null ? q.findPagingList(pageSize).getPage(page) : null;
 	}
 
 	public Integer getTracknumber() {
@@ -341,12 +351,12 @@ public class Song extends AppModel {
 		
 	}
 	
-	public static com.echonest.api.v4.Song getEchonestSong(String artistName, String songName)  throws EchoNestException {
-		 List<com.echonest.api.v4.Song> list = getEconestSongsByName(artistName, songName, 1);
+	public static com.echonest.api.v4.Song loadEchonestSong(String artistName, String songName)  throws EchoNestException {
+		 List<com.echonest.api.v4.Song> list = loadEconestSongsByName(artistName, songName, 1);
 		 return list.size() > 0 ? list.get(0) : null;
 	}
 	
-	public static List<com.echonest.api.v4.Song> getEconestSongsByName(String artistName, String songName, int results) throws EchoNestException {
+	public static List<com.echonest.api.v4.Song> loadEconestSongsByName(String artistName, String songName, int results) throws EchoNestException {
 		
     	EchoNestAPI en = new EchoNestAPI( Play.application().configuration().getString("echonest.api_key") );
     	

@@ -13,10 +13,9 @@
 		<li class="span3">
 			<h2><a href="@routes.PlaylistController.playlist(playlist.getId(), category.getId())">@playlist.getName</a></h2>
 			<p>@playlist.getDescription</p>
-			<div><a href="#" class="btn btn-large player-controls-play" data-playlist-id="@playlist.getId"><i class="icon-play"></i>Play</a></div>
 			<ul class="row-fluid songs">
-				@for( playlistSong <- ( playlist.getPlaylistSongs(4) ) ){
-					<li class="span@( (12/4).toInt )"><img src="@playlistSong.getSong.getAlbum.getAlbumArtUrl" title="@playlistSong.getSong().getName" alt="@playlistSong.getSong().getName" ></li>
+				@for( album <- playlist.getPreviewAlbums(4) ){
+					<li class="span3"><img src="@album.getAlbumArtUrl" title="@album.getArtist.getName - @album.getName" alt="@album.getArtist.getName - @album.getName" ></li>
 				}
 				
 			</ul>
