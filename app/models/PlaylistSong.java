@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -38,6 +39,9 @@ public class PlaylistSong extends AppModel {
 	@OneToMany
 	@OrderBy("created_date DESC")
 	private List<UserPlaylistActivity> userPlaylistActivities;
+
+	@OneToMany(cascade=CascadeType.ALL)
+	private List<PlaylistSongRating> playlistSongRatings;
 	
 	public static Model.Finder<Integer,PlaylistSong> find = new Finder<Integer, PlaylistSong>(Integer.class, PlaylistSong.class);
 
@@ -90,21 +94,21 @@ public class PlaylistSong extends AppModel {
 		this.dislikesCount = dislikesCount;
 	}
 	
-	public boolean isDislikedByUser(User user){
+	private boolean isDislikedByUser(User user){
 		// TODO optimize / cache this call
 		return PlaylistSongRating.find.where().eq("playlistSong", this).eq("user", user).eq("type", PlaylistSongRating.Type.dislike).findRowCount() > 0;
 	}
 
-	public boolean islikedByUser(User user){
+	private boolean islikedByUser(User user){
 		// TODO optimize / cache this call
 		return PlaylistSongRating.find.where().eq("playlistSong", this).eq("user", user).eq("type", PlaylistSongRating.Type.like).findRowCount() > 0;
 	}	
 	
-	private List<UserPlaylistActivity> getUserPlaylistActivities() {
+	public List<UserPlaylistActivity> getUserPlaylistActivities() {
 		return userPlaylistActivities;
 	}
 
-	private void setUserPlaylistActivities(List<UserPlaylistActivity> userPlaylistActivities) {
+	public void setUserPlaylistActivities(List<UserPlaylistActivity> userPlaylistActivities) {
 		this.userPlaylistActivities = userPlaylistActivities;
 	}
 

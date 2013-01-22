@@ -14,7 +14,8 @@
 		playlistData.put("id", playlist.getId().toString())
 		
 		var playlistSongsData = new ListBuffer[Map[String,Any]]
-		val playlistSongs:List[PlaylistSong] = if( user != null ){ playlist.getPlaylistSongs().filter( !_.isDislikedByUser(user) ) } else { playlist.getPlaylistSongs() } 
+		
+		val playlistSongs:List[PlaylistSong] = if( user != null ){ playlist.getPlaylistSongsForUser(user) } else { playlist.getPlaylistSongs() } 
 		
 		java.util.Collections.shuffle( playlistSongs )
 		

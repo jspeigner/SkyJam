@@ -47,10 +47,7 @@ public class BaseController extends Controller {
 		
 		String isPjax =  ( request().queryString().containsKey("_pjax") ) ? request().queryString().get("_pjax")[0] : "";
 		
-		
-		
-		if( isPjax != "" )
-		{
+		if( isPjax != "" ){
 			response().setHeader( PJAX_RESPONSE_REDIRECT_HEADER, url.toString() );
 			setPjaxUrl(url);
 			

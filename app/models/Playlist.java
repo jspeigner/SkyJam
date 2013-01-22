@@ -611,6 +611,36 @@ public class Playlist extends AppModel {
 		
 	}
 	
+	public List<PlaylistSong> getPlaylistSongsForUser(User user){
+		if( user == null ){
+			return null;
+		}
+		
+		
+		
+		@SuppressWarnings("unchecked")
+		Map<Integer, PlaylistSong> ps = (Map<Integer, PlaylistSong>) PlaylistSong.find.where().eq("playlist", this).findMap();
+		if( ps.size() > 0 ){
+			
+			
+			
+			List<PlaylistSongRating> negativeRatings = PlaylistSongRating.find.where().in("playlistSong", ps.values() ).eq("type", PlaylistSongRating.Type.dislike).eq("user", user).findList();
+			for(PlaylistSongRating p :negativeRatings){
+				Integer playlistSongId = p.getPlaylistSong().getId();
+				if( ps.containsKey(playlistSongId) ){
+					ps.remove(playlistSongId);
+				}
+			}
+			
+			
+			return new ArrayList<PlaylistSong>( ps.values() );
+		} else {
+			return new ArrayList<PlaylistSong>();
+		}
+		
+		
+	}
+	
 	public List<Album> getPreviewAlbums(int limit ){
 		@SuppressWarnings("unchecked")
 		Map<Integer, Album> a = (Map<Integer, Album>) Album.find.where().eq("songs.playlistSongs.playlist", this).ne("albumArtStorageObject", null).findMap();
