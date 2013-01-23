@@ -1,4 +1,4 @@
-@(album:Album, form: Form[Album], genres:List[Genre])@import helper.twitterBootstrap2._
+@(album:Album, form: Form[Album], genreOptions:List[(String,String)])@import helper.twitterBootstrap2._
 @Layout.admin("Edit Album") {
 
 
@@ -27,7 +27,7 @@
 			
 			@helper.textarea(form("description" ), '_showConstraints -> false, '_label -> "Info", 'class -> "span8", 'rows -> 5)
 		
-			@helper.select(form("genreId"), genres.map( genre => ( genre.getId.toString, genre.getName ) ), '_label -> "Genre" )
+			@helper.select(form("genre.id"), genreOptions, '_label -> "Genre" )
 			
 			@helper.inputText(form("copyrightYear" ), '_showConstraints -> false, '_label -> "Copyright Year", 'class -> "span1")
 		

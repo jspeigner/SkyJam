@@ -250,7 +250,7 @@ public class AdminController extends BaseController {
         		album.setId(albumId);
         		        		
     			processImageUpload(album, "setAlbumArtStorageObject", Album.imageMetadata );
-    			
+
     	    	album.update(albumId);
     			
         		flash("success", "Album was successfully updated");
@@ -261,7 +261,7 @@ public class AdminController extends BaseController {
     		
     	}
     	
-    	return ok(views.html.Admin.editAlbum.render(album, form, Genre.find.findList()));
+    	return ok(views.html.Admin.editAlbum.render(album, form, Genre.getList() ));
     }
     
     @Restrict(UserRole.ROLE_ADMIN)
@@ -329,16 +329,6 @@ public class AdminController extends BaseController {
     	if(user == null){
     		return notFound("User not found");
     	}
-    	
-    	/*
-    	@SuppressWarnings("unchecked")
-		UserInvitationsMailer m = new UserInvitationsMailer( Arrays.asList( new User[]{ user } ) , Http.Context.current.get() );
-    	try {
-			m.call();
-		} catch (Exception e) {
-
-		}
-    	*/
     	
     	ActorSystem system = ActorSystem.create("UserInvitation");
     	ActorRef mailer = system.actorOf(new Props(UserInvitationsMailerActor.class), "UserInvitationsMailerActor");
